@@ -1,0 +1,50 @@
+/* General table styling */
+table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+th, td {
+    border: 1px solid #ccc;
+    text-align: center;
+    padding: 5px;
+    min-width: 50px;
+}
+
+/* Colors for each person */
+.dallas {
+    background-color: #f39c12; /* orange */
+    color: white;
+    font-weight: bold;
+}
+
+.eric {
+    background-color: #3498db; /* blue */
+    color: white;
+    font-weight: bold;
+}
+
+.blaine {
+    background-color: #2ecc71; /* green */
+    color: white;
+    font-weight: bold;
+}
+
+.all {
+    background-color: #7f8c8d; /* gray */
+    color: white;
+    font-weight: bold;
+}
+
+td:empty {
+    border-top: none;
+    border-bottom: none;
+    border-left: none;
+    border-right: none;
+    background: transparent;
+}
+
+/* Optional: make blank cells invisible */
+td:not(.dallas):not(.eric):not(.blaine):not(.all) {
+    background-color: #fff;
+}
