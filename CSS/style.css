@@ -1,3 +1,96 @@
+/* =========================
+   Base Page Styling
+========================= */
+
+body {
+    font-family: Georgia, serif;
+    font-size: 100%;
+    line-height: 20px;
+    text-align: justify;
+
+    /* Center page in 950px box */
+    width: 950px;
+    margin: 0 auto;
+
+    padding: 10px;
+    border: 2px solid black;
+}
+
+/* =========================
+   Headings
+========================= */
+
+h1 {
+    font-size: 160%;
+}
+
+h2 {
+    font-size: 125%;
+}
+
+/* =========================
+   Paragraph styling
+========================= */
+
+p {
+    text-indent: 15px;
+}
+
+/* =========================
+   Emphasis classes / IDs
+========================= */
+
+.mkbold {
+    font-weight: bold;
+}
+
+.mkunderlined {
+    text-decoration: underline;
+}
+
+#can {
+    font-style: italic;
+}
+
+#hcs12 {
+    font-style: italic;
+}
+
+/* =========================
+   Images and Figures
+========================= */
+
+figure {
+    text-align: center;
+    border: 2px solid blue;
+    border-radius: 25px;
+    padding: 10px;
+    margin: 20px auto;
+}
+
+img {
+    height: 300px;
+    /*border: 2px solid green;*/
+    box-shadow: 5px 5px 5px gray;
+    display: block;
+    margin: 0 auto;
+}
+
+/* Figure captions */
+figcaption {
+    text-align: center;
+    font-style: italic;
+    font-size: 90%;
+}
+
+/* =========================
+   Lists
+========================= */
+
+ul, ol {
+    text-align: justify;
+}
+/* old */
 /* General table styling */
 table {
     border-collapse: collapse;
