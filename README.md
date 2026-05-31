@@ -21,30 +21,39 @@ The project is organized into three major phases:
 
 **Phase 1: CAN Network**
   -Design and implementation of the common CAN messaging protocol.
+  
   -Establishment of communication between embedded controllers.
 
 **Phase 2: LAN and Remote Control**
   -Development of the data server and diagnostics repository.
+  
   -Creation of the web-based user interface and database integration.
 
 **Phase 3: System Integration**
   -Full integration of the CAN and LAN communication modules.
+  
   -Implementation of the final finite state machine and system-specific features.
 
 **Tech Stack**
 **Hardware and Sensors**
   -Microcontrollers: STM32 Nucleo, Arduino, Raspberry Pi
+  
   -Adapter: PEAK USB/CAN Adapter
+  
   -Components: Laser Rangefinder, Servo Motor
 
 **Back-End and Database**
 Embedded Control: C/C++
+
 Server-side Logic: PHP
+
 Data Logging: MySQL
 
 **Front-End**
   -HTML5
+  
   -CSS3
+  
   -JavaScript
 
 **Team**
