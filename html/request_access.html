@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Request Form</title>
+    </head>
+
+    <body>
+        <h1>Request Access</h1>
+        <form action="php/req_access.php" method="post">
+                <fieldset>
+                <legend>Contact details</legend>
+                <p> First Name:<input type="text" name="firstname"/></p>
+                <p> Last Name: <input type="text" name="lastname"/></p>
+                <p><label>Email:<input type="email" name="email"/></label></p>
+                <p><label>Website:<input type="url" name="url"/></label></p>
+                <p><label>Birth date:<input type="date" name="birthday"/></label></p>
+                <label><input type="radio" name="fac_or_student" value="faculty"/> Faculty</label>
+                <label><input type="radio" name="fac_or_student" value="student"/> Student</label>
+                </fieldset>
+            <p> I currently.....(check all that apply)</p>
+            <label><input type="checkbox" name="involvement" value="none"/> Have no involvement in project</label><br/>
+            <input type="checkbox" name="involvement" value="instructor"/> I instruct on the project
+            <input type="checkbox" name="involvement" value="boss"/> You will respect my authority
+            <input type="checkbox" name="involvement" value="investor"/> I bring the money
+            <input type="checkbox" name="involvement" value="admin"/> I admin the thing
+            <input type="checkbox" name="involvement" value="it"/> I handle IT
+            <input type="checkbox" name="involvement" value="superboss"/> I am superboss
+
+            <p>Do you drive a car?
+            <select name="drives_car">
+                <option value="no_answer" selected></option>
+                <option value="yes">Yes</option>
+                <option value="no">No</option>
+            </select>
+            </p>
+
+            <p>Tell us a bit more about yourself</p>
+            <textarea>
+                Other details.......</textarea> <br/>
+            </textarea>
+            <input type="submit" value="Submit Request"/>
+        </form>
+    </body>
+</html>
