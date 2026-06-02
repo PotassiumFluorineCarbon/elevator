@@ -97,6 +97,16 @@ table {
     width: 100%;
 }
 
+/* Keep First Row Showing when scrolling through table */
+thead th {
+    position: sticky;
+    top: 0;
+    background-color: white;
+    z-index: 10;
+    border-bottom: 2px solid black;
+}
+
+
 th, td {
     border: 1px solid #ccc;
     text-align: center;
@@ -137,7 +147,7 @@ td:empty {
     background: transparent;
 }
 
-/* Optional: make blank cells invisible */
+/* Make blank cells invisible */
 td:not(.dallas):not(.eric):not(.blaine):not(.all) {
     background-color: #fff;
 }
