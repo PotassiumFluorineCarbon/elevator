@@ -103,10 +103,9 @@ table {
 }
 
 /* Keep First Row Showing when scrolling through table */
-thead th {
-    position: sticky;
+table thead th {
+    position: sticky; 
     top: 0;
-    background-color: white;
     z-index: 10;
     border-bottom: 2px solid black;
 }
@@ -120,25 +119,25 @@ th, td {
 }
 
 /* Colors for each person */
-.dallas {
+table td.dallas, table th.dallas{
     background-color: #f39c12; /* orange */
     color: white;
     font-weight: bold;
 }
 
-.eric {
+table td.eric, table th.eric {
     background-color: #3498db; /* blue */
     color: white;
     font-weight: bold;
 }
 
-.blaine {
+table td.blaine, table th.blaine {
     background-color: #2ecc71; /* green */
     color: white;
     font-weight: bold;
 }
 
-.all {
+table td.all, table th.all {
     background-color: #7f8c8d; /* gray */
     color: white;
     font-weight: bold;
@@ -293,4 +292,15 @@ legend {
 /* Clicked state */
 .request-btn:active {
     background-image: url("../Images/request_access_active.png");
+}
+
+/* Make sure Older browsers show these elements as blocks*/
+header,
+nav,
+main,
+section,
+article,
+aside,
+footer {
+    display: block;
 }
