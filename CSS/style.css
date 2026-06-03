@@ -22,10 +22,15 @@ body {
 
 h1 {
     font-size: 160%;
+    text-align: center;
 }
 
 h2 {
     font-size: 125%;
+}
+
+h3 {
+    font-size: 110%;
 }
 
 /* =========================
@@ -150,4 +155,115 @@ td:empty {
 /* Make blank cells invisible */
 td:not(.dallas):not(.eric):not(.blaine):not(.all) {
     background-color: #fff;
+}
+
+/* =========================
+   Request Access Form Styling
+========================= */
+
+form {
+    max-width: 700px;
+    margin: 20px auto;
+}
+
+
+legend {
+    font-weight: bold;
+    color: #4a6fa5;
+    padding: 0 10px;
+    font-size: 1.1em;
+}
+
+
+/* Text inputs */
+input[type="text"],
+input[type="email"],
+input[type="url"],
+input[type="date"],
+select,
+textarea {
+    padding: 8px;
+    border: 1px solid #999;
+    border-radius: 6px;
+    background-color: #ffffff;
+    font-size: 1em;
+}
+
+/* Textarea */
+textarea {
+    width: 100%;
+    max-width: 600px;
+    height: 120px;
+    resize: vertical;
+    margin-top: 10px;
+}
+
+/* Radio and checkbox groups */
+input[type="radio"],
+input[type="checkbox"] {
+    margin-right: 5px;
+}
+
+label {
+    margin-right: 15px;
+}
+
+/* Submit button */
+input[type="submit"] {
+    background: #4a6fa5;
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-size: 1em;
+    cursor: pointer;
+    transition: 0.3s;
+    margin-top: 15px;
+}
+
+input[type="submit"]:hover {
+    background: #35507a;
+    transform: translateY(-2px);
+    box-shadow: 0 3px 6px rgba(0,0,0,0.2);
+}
+
+/* Focus effects */
+input:focus,
+select:focus,
+textarea:focus {
+    outline: none;
+    border-color: #4a6fa5;
+    box-shadow: 0 0 5px rgba(74,111,165,0.5);
+}
+
+fieldset p {
+    margin: 12px 0;
+    text-indent: 0;
+}
+
+fieldset p label {
+    display: inline-block;
+    width: 120px;
+    font-weight: bold;
+}
+
+fieldset p input {
+    width: 220px;
+}
+
+fieldset {
+    border: 2px solid #4a6fa5;
+    border-radius: 15px;
+    padding: 20px;
+    margin-bottom: 20px;
+    background: linear-gradient(to bottom, #f8fbff, #eef5ff);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+}
+
+legend {
+    background-color: #4a6fa5;
+    color: white;
+    padding: 5px 15px;
+    border-radius: 10px;
+    font-weight: bold;
 }
