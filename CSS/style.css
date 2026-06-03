@@ -178,6 +178,7 @@ legend {
 /* Text inputs */
 input[type="text"],
 input[type="email"],
+input[type="password"],
 input[type="url"],
 input[type="date"],
 select,
@@ -266,4 +267,30 @@ legend {
     padding: 5px 15px;
     border-radius: 10px;
     font-weight: bold;
+}
+
+/* =========================
+   Request Access Button (Rollover)
+========================= */
+
+.request-btn {
+    display: inline-block;
+    width: 200px;
+    height: 50px;
+
+    background-image: url("../Images/request_access.png");
+    background-repeat: no-repeat;
+    background-size: cover;
+
+    text-indent: -9999px;
+}
+
+/* Hover state */
+.request-btn:hover {
+    background-image: url("../Images/request_access_hover.png");
+}
+
+/* Clicked state */
+.request-btn:active {
+    background-image: url("../Images/request_access_active.png");
 }
