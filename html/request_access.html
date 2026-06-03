@@ -10,34 +10,33 @@
         <form action="php/req_access.php" method="post">
                 <fieldset>
                 <legend>Contact details</legend>
-                <p> First Name:<input type="text" name="firstname"/></p>
-                <p> Last Name: <input type="text" name="lastname"/></p>
-                <p><label>Email:<input type="email" name="email"/></label></p>
-                <p><label>Website:<input type="url" name="url"/></label></p>
-                <p><label>Birth date:<input type="date" name="birthday"/></label></p>
+                <p><label>First Name:</label><input type="text" name="firstname"/></p>
+                <p><label>Last Name:</label><input type="text" name="lastname"/></p>
+                <p><label>Email:</label><input type="email" name="email"/></p>
+                <p><label>Website:</label><input type="url" name="url"/></p>
+                <p><label>Birth date:</label><input type="date" name="birthday"/></p>
                 <label><input type="radio" name="fac_or_student" value="faculty"/> Faculty</label>
                 <label><input type="radio" name="fac_or_student" value="student"/> Student</label>
                 </fieldset>
-            <p> I currently.....(check all that apply)</p>
+            <h3> I currently.....(check all that apply)</h3>
             <label><input type="checkbox" name="involvement" value="none"/> Have no involvement in project</label><br/>
-            <input type="checkbox" name="involvement" value="instructor"/> I instruct on the project
-            <input type="checkbox" name="involvement" value="boss"/> You will respect my authority
-            <input type="checkbox" name="involvement" value="investor"/> I bring the money
-            <input type="checkbox" name="involvement" value="admin"/> I admin the thing
-            <input type="checkbox" name="involvement" value="it"/> I handle IT
-            <input type="checkbox" name="involvement" value="superboss"/> I am superboss
+            <label><input type="checkbox" name="involvement" value="instructor"/> I instruct on the project</label><br/>
+            <label><input type="checkbox" name="involvement" value="boss"/> You will respect my authority</label><br/>
+            <label><input type="checkbox" name="involvement" value="investor"/> I bring the money</label><br/>
+            <label><input type="checkbox" name="involvement" value="admin"/> I admin the thing</label><br/>
+            <label><input type="checkbox" name="involvement" value="it"/> I handle IT</label><br/>
+            <label><input type="checkbox" name="involvement" value="superboss"/> I am superboss</label>
 
-            <p>Do you drive a car?
+            <h3>Do you drive a car?
             <select name="drives_car">
                 <option value="no_answer" selected></option>
                 <option value="yes">Yes</option>
                 <option value="no">No</option>
             </select>
-            </p>
+        </h3>
 
-            <p>Tell us a bit more about yourself</p>
-            <textarea>
-                Other details.......</textarea> <br/>
+            <h3>Tell us a bit more about yourself</h3>
+            <textarea placeholder="Other details..."></textarea> <br/>
             </textarea>
             <input type="submit" value="Submit Request"/>
         </form>
