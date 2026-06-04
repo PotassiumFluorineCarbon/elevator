@@ -1,25 +1,20 @@
 /* =========================
-   Base Page Styling
+   Base Page Styling 
 ========================= */
-
 body {
     font-family: Georgia, serif;
     font-size: 100%;
-    line-height: 20px;
-    text-align: justify;
-
-    /* Center page in 950px box */
+    
+    /* 950px box, centered, padded, with border */
     width: 950px;
     margin: 0 auto;
-
     padding: 10px;
     border: 2px solid black;
 }
 
 /* =========================
-   Headings
+   Headings 
 ========================= */
-
 h1 {
     font-size: 160%;
 }
@@ -29,17 +24,20 @@ h2 {
 }
 
 /* =========================
-   Paragraph styling
+   Paragraphs and Lists 
 ========================= */
+p, ul, ol {
+    line-height: 20px;
+    text-align: justify;
+}
 
 p {
     text-indent: 15px;
 }
 
 /* =========================
-   Emphasis classes / IDs
+   Emphasis Classes & IDs 
 ========================= */
-
 .mkbold {
     font-weight: bold;
 }
@@ -48,35 +46,33 @@ p {
     text-decoration: underline;
 }
 
-#can {
-    font-style: italic;
-}
-
-#hcs12 {
+#can, #hcs12 {
     font-style: italic;
 }
 
 /* =========================
-   Images and Figures
+   Figures and Images 
 ========================= */
-
 figure {
     text-align: center;
+    margin: 20px auto;
+    padding: 10px;
     border: 2px solid blue;
     border-radius: 25px;
-    padding: 10px;
-    margin: 20px auto;
 }
 
 img {
     height: 300px;
-    border: 2px solid green;
-    box-shadow: 10px 10px 5px gray;
     display: block;
     margin: 0 auto;
+    border: 2px solid green;
+    /* -10px sets the shadow 10px to the left, 10px sets it 10px down */
+    box-shadow: -10px 10px 5px gray; 
 }
 
-/* Figure captions */
+/* =========================
+   Figure Captions 
+========================= */
 figcaption {
     text-align: center;
     font-style: italic;
@@ -84,17 +80,8 @@ figcaption {
 }
 
 /* =========================
-   Lists
+   Table Styling
 ========================= */
-
-ul, ol {
-    text-align: justify;
-}
-
-/* =========================
-   Table styling (optional cleanup)
-========================= */
-
 table {
     width: 100%;
     border-collapse: collapse;
