@@ -3,39 +3,154 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>About - CAN Elevator Project</title>
+
     <meta http-equiv="author" content="Blaine Dolson">
     <meta http-equiv="pragma" content="no-cache">
     <meta name="robots" content="noindex, nofollow">
-    <link href="../CSS/style.css" type="text/css" rel="stylesheet" />
+
+    <!-- HTML5 Shiv -->
+    <!--[if lt IE 9]>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <![endif]-->
+
+    <!-- Bootstrap -->
+    <link rel="stylesheet" href="../node_modules/bootstrap/dist/css/bootstrap.min.css">
+
+    <!-- Custom Styles -->
+    <link rel="stylesheet" href="../CSS/style.css">
 </head>
+
 <body>
-    <h1>Elevator Diagnostics & Control Design Project</h1>
-    
-    <p>Welcome to the <i>about</i> page for <b>Engineering Project VI.</b></p>
-    <p>In this project, we are building and controlling an elevator system that leverages a Controller Area Network (CAN) bus communication environment. The system integrates embedded controllers, a Raspberry Pi supervisory controller, and a web-based data repository to allow for remote tracking, diagnostics, and control over the Internet.</p>
-    
-    <video width="320" height="240" controls>
-        <source src="elevator.mp4" type="video/mp4">
-        Your browser does not support the video tag.
-    </video>
-    
-    <hr>
-    
-    <h1>Our Team</h1>
-    <img src="../Images/The_Team.jpg" alt="Photo of the Team" width="500">
-    
-    <h2>Eric</h2>
-    <p>Specializes in protocol development and communication design for the CAN network. Age: <script>document.write(new Date().getFullYear()-2005)</script></p>
-    <img src="../Images/eric.jpeg" alt="Photo of Eric" width="500">
-    <h2>Blaine</h2>
-    <p>Software engineer focusing on full-stack development, version control, and system logic.</p>
-    <img src="../Images/blaine.jpg" alt="Photo of Blaine" width="500">
-    
-    <h2>Dallas</h2>
-    <p>Software engineer focusing on database integration, user interface design, and testing.</p>
-    <img src="../Images/dallas.jpeg" alt="Photo of Dallas" width="500">
-    <br><br>
-    <p>Copyright &copy; <script>document.write(new Date().getFullYear())</script> Blaine Dolson & Team</p>
+
+    <header class="bg-dark text-white py-4 mb-1">
+        <div class="container text-center">
+            <h1 class="display-5 fw-bold">Elevator Project</h1>
+        </div>
+    </header>
+
+    <main class="container">
+
+        <nav class="mb-4 mt-0">
+            <ul class="nav nav-pills justify-content-evenly bg-white py-2 rounded">
+
+                <li class="nav-item">
+                    <a class="nav-link text-dark" href="index.html">Home</a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link active bg-dark text-white" href="about.html">About</a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link text-dark" href="project_plan.html">Project Plan</a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link text-dark" href="project_details.html">Project Details</a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link text-dark" href="logbook_eric.html">Eric</a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link text-dark" href="logbook_dallas.html">Dallas</a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link text-dark" href="logbook_blaine.html">Blaine</a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link text-dark" href="contactus.html">Contact Us</a>
+                </li>
+
+            </ul>
+        </nav>
+
+        <section class="mb-4">
+            <p>
+                Welcome to the <i>about</i> page for <b>Engineering Project VI.</b>
+            </p>
+
+            <p>
+                In this project, we are building and controlling an elevator system that leverages a Controller Area Network (CAN) bus communication environment. The system integrates embedded controllers, a Raspberry Pi supervisory controller, and a web-based data repository to allow for remote tracking, diagnostics, and control over the Internet.
+            </p>
+        </section>
+
+        <section class="mb-5 text-center">
+            <video class="img-fluid" width="320" height="240" controls>
+                <source src="elevator.mp4" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+        </section>
+
+        <section class="mb-5">
+            <h2 class="text-center mb-4">Our Team</h2>
+
+            <div class="text-center mb-4">
+                <img src="../Images/The_Team.jpg"
+                     alt="Photo of the Team"
+                     class="img-fluid rounded"
+                     style="max-width:500px;">
+
+                     <figcaption class="mt-2">
+                    Project team photo
+                    </figcaption>
+            </div>
+
+            <div class="mb-4">
+                <h2>Eric</h2>
+                <p>
+                    Specializes in protocol development and communication design for the CAN network.
+                    Age: <script>document.write(new Date().getFullYear()-2005)</script>
+                </p>
+                <img src="../Images/eric.jpeg" class="team-img" alt="Photo of Eric">
+
+
+            </div>
+
+            <div class="mb-4">
+                <h2>Blaine</h2>
+                <p>
+                    Software engineer focusing on full-stack development, version control, and system logic.
+                </p>
+                <img src="../Images/blaine.jpg" class="team-img" alt="Photo of Blaine">            
+            </div>
+
+            <div class="mb-4">
+                <h2>Dallas</h2>
+                <p>
+                    Software engineer focusing on database integration, user interface design, and testing.
+                </p>
+                <img src="../Images/dallas.jpeg" class="team-img" alt="Photo of Dallas">
+            </div>
+        </section>
+
+        <section class="mb-5">
+            <h2 class="text-center mb-3">Our School Campus</h2>
+
+            <div class="ratio ratio-4x3">
+                <iframe src="https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d2509.6709141513475!2d-80.39735365670496!3d43.38632628068149!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1sen!2sca!4v1779666031270!5m2!1sen!2sca"
+                        style="border:0;"
+                        allowfullscreen=""
+                        loading="lazy"
+                        referrerpolicy="no-referrer-when-downgrade">
+                </iframe>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="text-center py-3 border-top">
+        <p>
+            Copyright &copy;
+            <script>document.write(new Date().getFullYear())</script>
+            Blaine Dolson & Team
+        </p>
+    </footer>
+
 </body>
 </html>

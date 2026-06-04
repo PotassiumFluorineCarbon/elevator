@@ -7,13 +7,7 @@ body {
     font-size: 100%;
     line-height: 20px;
     text-align: justify;
-
-    /* Center page in 950px box */
-    width: 950px;
-    margin: 0 auto;
-
     padding: 10px;
-    border: 2px solid black;
 }
 
 /* =========================
@@ -22,7 +16,6 @@ body {
 
 h1 {
     font-size: 160%;
-    text-align: center;
 }
 
 h2 {
@@ -67,7 +60,6 @@ p {
 
 figure {
     text-align: center;
-    border: 2px solid blue;
     border-radius: 25px;
     padding: 10px;
     margin: 20px auto;
@@ -75,7 +67,7 @@ figure {
 
 img {
     height: 300px;
-    border: 2px solid green;
+    border: 2px solid #212529;
     box-shadow: 10px 10px 5px gray;
     display: block;
     margin: 0 auto;
@@ -86,6 +78,15 @@ figcaption {
     text-align: center;
     font-style: italic;
     font-size: 90%;
+}
+
+.team-img {
+    width: 250px;
+    height: 250px;
+    object-fit: cover;
+    border-radius: 10px;
+    display: block;
+    margin: 0;
 }
 
 /* =========================

@@ -1,24 +1,62 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Ordered List</title>
-    </head>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <body>
-        <h1>Ordered ones:</h1>
-        <ol>
-            <li>Item one</li>
-            <li>Item two</li>
-            <li>Item three</li>
-        </ol>
+    <title>Lists Demo</title>
 
-        <h1>Unordered List</h1>
-        <ul>
-            <li>Item one</li>
-            <li>Item two</li>
-            <li>Item three</li>
-        </ul>
-    </body>
+    <!-- HTML5 Shiv -->
+    <!--[if lt IE 9]>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <![endif]-->
+
+    <!-- Bootstrap -->
+    <link rel="stylesheet" href="../node_modules/bootstrap/dist/css/bootstrap.min.css">
+
+    <!-- Custom Styles -->
+    <link rel="stylesheet" href="../CSS/style.css">
+</head>
+
+<body>
+
+    <header class="bg-dark text-white py-4 mb-4">
+        <div class="container text-center">
+            <h1>List Examples</h1>
+        </div>
+    </header>
+
+    <main class="container">
+
+        <section class="mb-5">
+
+            <h2>Ordered List</h2>
+
+            <ol class="list-group list-group-numbered">
+                <li class="list-group-item">Item one</li>
+                <li class="list-group-item">Item two</li>
+                <li class="list-group-item">Item three</li>
+            </ol>
+
+        </section>
+
+        <section class="mb-5">
+
+            <h2>Unordered List</h2>
+
+            <ul class="list-group">
+                <li class="list-group-item">Item one</li>
+                <li class="list-group-item">Item two</li>
+                <li class="list-group-item">Item three</li>
+            </ul>
+
+        </section>
+
+    </main>
+
+    <footer class="text-center py-3 border-top mt-4">
+        <p>&copy; List Demo Page</p>
+    </footer>
+
+</body>
 </html>
