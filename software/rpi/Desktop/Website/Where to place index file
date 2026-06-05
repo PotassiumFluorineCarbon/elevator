@@ -1,0 +1,5 @@
+Place index.php in the directory /var/www/html
+
+Then you can view the file by typing 'localhost' or '127.0.0.1' into a browser 
+
+OR from another computer simply type the IP address of this Raspberry PI

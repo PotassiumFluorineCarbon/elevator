@@ -1,8 +1,116 @@
+/* =========================
+   Base Page Styling
+========================= */
+
+body {
+    font-family: Georgia, serif;
+    font-size: 100%;
+    line-height: 20px;
+    text-align: justify;
+    padding: 10px;
+}
+
+/* =========================
+   Headings
+========================= */
+
+h1 {
+    font-size: 160%;
+}
+
+h2 {
+    font-size: 125%;
+}
+
+h3 {
+    font-size: 110%;
+}
+
+/* =========================
+   Paragraph styling
+========================= */
+
+p {
+    text-indent: 15px;
+}
+
+/* =========================
+   Emphasis classes / IDs
+========================= */
+
+.mkbold {
+    font-weight: bold;
+}
+
+.mkunderlined {
+    text-decoration: underline;
+}
+
+#can {
+    font-style: italic;
+}
+
+#hcs12 {
+    font-style: italic;
+}
+
+/* =========================
+   Images and Figures
+========================= */
+
+figure {
+    text-align: center;
+    border-radius: 25px;
+    padding: 10px;
+    margin: 20px auto;
+}
+
+img {
+    height: 300px;
+    border: 2px solid #212529;
+    box-shadow: 10px 10px 5px gray;
+    display: block;
+    margin: 0 auto;
+}
+
+/* Figure captions */
+figcaption {
+    text-align: center;
+    font-style: italic;
+    font-size: 90%;
+}
+
+.team-img {
+    width: 250px;
+    height: 250px;
+    object-fit: cover;
+    border-radius: 10px;
+    display: block;
+    margin: 0;
+}
+
+/* =========================
+   Lists
+========================= */
+
+ul, ol {
+    text-align: justify;
+}
+/* old */
 /* General table styling */
 table {
     border-collapse: collapse;
     width: 100%;
 }
+
+/* Keep First Row Showing when scrolling through table */
+table thead th {
+    position: sticky; 
+    top: 0;
+    z-index: 10;
+    border-bottom: 2px solid black;
+}
+
 
 th, td {
     border: 1px solid #ccc;
@@ -12,25 +120,25 @@ th, td {
 }
 
 /* Colors for each person */
-.dallas {
+table td.dallas, table th.dallas{
     background-color: #f39c12; /* orange */
     color: white;
     font-weight: bold;
 }
 
-.eric {
+table td.eric, table th.eric {
     background-color: #3498db; /* blue */
     color: white;
     font-weight: bold;
 }
 
-.blaine {
+table td.blaine, table th.blaine {
     background-color: #2ecc71; /* green */
     color: white;
     font-weight: bold;
 }
 
-.all {
+table td.all, table th.all {
     background-color: #7f8c8d; /* gray */
     color: white;
     font-weight: bold;
@@ -44,7 +152,156 @@ td:empty {
     background: transparent;
 }
 
-/* Optional: make blank cells invisible */
+/* Make blank cells invisible */
 td:not(.dallas):not(.eric):not(.blaine):not(.all) {
     background-color: #fff;
+}
+
+/* =========================
+   Request Access Form Styling
+========================= */
+
+form {
+    max-width: 700px;
+    margin: 20px auto;
+}
+
+
+legend {
+    font-weight: bold;
+    color: #4a6fa5;
+    padding: 0 10px;
+    font-size: 1.1em;
+}
+
+
+/* Text inputs */
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="url"],
+input[type="date"],
+select,
+textarea {
+    padding: 8px;
+    border: 1px solid #999;
+    border-radius: 6px;
+    background-color: #ffffff;
+    font-size: 1em;
+}
+
+/* Textarea */
+textarea {
+    width: 100%;
+    max-width: 600px;
+    height: 120px;
+    resize: vertical;
+    margin-top: 10px;
+}
+
+/* Radio and checkbox groups */
+input[type="radio"],
+input[type="checkbox"] {
+    margin-right: 5px;
+}
+
+label {
+    margin-right: 15px;
+}
+
+/* Submit button */
+input[type="submit"] {
+    background: #4a6fa5;
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-size: 1em;
+    cursor: pointer;
+    transition: 0.3s;
+    margin-top: 15px;
+}
+
+input[type="submit"]:hover {
+    background: #35507a;
+    transform: translateY(-2px);
+    box-shadow: 0 3px 6px rgba(0,0,0,0.2);
+}
+
+/* Focus effects */
+input:focus,
+select:focus,
+textarea:focus {
+    outline: none;
+    border-color: #4a6fa5;
+    box-shadow: 0 0 5px rgba(74,111,165,0.5);
+}
+
+fieldset p {
+    margin: 12px 0;
+    text-indent: 0;
+}
+
+fieldset p label {
+    display: inline-block;
+    width: 120px;
+    font-weight: bold;
+}
+
+fieldset p input {
+    width: 220px;
+}
+
+fieldset {
+    border: 2px solid #4a6fa5;
+    border-radius: 15px;
+    padding: 20px;
+    margin-bottom: 20px;
+    background: linear-gradient(to bottom, #f8fbff, #eef5ff);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+}
+
+legend {
+    background-color: #4a6fa5;
+    color: white;
+    padding: 5px 15px;
+    border-radius: 10px;
+    font-weight: bold;
+}
+
+/* =========================
+   Request Access Button (Rollover)
+========================= */
+
+.request-btn {
+    display: inline-block;
+    width: 200px;
+    height: 50px;
+
+    background-image: url("../Images/request_access.png");
+    background-repeat: no-repeat;
+    background-size: cover;
+
+    text-indent: -9999px;
+}
+
+/* Hover state */
+.request-btn:hover {
+    background-image: url("../Images/request_access_hover.png");
+}
+
+/* Clicked state */
+.request-btn:active {
+    background-image: url("../Images/request_access_active.png");
+}
+
+/* Make sure Older browsers show these elements as blocks*/
+header,
+nav,
+main,
+section,
+article,
+aside,
+footer {
+    display: block;
 }
