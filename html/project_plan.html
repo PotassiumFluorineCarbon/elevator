@@ -1,42 +1,107 @@
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Project Plan</title>
-    <meta http-equiv="author" content="Dallas Knarr">
-    <meta http-equiv="pragma" content="no-cache">
-    <meta name="robots" content="noindex, nofollow">
-    <link href="../CSS/style.css" type="text/css" rel="stylesheet" />
+
+<title>Project Plan</title>
+
+<meta http-equiv="author" content="Dallas Knarr">
+<meta http-equiv="pragma" content="no-cache">
+<meta name="robots" content="noindex, nofollow">
+
+<!-- HTML5 Shiv -->
+<!--[if lt IE 9]>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.min.js"></script>
+<![endif]-->
+
+<!-- Bootstrap -->
+<link rel="stylesheet" href="../node_modules/bootstrap/dist/css/bootstrap.min.css">
+
+<!-- Custom Styles -->
+<link rel="stylesheet" href="../CSS/style.css">
+
+
 </head>
+
 <body>
-    <h1>Project Plan</h1>
 
-    <h2>Gantt Chart</h2>
 
-    <table border="1">
+<header class="bg-dark text-white py-4 mb-1">
+        <div class="container text-center">
+            <h1 class="display-5 fw-bold">Elevator Project</h1>
+        </div>
+    </header>
 
-        <thead>
-            <tr>
-                <th>Task</th>
-                <th> W1</th>
-                <th> W2</th>
-                <th> W3</th>
-                <th> W4</th>
-                <th> W5</th>
-                <th> W6</th>
-                <th> W7</th>
-                <th> W8</th>
-                <th> W9</th>
-                <th> W10</th>
-                <th> W11</th>
-                <th> W12</th>
-                <th> W13</th>
-                <th> W14</th>
-            </tr>
-        </thead>
+    <main class="container">
 
-        <tbody>
+        <nav class="mb-4 mt-0">
+            <ul class="nav nav-pills justify-content-evenly bg-white py-2 rounded">
+
+                <li class="nav-item">
+                    <a class="nav-link text-dark" href="index.html">Home</a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link text-dark" href="about.html">About</a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link active bg-dark text-white" href="project_plan.html">Project Plan</a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link text-dark" href="project_details.html">Project Details</a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link text-dark" href="logbook_eric.html">Eric</a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link text-dark" href="logbook_dallas.html">Dallas</a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link text-dark" href="logbook_blaine.html">Blaine</a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link text-dark" href="contactus.html">Contact Us</a>
+                </li>
+
+            </ul>
+        </nav>
+
+    <section class="mb-4">
+        <h2>Gantt Chart</h2>
+
+        <div style="max-height: 400px; overflow-y: auto;">
+
+            <table class="table table-bordered">
+
+                <thead class="table-dark">
+                    <tr>
+                        <th>Task</th>
+                        <th>W1</th>
+                        <th>W2</th>
+                        <th>W3</th>
+                        <th>W4</th>
+                        <th>W5</th>
+                        <th>W6</th>
+                        <th>W7</th>
+                        <th>W8</th>
+                        <th>W9</th>
+                        <th>W10</th>
+                        <th>W11</th>
+                        <th>W12</th>
+                        <th>W13</th>
+                        <th>W14</th>
+                    </tr>
+                </thead>
+
+                <tbody>
 
             <tr>
                 <th>Wire STM32, push buttons/LED indicators</th>
@@ -82,7 +147,7 @@
             <tr>
                 <th>Develop and implement a test plan</th>
                 <td colspan="2"></td>
-                <td colspan="2" class="eric">E</td>
+                <td colspan="2" class="all">A</td>
             </tr>
 
             <tr>
@@ -254,16 +319,28 @@
 
         </tbody>
 
-        <tfoot>
-            <tr>
-                <th colspan="7">D = Dallas Knarr, E = Eric Eigler, B = Blaine Dolson, A = All</th>
-            </tr>
-        </tfoot>
+                <tfoot>
+                    <tr>
+                        <th colspan="15">
+                            D = Dallas Knarr,
+                            E = Eric Eigler,
+                            B = Blaine Dolson,
+                            A = All
+                        </th>
+                    </tr>
+                </tfoot>
 
-    </table>
-    
-    <br><p> <a href="index.html">Home</a> </p>
+            </table>
 
+        </div>
+    </section>
+
+</main>
+
+<footer class="text-center py-3 border-top">
     <p>Copyright &copy; Dallas Knarr</p>
+</footer>
+
+
 </body>
 </html>
