@@ -38,7 +38,7 @@
 #define FC3					0x203
 #define CC 					0x200
 
-#define ID                  FC1 // set personality of this program for one conrolller
+#define ID                  FC3 // set personality of this program for one controller
 
 
 #define GO_TO_FLOOR_1		0x05		// arrived at Floor 1
