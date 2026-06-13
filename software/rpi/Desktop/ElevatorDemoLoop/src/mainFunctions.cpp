@@ -164,6 +164,18 @@ enum State {
 	fault
 };
 
+
+int sendMsg(int id,int data,HANDLE h){
+	TPCANMsg Txmsg;
+	// Set up message
+	Txmsg.ID = id;
+	Txmsg.MSGTYPE = MSGTYPE_STANDARD;
+	Txmsg.LEN = 1;
+	Txmsg.DATA[0] = data;
+
+	status = CAN_Write(h, &Txmsg);
+}
+
 elevatoroperator() {
 	enum State state = initial;
 	TPCANMsg Rxmsg;
@@ -200,53 +212,40 @@ elevatoroperator() {
 		case waiting_at_1:
 			// Waiting at floor 1
 			// If command received, state = moving_to_2 or 3
-			if (Rxmsg.ID == ID_SC_TO_EC && Rxmsg.DATA[0] == GO_TO_FLOOR2) {
+			if (Rxmsg.ID == 0x202 && Rxmsg.DATA[0] == 0x01) {  // FC2 is calling
+				// now send message to EC to MOVE TO FLOOR 2: CAN ID 0X100, MESSAGE BYTE 0X06
+				sendMsg(0x100,0x06, h2);
 				state = moving_to_2;
 			}
-			if (Rxmsg.ID == ID_SC_TO_EC && Rxmsg.DATA[0] == GO_TO_FLOOR3) {
+			if (Rxmsg.ID == 0x200 && Rxmsg.DATA[0] == 0x02) {
+				sendMsg(0x100, 0x06, h2)
+				state = moving_to_2;
+			}
+
+			if (Rxmsg.ID == 0x203 && Rxmsg.DATA[0] == 0x01) {
+				sendMsg(0x100, 0x07, h2);
+				state = moving_to_3;
+			}
+			
+			if (Rxmsg.ID == 0x200 && Rxmsg.DATA[0] == 0x03) {
+				sendMsg(0x100, 0x07, h2);
 				state = moving_to_3;
 			}
 			break;
 		case moving_to_1:
-			// Move elevator to floor 1
-			// If arrived at floor 1, state = waiting_at_1
-			if (Rxmsg.ID == ID_EC_TO_ALL && Rxmsg.DATA[0] == AT_FLOOR1) {
-				state = waiting_at_1;
-			}
+		
 			break;
 		case waiting_at_2:
-			// Waiting at floor 2
-			// If command received, state = moving_to_2
-			if (Rxmsg.ID == ID_SC_TO_EC && Rxmsg.DATA[0] == GO_TO_FLOOR1) {
-				state = moving_to_1;
-			}
-			if (Rxmsg.ID == ID_SC_TO_EC && Rxmsg.DATA[0] == GO_TO_FLOOR3) {
-				state = moving_to_3;
-			}
+			
 			break;
 		case moving_to_2:
-			// Move elevator to floor 2
-			// If arrived at floor 2, state = waiting_at_2
-			if (Rxmsg.ID == ID_EC_TO_ALL && Rxmsg.DATA[0] == AT_FLOOR2) {
-				state = waiting_at_2;
-			}
+			
 			break;
 		case waiting_at_3:
-			// Waiting at floor 3
-			// If command received, state = moving_to_3
-			if (Rxmsg.ID == ID_SC_TO_EC && Rxmsg.DATA[0] == GO_TO_FLOOR1) {
-				state = moving_to_1;
-			}
-			if (Rxmsg.ID == ID_SC_TO_EC && Rxmsg.DATA[0] == GO_TO_FLOOR2) {
-				state = moving_to_2;
-			}
+		
 			break;
 		case moving_to_3:
-			// Move elevator to floor 3
-			// If arrived at floor 3, state = waiting_at_3
-			if (Rxmsg.ID == ID_EC_TO_ALL && Rxmsg.DATA[0] == AT_FLOOR3) {
-				state = waiting_at_3;
-			}
+		
 			break;
 		case fault:
 			// Handle fault condition (e.g. stop elevator, sound alarm, etc.)
