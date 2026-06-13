@@ -19,7 +19,9 @@
 #define GO_TO_FLOOR2 0x06	// Go to floor 2
 #define GO_TO_FLOOR3 0x07	// Go to floor 3
 
-
+#define AT_FLOOR1 0x05
+#define AT_FLOOR2 0x06
+#define AT_FLOOR3 0x07
 // Function declarations
 int pcanTx(int id, int data);
 int pcanRx(int num_msgs);

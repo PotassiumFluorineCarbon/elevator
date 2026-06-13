@@ -5,7 +5,7 @@
 #include <stdlib.h>
 #include <stdlib.h>
 #include <unistd.h> 
-
+#include <array>
 
 int menu(){
 	
@@ -154,5 +154,102 @@ int FloorFromHex(int Hex){
 
 
 enum State {
-
+	initial,
+	waiting_at_1,
+	moving_to_1,
+	waiting_at_2,
+	moving_to_2,
+	waiting_at_3,
+	moving_to_3,
+	fault
 };
+
+elevatoroperator() {
+	enum State state = initial;
+	TPCANMsg Rxmsg;
+	HANDLE h2;
+
+	// Open a CAN channel 
+	h2 = LINUX_CAN_Open("/dev/pcanusb32", O_RDWR);
+
+	// Initialize an opened CAN 2.0 channel with a 125kbps bitrate, accepting standard frames
+	status = CAN_Init(h2, CAN_BAUD_125K, CAN_INIT_TYPE_ST);
+
+	// Clear the channel - new - Must clear the channel before Tx/Rx
+	status = CAN_Status(h2);
+
+	while (1) {
+		while ((status = CAN_Read(h2, &Rxmsg)) == PCAN_RECEIVE_QUEUE_EMPTY) {//read message from CAN bus
+			// No message received, continue waiting
+
+		}
+
+		switch (state) {
+		case initial:
+			// Initialize elevator
+			if (Rxmsg.ID == ID_EC_TO_ALL && Rxmsg.DATA[0] == AT_FLOOR1) {
+				state = waiting_at_1;
+			}
+			else if (Rxmsg.ID == ID_EC_TO_ALL && Rxmsg.DATA[0] == AT_FLOOR2) {
+				state = waiting_at_2;
+			}
+			else if (Rxmsg.ID == ID_EC_TO_ALL && Rxmsg.DATA[0] == AT_FLOOR3) {
+				state = waiting_at_3;
+			}
+			break;
+		case waiting_at_1:
+			// Waiting at floor 1
+			// If command received, state = moving_to_2 or 3
+			if (Rxmsg.ID == ID_SC_TO_EC && Rxmsg.DATA[0] == GO_TO_FLOOR2) {
+				state = moving_to_2;
+			}
+			if (Rxmsg.ID == ID_SC_TO_EC && Rxmsg.DATA[0] == GO_TO_FLOOR3) {
+				state = moving_to_3;
+			}
+			break;
+		case moving_to_1:
+			// Move elevator to floor 1
+			// If arrived at floor 1, state = waiting_at_1
+			if (Rxmsg.ID == ID_EC_TO_ALL && Rxmsg.DATA[0] == AT_FLOOR1) {
+				state = waiting_at_1;
+			}
+			break;
+		case waiting_at_2:
+			// Waiting at floor 2
+			// If command received, state = moving_to_2
+			if (Rxmsg.ID == ID_SC_TO_EC && Rxmsg.DATA[0] == GO_TO_FLOOR1) {
+				state = moving_to_1;
+			}
+			if (Rxmsg.ID == ID_SC_TO_EC && Rxmsg.DATA[0] == GO_TO_FLOOR3) {
+				state = moving_to_3;
+			}
+			break;
+		case moving_to_2:
+			// Move elevator to floor 2
+			// If arrived at floor 2, state = waiting_at_2
+			if (Rxmsg.ID == ID_EC_TO_ALL && Rxmsg.DATA[0] == AT_FLOOR2) {
+				state = waiting_at_2;
+			}
+			break;
+		case waiting_at_3:
+			// Waiting at floor 3
+			// If command received, state = moving_to_3
+			if (Rxmsg.ID == ID_SC_TO_EC && Rxmsg.DATA[0] == GO_TO_FLOOR1) {
+				state = moving_to_1;
+			}
+			if (Rxmsg.ID == ID_SC_TO_EC && Rxmsg.DATA[0] == GO_TO_FLOOR2) {
+				state = moving_to_2;
+			}
+			break;
+		case moving_to_3:
+			// Move elevator to floor 3
+			// If arrived at floor 3, state = waiting_at_3
+			if (Rxmsg.ID == ID_EC_TO_ALL && Rxmsg.DATA[0] == AT_FLOOR3) {
+				state = waiting_at_3;
+			}
+			break;
+		case fault:
+			// Handle fault condition (e.g. stop elevator, sound alarm, etc.)
+			break;
+	}
+}
