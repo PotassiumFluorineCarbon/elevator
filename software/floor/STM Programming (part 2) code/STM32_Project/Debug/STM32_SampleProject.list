@@ -908,8 +908,8 @@ int main(void)
  80006be:	781b      	ldrb	r3, [r3, #0]
  80006c0:	2b05      	cmp	r3, #5
  80006c2:	d12a      	bne.n	800071a <main+0x76>
-			HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_5);  											// Turn on LED2
- 80006c4:	2120      	movs	r1, #32
+			HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_4);  											// Turn on LED2
+ 80006c4:	2110      	movs	r1, #16
  80006c6:	f04f 4090 	mov.w	r0, #1207959552	@ 0x48000000
  80006ca:	f001 fcb1 	bl	8002030 <HAL_GPIO_TogglePin>
 			HAL_Delay(2000);					    											// Keep LED on for 2 seconds
@@ -939,8 +939,8 @@ int main(void)
  80006fa:	2b07      	cmp	r3, #7
  80006fc:	d9ef      	bls.n	80006de <main+0x3a>
 			}
-			HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_5);  											// Turn off LED2
- 80006fe:	2120      	movs	r1, #32
+			HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_4);  											// Turn off LED2
+ 80006fe:	2110      	movs	r1, #16
  8000700:	f04f 4090 	mov.w	r0, #1207959552	@ 0x48000000
  8000704:	f001 fc94 	bl	8002030 <HAL_GPIO_TogglePin>
 			HAL_Delay(100);																		// Need a delay after toggle
@@ -1068,8 +1068,8 @@ int main(void)
  80007e2:	781b      	ldrb	r3, [r3, #0]
  80007e4:	2b01      	cmp	r3, #1
  80007e6:	d11f      	bne.n	8000828 <main+0x184>
-				HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_5);  										// Turn on LED2
- 80007e8:	2120      	movs	r1, #32
+				HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_4);  										// Turn on LED2
+ 80007e8:	2110      	movs	r1, #16
  80007ea:	f04f 4090 	mov.w	r0, #1207959552	@ 0x48000000
  80007ee:	f001 fc1f 	bl	8002030 <HAL_GPIO_TogglePin>
 				HAL_Delay(2000);																// Leave it on for 2 seconds
@@ -1093,8 +1093,8 @@ int main(void)
 					Error_Handler();															// Transmission error
  8000814:	f7ff ff40 	bl	8000698 <Error_Handler>
 				}
-				HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_5);  										// Turn off LED2
- 8000818:	2120      	movs	r1, #32
+				HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_4);  										// Turn off LED2
+ 8000818:	2110      	movs	r1, #16
  800081a:	f04f 4090 	mov.w	r0, #1207959552	@ 0x48000000
  800081e:	f001 fc07 	bl	8002030 <HAL_GPIO_TogglePin>
 				BUTTON = NO_BUTTON_PRESSED; 													// Reset the BUTTON flag
@@ -1107,8 +1107,8 @@ int main(void)
  800082a:	781b      	ldrb	r3, [r3, #0]
  800082c:	2b01      	cmp	r3, #1
  800082e:	d11e      	bne.n	800086e <main+0x1ca>
-				HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_5);  										// Turn on LED2
- 8000830:	2120      	movs	r1, #32
+				HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_4);  										// Turn on LED2
+ 8000830:	2110      	movs	r1, #16
  8000832:	f04f 4090 	mov.w	r0, #1207959552	@ 0x48000000
  8000836:	f001 fbfb 	bl	8002030 <HAL_GPIO_TogglePin>
 				HAL_Delay(2000);																// Leave it on for 2 seconds
@@ -1135,8 +1135,8 @@ int main(void)
 					Error_Handler();															// Transmission error
  800085a:	f7ff ff1d 	bl	8000698 <Error_Handler>
 				}
-				HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_5);  										// Turn off LED2
- 800085e:	2120      	movs	r1, #32
+				HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_4);  										// Turn off LED2
+ 800085e:	2110      	movs	r1, #16
  8000860:	f04f 4090 	mov.w	r0, #1207959552	@ 0x48000000
  8000864:	f001 fbe4 	bl	8002030 <HAL_GPIO_TogglePin>
 				BUTTON = NO_BUTTON_PRESSED; 													// Reset the BUTTON flag
@@ -1198,15 +1198,16 @@ int main(void)
 				HAL_Delay(2000);																// Leave it on for 2 seconds
  80008c8:	f44f 60fa 	mov.w	r0, #2000	@ 0x7d0
  80008cc:	f000 fa70 	bl	8000db0 <HAL_Delay>
+				//printf("go to floor 3");
 				//TxData[0] = 0x01;																// Store the 1 character message to transmit into the TxData buffer and transmit over the CAN bus
 				//TxHeader.StdId = 0x203; // send message from ID=0x203 = FC3
-				if (ID==CC){
+				if (ID==FC3){//CC
 					TxData[0]=0x03;
+ 80008d0:	4b10      	ldr	r3, [pc, #64]	@ (8000914 <main+0x270>)
+ 80008d2:	2203      	movs	r2, #3
+ 80008d4:	701a      	strb	r2, [r3, #0]
 				}
 				else TxData[0]=0x01;
- 80008d0:	4b10      	ldr	r3, [pc, #64]	@ (8000914 <main+0x270>)
- 80008d2:	2201      	movs	r2, #1
- 80008d4:	701a      	strb	r2, [r3, #0]
 				if (HAL_CAN_AddTxMessage(&hcan, &TxHeader, TxData, &TxMailbox) != HAL_OK) {	// Transmit the message
  80008d6:	4b10      	ldr	r3, [pc, #64]	@ (8000918 <main+0x274>)
  80008d8:	4a0e      	ldr	r2, [pc, #56]	@ (8000914 <main+0x270>)

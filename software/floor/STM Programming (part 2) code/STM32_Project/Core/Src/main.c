@@ -447,34 +447,34 @@ int main(void)
 		/* USER CODE BEGIN 3 */
 		// Receive
 		if (RxData[0] == GO_TO_FLOOR_1) {
-			HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_5);  											// Turn on LED2
+			//HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_4);  											// Turn on LED2
 			HAL_Delay(2000);					    											// Keep LED on for 2 seconds
 			for (i=0; i<8; i++) {
 				RxData[i] = 0x00;																	// Reset the RxData[] buffer (used as flag)
 			}
-			HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_5);  											// Turn off LED2
+			HAL_GPIO_WritePin(GPIOA, GPIO_PIN_4, GPIO_PIN_RESET);  											// Turn off LED2
 			HAL_Delay(100);																		// Need a delay after toggle
 			printf("Rxdata: %d",RxData[0]);
 		}
 
 		if (RxData[0] == GO_TO_FLOOR_2) {
-			HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_6);  											// Turn on LED2
+			//HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_6);  											// Turn on LED2
 			HAL_Delay(2000);					    											// Keep LED on for 2 seconds
 			for (i=0; i<8; i++) {
 				RxData[i] = 0x00;																	// Reset the RxData[] buffer (used as flag)
 			}
-			HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_6);  											// Turn off LED2
+			HAL_GPIO_WritePin(GPIOA, GPIO_PIN_6, GPIO_PIN_RESET);  											// Turn off LED2
 			HAL_Delay(100);																		// Need a delay after toggle
 			printf("Rxdata: %d",RxData[0]);
 		}
 
 		if (RxData[0] == GO_TO_FLOOR_3) {
-			HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_7);  											// Turn on LED2
+			//HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_7);  											// Turn on LED2
 			HAL_Delay(2000);					    											// Keep LED on for 2 seconds
 			for (i = 0; i < 8; i++) {
 				RxData[i] = 0x00;																	// Reset the RxData[] buffer (used as flag)
 			}
-			HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_7);  											// Turn off LED2
+			HAL_GPIO_WritePin(GPIOA, GPIO_PIN_7, GPIO_PIN_RESET);  											// Turn off LED2
 			HAL_Delay(100);																		// Need a delay after toggle
 			printf("Rxdata: %d", RxData[0]);
 		}
@@ -483,19 +483,19 @@ int main(void)
 		if (BUTTON != 0) {
 			//not physically reachable
 			if (BUTTON == BLUE_BUTTON_PRESSED) {												// Blue button pressed --> Turn on LED2 for 2 seconds and Transmit message
-				HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_5);  										// Turn on LED2
-				HAL_Delay(2000);																// Leave it on for 2 seconds
+				HAL_GPIO_WritePin(GPIOA, GPIO_PIN_4, GPIO_PIN_SET);  							// Turn on LED2
+				//HAL_Delay(2000);																// Leave it on for 2 seconds
 				//printf("go to floor 1");
 				TxData[0] = msg1;																// Store the 1 character message to transmit into the TxData buffer and transmit over the CAN bus
 				if (HAL_CAN_AddTxMessage(&hcan, &TxHeader, TxData, &TxMailbox) != HAL_OK) {	// Transmit the message
 					Error_Handler();															// Transmission error
 				}
-				HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_5);  										// Turn off LED2
+				//HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_4);  										// Turn off LED2
 				BUTTON = NO_BUTTON_PRESSED; 													// Reset the BUTTON flag
 			}
 			if (BUTTON == BUTTON_1_PRESSED) {												// Blue button pressed --> Turn on LED2 for 2 seconds and Transmit message
-				HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_5);  										// Turn on LED2
-				HAL_Delay(2000);																// Leave it on for 2 seconds
+				HAL_GPIO_WritePin(GPIOA, GPIO_PIN_4, GPIO_PIN_SET);  							// Turn on LED2
+				//HAL_Delay(2000);																// Leave it on for 2 seconds
 				//printf("go to floor 1");
 				//TxData[0] = 0x01;
 				//TxHeader.StdId = 0x201; // send message from ID=0x201 = FC1
@@ -507,12 +507,12 @@ int main(void)
 				if (HAL_CAN_AddTxMessage(&hcan, &TxHeader, TxData, &TxMailbox) != HAL_OK) {	// Transmit the message
 					Error_Handler();															// Transmission error
 				}
-				HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_5);  										// Turn off LED2
+				//HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_4);  										// Turn off LED2
 				BUTTON = NO_BUTTON_PRESSED; 													// Reset the BUTTON flag
 			}
 			if (BUTTON == BUTTON_2_PRESSED) {												// Blue button pressed --> Turn on LED2 for 2 seconds and Transmit message
-				HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_6);  										// Turn on LED2
-				HAL_Delay(2000);																// Leave it on for 2 seconds
+				HAL_GPIO_WritePin(GPIOA, GPIO_PIN_6, GPIO_PIN_SET);  							// Turn on LED2
+				//HAL_Delay(2000);																// Leave it on for 2 seconds
 				//printf("go to floor 2");
 				//TxData[0] = 0x01;																// Store the 1 character message to transmit into the TxData buffer and transmit over the CAN bus
 				//TxHeader.StdId = 0x202; // send message from ID=0x202 = FC2
@@ -523,23 +523,23 @@ int main(void)
 				if (HAL_CAN_AddTxMessage(&hcan, &TxHeader, TxData, &TxMailbox) != HAL_OK) {	// Transmit the message
 					Error_Handler();															// Transmission error
 				}
-				HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_6);  										// Turn off LED2
+				//HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_6);  										// Turn off LED2
 				BUTTON = NO_BUTTON_PRESSED; 													// Reset the BUTTON flag
 			}
 			if (BUTTON == BUTTON_3_PRESSED) {												// Blue button pressed --> Turn on LED2 for 2 seconds and Transmit message
-				HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_7);  										// Turn on LED2
-				HAL_Delay(2000);																// Leave it on for 2 seconds
+				HAL_GPIO_WritePin(GPIOA, GPIO_PIN_7, GPIO_PIN_SET);  										// Turn on LED2
+				//HAL_Delay(2000);																// Leave it on for 2 seconds
 				//printf("go to floor 3");
 				//TxData[0] = 0x01;																// Store the 1 character message to transmit into the TxData buffer and transmit over the CAN bus
 				//TxHeader.StdId = 0x203; // send message from ID=0x203 = FC3
-				if (ID==CC){
+				if (ID==FC3){//CC
 					TxData[0]=0x03;
 				}
 				else TxData[0]=0x01;
 				if (HAL_CAN_AddTxMessage(&hcan, &TxHeader, TxData, &TxMailbox) != HAL_OK) {	// Transmit the message
 					Error_Handler();															// Transmission error
 				}
-				HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_7);  										// Turn off LED2
+				//HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_7);  										// Turn off LED2
 				BUTTON = NO_BUTTON_PRESSED; 													// Reset the BUTTON flag
 			}
 		}

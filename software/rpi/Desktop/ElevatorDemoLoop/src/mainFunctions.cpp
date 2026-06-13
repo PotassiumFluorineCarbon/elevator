@@ -150,3 +150,9 @@ int FloorFromHex(int Hex){
 			return(1);							// Default is to reset to floor 1 on bad input
 		}
 }
+
+
+
+enum State {
+
+};
