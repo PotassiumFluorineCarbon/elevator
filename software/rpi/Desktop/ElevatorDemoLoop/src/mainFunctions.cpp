@@ -233,18 +233,62 @@ elevatoroperator() {
 			}
 			break;
 		case moving_to_1:
+			if (Rxmsg.ID == ID_EC_TO_ALL && Rxmsg.DATA[0] == AT_FLOOR1) {
+				state = waiting_at_1;
+			}
 		
 			break;
 		case waiting_at_2:
-			
+			if (Rxmsg.ID == 0x201 && Rxmsg.DATA[0] == 0x01) {
+				sendMsg(0x100, 0x05, h2);
+				state = moving_to_1;
+			}
+			if (Rxmsg.ID == 0x200 && Rxmsg.DATA[0] == 0x01) {
+				sendMsg(0x100, 0x05, h2)
+				state = moving_to_1;
+			}
+
+			if (Rxmsg.ID == 0x203 && Rxmsg.DATA[0] == 0x01) {
+				sendMsg(0x100, 0x07, h2);
+				state = moving_to_3;
+			}
+
+			if (Rxmsg.ID == 0x200 && Rxmsg.DATA[0] == 0x03) {
+				sendMsg(0x100, 0x07, h2);
+				state = moving_to_3;
+			}
 			break;
 		case moving_to_2:
+			if (Rxmsg.ID == ID_EC_TO_ALL && Rxmsg.DATA[0] == AT_FLOOR2) {
+				state = waiting_at_2;
+			}
 			
 			break;
 		case waiting_at_3:
+			if (Rxmsg.ID == 0x201 && Rxmsg.DATA[0] == 0x01) {
+				sendMsg(0x100, 0x05, h2);
+				state = moving_to_1;
+			}
+			if (Rxmsg.ID == 0x200 && Rxmsg.DATA[0] == 0x01) {
+				sendMsg(0x100, 0x05, h2)
+				state = moving_to_1;
+			}
+
+			if (Rxmsg.ID == 0x202 && Rxmsg.DATA[0] == 0x01) {
+				sendMsg(0x100, 0x06, h2);
+				state = moving_to_2;
+			}
+
+			if (Rxmsg.ID == 0x200 && Rxmsg.DATA[0] == 0x02) {
+				sendMsg(0x100, 0x06, h2);
+				state = moving_to_2;
+			}
 		
 			break;
 		case moving_to_3:
+			if (Rxmsg.ID == ID_EC_TO_ALL && Rxmsg.DATA[0] == AT_FLOOR3) {
+				state = waiting_at_3;
+			}
 		
 			break;
 		case fault:
