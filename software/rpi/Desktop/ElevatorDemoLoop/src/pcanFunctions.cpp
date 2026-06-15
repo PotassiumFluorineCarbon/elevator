@@ -118,7 +118,7 @@ void elevatoroperator() {
 	status = CAN_Status(h2);
 
 	while (1) {
-		printf("\nRxmsg ID: %d", Rxmsg.ID);
+		printf("\nRxmsg ID: %x", Rxmsg.ID);
 		while ((status = CAN_Read(h2, &Rxmsg)) == PCAN_RECEIVE_QUEUE_EMPTY) {//read message from CAN bus
 			// No message received, continue waiting
 
