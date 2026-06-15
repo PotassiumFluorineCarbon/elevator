@@ -105,7 +105,7 @@ int pcanRx(int num_msgs){
 
 void elevatoroperator() {
 	enum State state = initial;
-	TPCANMsg Rxmsg;
+	TPCANMsg Rxmsg = {0};
 	HANDLE h2;
 
 	// Open a CAN channel 
@@ -118,16 +118,16 @@ void elevatoroperator() {
 	status = CAN_Status(h2);
 
 	while (1) {
-		printf("\nRxmsg ID: %x", Rxmsg.ID);
-		printf("\nRxmsg data: %x", Rxmsg.DATA[0]);
 		while ((status = CAN_Read(h2, &Rxmsg)) == PCAN_RECEIVE_QUEUE_EMPTY) {//read message from CAN bus
 			// No message received, continue waiting
-
+			usleep(50000);
 		}
+		printf("Rxmsg ID: %x\n", Rxmsg.ID);
+		printf("Rxmsg data: %x\n", Rxmsg.DATA[0]);
 
 		switch (state) {
 		case initial:
-			printf("\nInitial");
+			printf("Initial\n");
 			// Initialize elevator
 			if (Rxmsg.ID == ID_EC_TO_ALL && Rxmsg.DATA[0] == AT_FLOOR1) {
 				state = waiting_at_1;
@@ -140,7 +140,7 @@ void elevatoroperator() {
 			}
 			break;
 		case waiting_at_1:
-			printf("\nWaiting at 1");
+			printf("Waiting at 1\n");
 			// Waiting at floor 1
 			// If command received, state = moving_to_2 or 3
 			if (Rxmsg.ID == 0x202 && Rxmsg.DATA[0] == 0x01) {  // FC2 is calling
@@ -164,14 +164,14 @@ void elevatoroperator() {
 			}
 			break;
 		case moving_to_1:
-			printf("\nMoving to 1");
+			printf("Moving to 1\n");
 			if (Rxmsg.ID == ID_EC_TO_ALL && Rxmsg.DATA[0] == AT_FLOOR1) {
 				state = waiting_at_1;
 			}
 
 			break;
 		case waiting_at_2:
-			printf("\nWaiting at 2");
+			printf("Waiting at 2\n");
 			if (Rxmsg.ID == 0x201 && Rxmsg.DATA[0] == 0x01) {
 				sendMsg(0x100, 0x05, h2);
 				state = moving_to_1;
@@ -192,14 +192,14 @@ void elevatoroperator() {
 			}
 			break;
 		case moving_to_2:
-			printf("\nMoving to 2");
+			printf("Moving to 2\n");
 			if (Rxmsg.ID == ID_EC_TO_ALL && Rxmsg.DATA[0] == AT_FLOOR2) {
 				state = waiting_at_2;
 			}
 
 			break;
 		case waiting_at_3:
-			printf("\nWaiting at 3");
+			printf("Waiting at 3\n");
 			if (Rxmsg.ID == 0x201 && Rxmsg.DATA[0] == 0x01) {
 				sendMsg(0x100, 0x05, h2);
 				state = moving_to_1;
@@ -221,14 +221,14 @@ void elevatoroperator() {
 
 			break;
 		case moving_to_3:
-			printf("\nMoving to 3");
+			printf("Moving to 3\n");
 			if (Rxmsg.ID == ID_EC_TO_ALL && Rxmsg.DATA[0] == AT_FLOOR3) {
 				state = waiting_at_3;
 			}
 
 			break;
 		case fault:
-			printf("\nError");
+			printf("Error\n");
 			// Handle fault condition (e.g. stop elevator, sound alarm, etc.)
 			break;
 		}
@@ -238,9 +238,9 @@ void elevatoroperator() {
 
 
 int sendMsg(int id, int data, HANDLE h) {
-	printf("\nTxmsg id: %d", id);
-	printf("\nTxmsg data: %d", data);
-	TPCANMsg Txmsg;
+	//printf("\nTxmsg id: %d", id);
+	//printf("\nTxmsg data: %d", data);
+	TPCANMsg Txmsg = {0};
 	// Set up message
 	Txmsg.ID = id;
 	Txmsg.MSGTYPE = MSGTYPE_STANDARD;
@@ -248,5 +248,13 @@ int sendMsg(int id, int data, HANDLE h) {
 	Txmsg.DATA[0] = data;
 
 	status = CAN_Write(h, &Txmsg);
+
+	if (status != PCAN_NO_ERROR) {
+		printf("CAN Write failed: 0x%x\n", (int)status);
+	}
+	else {
+		printf("[Tx] ID: 0x%04X  DATA: 0x%02X  --> Sent!\n", id, data);
+	}
+	return status;
 }
 
