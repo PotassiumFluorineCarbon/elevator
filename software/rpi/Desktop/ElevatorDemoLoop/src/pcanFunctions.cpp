@@ -119,6 +119,7 @@ void elevatoroperator() {
 
 	while (1) {
 		printf("\nRxmsg ID: %x", Rxmsg.ID);
+		printf("\nRxmsg data: %x", Rxmsg.DATA[0]);
 		while ((status = CAN_Read(h2, &Rxmsg)) == PCAN_RECEIVE_QUEUE_EMPTY) {//read message from CAN bus
 			// No message received, continue waiting
 
@@ -229,7 +230,8 @@ void elevatoroperator() {
 
 
 int sendMsg(int id, int data, HANDLE h) {
-	printf("\nTxmsg: %d", data);
+	printf("\nTxmsg id: %d", id);
+	printf("\nTxmsg data: %d", data);
 	TPCANMsg Txmsg;
 	// Set up message
 	Txmsg.ID = id;
