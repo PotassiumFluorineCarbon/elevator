@@ -48,8 +48,7 @@
               "RelativeToolTip": "..\\..\\..\\..\\..\\html\\logbook_eric.html",
               "ViewState": "AgIAAI0AAAAAAAAAAAAAAKEAAAAQAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001512|",
-              "WhenOpened": "2026-06-13T16:13:39.018Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-06-13T16:13:39.018Z"
             },
             {
               "$type": "Document",
@@ -61,8 +60,7 @@
               "RelativeToolTip": "..\\include\\pcanFunctions.h",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAB4AAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
-              "WhenOpened": "2026-06-13T15:43:03.316Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-06-13T15:43:03.316Z"
             },
             {
               "$type": "Document",
@@ -74,8 +72,7 @@
               "RelativeToolTip": "databaseFunctions.cpp",
               "ViewState": "AgIAAEUAAAAAAAAAAAAAAEkAAAACAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
-              "WhenOpened": "2026-06-10T15:06:43.904Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-06-10T15:06:43.904Z"
             },
             {
               "$type": "Document",
@@ -83,9 +80,9 @@
               "Title": "mainFunctions.cpp",
               "DocumentMoniker": "D:\\elevator\\elevator\\software\\rpi\\Desktop\\ElevatorDemoLoop\\src\\mainFunctions.cpp",
               "RelativeDocumentMoniker": "mainFunctions.cpp",
-              "ToolTip": "D:\\elevator\\elevator\\software\\rpi\\Desktop\\ElevatorDemoLoop\\src\\mainFunctions.cpp",
-              "RelativeToolTip": "mainFunctions.cpp",
-              "ViewState": "AgIAAOgAAAAAAAAAAAAQwPUAAAAtAAAAAAAAAA==",
+              "ToolTip": "D:\\elevator\\elevator\\software\\rpi\\Desktop\\ElevatorDemoLoop\\src\\mainFunctions.cpp*",
+              "RelativeToolTip": "mainFunctions.cpp*",
+              "ViewState": "AgIAAOsAAAAAAAAAAAAQwPkAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
               "WhenOpened": "2026-06-10T18:23:33.833Z",
               "EditorCaption": ""
@@ -100,8 +97,7 @@
               "RelativeToolTip": "pcanFunctions.cpp",
               "ViewState": "AgIAADAAAAAAAAAAAAAAADIAAAAZAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
-              "WhenOpened": "2026-06-10T18:27:59.257Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-06-10T18:27:59.257Z"
             },
             {
               "$type": "Document",
