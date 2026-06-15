@@ -72,6 +72,7 @@ int main() {
 			case 5: 
 				printf("Elevator operator");
 				elevatoroperator();
+				break;
 			case 6:
 				return(0);
 			default:

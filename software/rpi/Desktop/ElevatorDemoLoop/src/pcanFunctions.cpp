@@ -127,6 +127,7 @@ void elevatoroperator() {
 
 		switch (state) {
 		case initial:
+			printf("\nInitial");
 			// Initialize elevator
 			if (Rxmsg.ID == ID_EC_TO_ALL && Rxmsg.DATA[0] == AT_FLOOR1) {
 				state = waiting_at_1;
@@ -139,6 +140,7 @@ void elevatoroperator() {
 			}
 			break;
 		case waiting_at_1:
+			printf("\nWaiting at 1");
 			// Waiting at floor 1
 			// If command received, state = moving_to_2 or 3
 			if (Rxmsg.ID == 0x202 && Rxmsg.DATA[0] == 0x01) {  // FC2 is calling
@@ -162,12 +164,14 @@ void elevatoroperator() {
 			}
 			break;
 		case moving_to_1:
+			printf("\nMoving to 1");
 			if (Rxmsg.ID == ID_EC_TO_ALL && Rxmsg.DATA[0] == AT_FLOOR1) {
 				state = waiting_at_1;
 			}
 
 			break;
 		case waiting_at_2:
+			printf("\nWaiting at 2");
 			if (Rxmsg.ID == 0x201 && Rxmsg.DATA[0] == 0x01) {
 				sendMsg(0x100, 0x05, h2);
 				state = moving_to_1;
@@ -188,12 +192,14 @@ void elevatoroperator() {
 			}
 			break;
 		case moving_to_2:
+			printf("\nMoving to 2");
 			if (Rxmsg.ID == ID_EC_TO_ALL && Rxmsg.DATA[0] == AT_FLOOR2) {
 				state = waiting_at_2;
 			}
 
 			break;
 		case waiting_at_3:
+			printf("\nWaiting at 3");
 			if (Rxmsg.ID == 0x201 && Rxmsg.DATA[0] == 0x01) {
 				sendMsg(0x100, 0x05, h2);
 				state = moving_to_1;
@@ -215,12 +221,14 @@ void elevatoroperator() {
 
 			break;
 		case moving_to_3:
+			printf("\nMoving to 3");
 			if (Rxmsg.ID == ID_EC_TO_ALL && Rxmsg.DATA[0] == AT_FLOOR3) {
 				state = waiting_at_3;
 			}
 
 			break;
 		case fault:
+			printf("\nError");
 			// Handle fault condition (e.g. stop elevator, sound alarm, etc.)
 			break;
 		}

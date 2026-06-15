@@ -7,11 +7,11 @@
       "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:pcanFunctions.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\elevator\\elevator\\software\\rpi\\Desktop\\ElevatorDemoLoop\\include\\pcanFunctions.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\elevator\\elevator\\software\\rpi\\Desktop\\ElevatorDemoLoop\\src\\main.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
       "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:main.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\elevator\\elevator\\software\\rpi\\Desktop\\ElevatorDemoLoop\\include\\pcanFunctions.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\elevator\\elevator\\software\\rpi\\Desktop\\ElevatorDemoLoop\\src\\mainFunctions.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
@@ -79,7 +79,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 2,
               "Title": "pcanFunctions.h",
               "DocumentMoniker": "D:\\elevator\\elevator\\software\\rpi\\Desktop\\ElevatorDemoLoop\\include\\pcanFunctions.h",
               "RelativeDocumentMoniker": "..\\include\\pcanFunctions.h",
@@ -87,8 +87,7 @@
               "RelativeToolTip": "..\\include\\pcanFunctions.h",
               "ViewState": "AgIAAA8AAAAAAAAAAAAAABsAAAAYAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
-              "WhenOpened": "2026-06-13T15:43:03.316Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-06-13T15:43:03.316Z"
             },
             {
               "$type": "Document",
@@ -110,20 +109,20 @@
               "RelativeDocumentMoniker": "pcanFunctions.cpp",
               "ToolTip": "D:\\elevator\\elevator\\software\\rpi\\Desktop\\ElevatorDemoLoop\\src\\pcanFunctions.cpp",
               "RelativeToolTip": "pcanFunctions.cpp",
-              "ViewState": "AgIAAGsAAAAAAAAAAAAAwHkAAAAWAAAAAAAAAA==",
+              "ViewState": "AgIAAOUAAAAAAAAAAAAAAOgAAAAJAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
               "WhenOpened": "2026-06-10T18:27:59.257Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 1,
               "Title": "main.cpp",
               "DocumentMoniker": "D:\\elevator\\elevator\\software\\rpi\\Desktop\\ElevatorDemoLoop\\src\\main.cpp",
               "RelativeDocumentMoniker": "main.cpp",
               "ToolTip": "D:\\elevator\\elevator\\software\\rpi\\Desktop\\ElevatorDemoLoop\\src\\main.cpp",
               "RelativeToolTip": "main.cpp",
-              "ViewState": "AgIAACAAAAAAAAAAAAAAAEwAAAALAAAAAAAAAA==",
+              "ViewState": "AgIAAEEAAAAAAAAAAAAAAEoAAAAKAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
               "WhenOpened": "2026-06-10T15:06:35.823Z",
               "EditorCaption": ""
