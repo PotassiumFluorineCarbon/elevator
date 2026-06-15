@@ -63,8 +63,7 @@
               "RelativeToolTip": "mainFunctions.cpp",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAcAAAAQAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
-              "WhenOpened": "2026-06-10T18:23:33.833Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-06-10T18:23:33.833Z"
             },
             {
               "$type": "Document",
@@ -88,8 +87,7 @@
               "RelativeToolTip": "..\\include\\pcanFunctions.h",
               "ViewState": "AgIAAA8AAAAAAAAAAAAAABsAAAAYAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
-              "WhenOpened": "2026-06-13T15:43:03.316Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-06-13T15:43:03.316Z"
             },
             {
               "$type": "Document",
@@ -111,7 +109,7 @@
               "RelativeDocumentMoniker": "pcanFunctions.cpp",
               "ToolTip": "D:\\elevator\\elevator\\software\\rpi\\Desktop\\ElevatorDemoLoop\\src\\pcanFunctions.cpp",
               "RelativeToolTip": "pcanFunctions.cpp",
-              "ViewState": "AgIAAOIAAAAAAAAAAAAAwOsAAAAWAAAAAAAAAA==",
+              "ViewState": "AgIAABcAAAAAAAAAAAAQwCAAAAANAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
               "WhenOpened": "2026-06-10T18:27:59.257Z",
               "EditorCaption": ""
@@ -126,8 +124,7 @@
               "RelativeToolTip": "main.cpp",
               "ViewState": "AgIAAAIAAAAAAAAAAAAAAAwAAABFAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
-              "WhenOpened": "2026-06-10T15:06:35.823Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-06-10T15:06:35.823Z"
             }
           ]
         }

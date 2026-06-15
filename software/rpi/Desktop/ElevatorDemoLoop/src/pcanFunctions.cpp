@@ -24,6 +24,17 @@ DWORD status;
 // Code
 // ***********************************************************************************************************
 int sendMsg(int id, int data, HANDLE h);
+
+enum State {
+	initial,
+	waiting_at_1,
+	moving_to_1,
+	waiting_at_2,
+	moving_to_2,
+	waiting_at_3,
+	moving_to_3,
+	fault
+};
 // Functions
 // *****************************************************************
 int pcanTx(int id, int data){
@@ -134,8 +145,8 @@ void elevatoroperator() {
 				state = moving_to_2;
 			}
 			if (Rxmsg.ID == 0x200 && Rxmsg.DATA[0] == 0x02) {
-				sendMsg(0x100, 0x06, h2)
-					state = moving_to_2;
+				sendMsg(0x100, 0x06, h2);
+				state = moving_to_2;
 			}
 
 			if (Rxmsg.ID == 0x203 && Rxmsg.DATA[0] == 0x01) {
@@ -160,8 +171,8 @@ void elevatoroperator() {
 				state = moving_to_1;
 			}
 			if (Rxmsg.ID == 0x200 && Rxmsg.DATA[0] == 0x01) {
-				sendMsg(0x100, 0x05, h2)
-					state = moving_to_1;
+				sendMsg(0x100, 0x05, h2);
+				state = moving_to_1;
 			}
 
 			if (Rxmsg.ID == 0x203 && Rxmsg.DATA[0] == 0x01) {
@@ -186,8 +197,8 @@ void elevatoroperator() {
 				state = moving_to_1;
 			}
 			if (Rxmsg.ID == 0x200 && Rxmsg.DATA[0] == 0x01) {
-				sendMsg(0x100, 0x05, h2)
-					state = moving_to_1;
+				sendMsg(0x100, 0x05, h2);
+				state = moving_to_1;
 			}
 
 			if (Rxmsg.ID == 0x202 && Rxmsg.DATA[0] == 0x01) {
@@ -215,16 +226,6 @@ void elevatoroperator() {
 	}
 }
 
-enum State {
-	initial,
-	waiting_at_1,
-	moving_to_1,
-	waiting_at_2,
-	moving_to_2,
-	waiting_at_3,
-	moving_to_3,
-	fault
-};
 
 
 int sendMsg(int id, int data, HANDLE h) {
