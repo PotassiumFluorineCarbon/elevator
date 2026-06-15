@@ -174,7 +174,7 @@ int sendMsg(int id,int data,HANDLE h){
 	Txmsg.DATA[0] = data;
 
 	status = CAN_Write(h, &Txmsg);
-	printf("\nTxmsg: ",txmsg)
+	printf("\nTxmsg: ", txmsg);
 }
 
 void elevatoroperator() {
