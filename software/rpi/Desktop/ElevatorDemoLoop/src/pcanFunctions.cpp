@@ -54,7 +54,8 @@ int pcanTx(int id, int data){
 
 	sleep(1);  
 	status = CAN_Write(h, &Txmsg);
-
+	printf("Txmsg ID pcanTx: %d\n", id);
+	printf("Txmsg data pcanTx: %d\n", data);
 	// Close CAN 2.0 channel and exit	
 	CAN_Close(h);
 }
