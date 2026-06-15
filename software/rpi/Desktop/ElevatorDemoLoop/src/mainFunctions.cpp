@@ -151,30 +151,3 @@ int FloorFromHex(int Hex){
 			return(1);							// Default is to reset to floor 1 on bad input
 		}
 }
-
-
-
-enum State {
-	initial,
-	waiting_at_1,
-	moving_to_1,
-	waiting_at_2,
-	moving_to_2,
-	waiting_at_3,
-	moving_to_3,
-	fault
-};
-
-
-int sendMsg(int id,int data,HANDLE h){
-	TPCANMsg Txmsg;
-	// Set up message
-	Txmsg.ID = id;
-	Txmsg.MSGTYPE = MSGTYPE_STANDARD;
-	Txmsg.LEN = 1;
-	Txmsg.DATA[0] = data;
-
-	status = CAN_Write(h, &Txmsg);
-	printf("\nTxmsg: ", txmsg);
-}
-
