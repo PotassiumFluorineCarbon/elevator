@@ -23,7 +23,7 @@ DWORD status;
 
 // Code
 // ***********************************************************************************************************
-
+int sendMsg(int id, int data, HANDLE h);
 // Functions
 // *****************************************************************
 int pcanTx(int id, int data){
@@ -236,6 +236,6 @@ int sendMsg(int id, int data, HANDLE h) {
 	Txmsg.DATA[0] = data;
 
 	status = CAN_Write(h, &Txmsg);
-	printf("\nTxmsg: ", txmsg);
+	printf("\nTxmsg: ", Txmsg);
 }
 
