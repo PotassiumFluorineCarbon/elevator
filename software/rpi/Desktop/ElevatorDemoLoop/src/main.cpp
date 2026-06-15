@@ -35,7 +35,6 @@ int main() {
 				printf("\nHow many messages to receive? ");
 				scanf("%d", &numRx);
 				pcanRx(numRx);
-				elevatoroperator();
 				break;
 				
 			case 3:
@@ -71,8 +70,10 @@ int main() {
 				break;
 				
 			case 5: 
+				printf("Elevator operator");
+				elevatoroperator();
+			case 6:
 				return(0);
-			
 			default:
 				printf("Error on input values");
 				sleep(3);
