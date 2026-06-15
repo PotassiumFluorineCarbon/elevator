@@ -174,6 +174,7 @@ int sendMsg(int id,int data,HANDLE h){
 	Txmsg.DATA[0] = data;
 
 	status = CAN_Write(h, &Txmsg);
+	printf("\nTxmsg: ",txmsg)
 }
 
 void elevatoroperator() {
@@ -295,5 +296,6 @@ void elevatoroperator() {
 			// Handle fault condition (e.g. stop elevator, sound alarm, etc.)
 			break;
 		}
+		printf("\nState: ", state);
 	}
 }

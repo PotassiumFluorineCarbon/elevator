@@ -6,5 +6,6 @@ int chooseID();
 int chooseMsg();
 int HexFromFloor(int floorVal);
 int FloorFromHex(int Hex);
+void elevatoroperator();
 
 #endif
