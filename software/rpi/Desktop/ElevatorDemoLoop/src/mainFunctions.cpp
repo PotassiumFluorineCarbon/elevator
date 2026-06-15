@@ -1,4 +1,4 @@
-//#include "../include/pcanFunctions.h"
+#include "../include/pcanFunctions.h"
 #include "../include/mainFunctions.h"
 
 #include <stdio.h>

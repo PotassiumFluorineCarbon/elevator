@@ -26,6 +26,5 @@
 int pcanTx(int id, int data);
 int pcanRx(int num_msgs);
 void elevatoroperator();
-int sendMsg(int id, int data, HANDLE h);
 
 #endif
