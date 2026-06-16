@@ -57,7 +57,7 @@ int pcanTx(int id, int data){
 	// Close CAN 2.0 channel and exit	
 
 	if (status != PCAN_NO_ERROR) {
-		printf("CAN Write failed: 0x%x\n", (int)status);
+		printf("pcanTx CAN Write failed: 0x%x\n", (int)status);
 	}
 	else {
 		printf("pcanTx [Tx] ID: 0x%04X  DATA: 0x%02X  --> Sent!\n", id, data);
@@ -256,7 +256,7 @@ int sendMsg(int id, int data, HANDLE h) {
 	status = CAN_Write(h, &Txmsg);
 
 	if (status != PCAN_NO_ERROR) {
-		printf("CAN Write failed: 0x%x\n", (int)status);
+		printf("sendMsg CAN Write failed: 0x%x\n", (int)status);
 	}
 	else {
 		printf("sendMsg [Tx] ID: 0x%04X  DATA: 0x%02X  --> Sent!\n", id, data);
