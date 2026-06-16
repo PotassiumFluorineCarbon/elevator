@@ -1,6 +1,17 @@
-#ifndef PCAN_FUNCTIONS
-#define PCAN_FUNCTIONS
+#ifndef PCANFUNCTIONS_H
+#define PCANFUNCTIONS_H
 
+#include <linux/can.h>
+#include <linux/can/raw.h>
+#include <sys/socket.h>
+#include <sys/ioctl.h>
+#include <net/if.h>
+#include <unistd.h>     // for close(), usleep()
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <fcntl.h>
+#include <errno.h>
 
 // Defines
 // ***********************************************************************************************************

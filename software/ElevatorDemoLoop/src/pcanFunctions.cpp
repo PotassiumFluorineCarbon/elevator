@@ -8,6 +8,7 @@
 #include <signal.h>
 
 static int can_socket = -1;
+int sendMsg(int id, int data, int sock);
 
 // Open / bind SocketCAN interface (can0)
 static int can_open(void) {
