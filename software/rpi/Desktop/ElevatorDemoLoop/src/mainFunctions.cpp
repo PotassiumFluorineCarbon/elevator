@@ -91,6 +91,7 @@ int chooseMsg(){
 		printf("1. Go to floor 1\n");
 		printf("2. Go to floor 2\n");
 		printf("3. Go to floor 3\n");
+		printf("4. All 0s\n");
 		printf("\nYour choice: ");
 		scanf("%d", &messageChoice);
 
@@ -106,6 +107,10 @@ int chooseMsg(){
 					break;
 				case 3:
 					messageValue = GO_TO_FLOOR3; 
+					return(messageValue);
+					break;
+				case 4:
+					messageValue = 0x000;
 					return(messageValue);
 					break;
 			}
