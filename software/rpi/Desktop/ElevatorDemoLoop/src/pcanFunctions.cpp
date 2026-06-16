@@ -116,6 +116,10 @@ void elevatoroperator() {
 
 	// Open a CAN channel 
 	h2 = LINUX_CAN_Open("/dev/pcanusb32", O_RDWR);
+	if (h2 == NULL) {
+		printf("Failed to open CAN device!\n");
+		return;
+	}
 
 	// Initialize an opened CAN 2.0 channel with a 125kbps bitrate, accepting standard frames
 	status = CAN_Init(h2, CAN_BAUD_125K, CAN_INIT_TYPE_ST);
