@@ -95,7 +95,7 @@ int chooseMsg(){
 		printf("\nYour choice: ");
 		scanf("%d", &messageChoice);
 
-		if (messageChoice >=1 && messageChoice <= 3) {	
+		if (messageChoice >=1 && messageChoice <= 4) {	
 			switch(messageChoice) {
 				case 1:
 					messageValue = GO_TO_FLOOR1; 
