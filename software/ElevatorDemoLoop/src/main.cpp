@@ -27,7 +27,7 @@ int main() {
 	int floorNumber = 1, prev_floorNumber = 1;
 
 	while(1) {
-		system("@cls||clear");
+		//system("@cls||clear");
 		choice = menu(); 
 		switch (choice) {
 			case 1: 

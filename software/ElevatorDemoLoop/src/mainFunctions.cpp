@@ -10,7 +10,7 @@
 int menu(){
 	
 	int usrchoice = 0;
-	system("@cls||clear");
+	//system("@cls||clear");
 	while(1) {
 		printf("\n\nMenu - Transmit/Receive CAN Messages\n");
 		printf("1. Transmit CAN message using this program\n");
@@ -27,7 +27,7 @@ int menu(){
 		} else {
 			printf("\nPLEASE SELECT FROM CHOICES 1-5 ONLY!\n\n");
 			sleep(3);
-			system("@cls||clear");
+			//system("@cls||clear");
 		}
 	}
 	
@@ -39,7 +39,7 @@ int chooseID(){
 	int IdChoice = 0;		// Menu item number
 	int IDvalue = 0 ;		// ID value in HEX
 	while(1) {
-		system("@cls||clear");
+		//system("@cls||clear");
 		printf("\nChoose sender and receiver for message\n");
 		printf("1. Message from Supervisory controller (i.e. this node) to Elecvator Controller\n");
 		printf("2. Message from Elevator controller to all other nodes\n");
@@ -86,7 +86,7 @@ int chooseMsg(){
 	int messageValue = 0;
 	
 	while(1) {
-		system("@cls||clear");
+		//system("@cls||clear");
 		printf("\nChoose Message\n");
 		printf("1. Go to floor 1\n");
 		printf("2. Go to floor 2\n");

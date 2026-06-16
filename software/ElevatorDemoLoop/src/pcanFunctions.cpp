@@ -80,7 +80,7 @@ int pcanRx(int num_msgs) {
 	struct can_frame frame;
 	int received = 0;
 
-	system("@cls||clear");
+	//system("@cls||clear");
 	printf("\nReady to receive %d message(s) over CAN bus (can0)\n", num_msgs);
 
 	while (received < num_msgs) {
