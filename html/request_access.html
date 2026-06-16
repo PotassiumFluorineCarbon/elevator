@@ -30,7 +30,7 @@
 
     <main class="container">
 
-        <form action="php/req_access.php" method="post" class="p-4 border rounded shadow-sm">
+        <form action="php/req_access.php" method="post" id="requestAccess" class="p-4 border rounded shadow-sm">
 
             <section class="mb-4">
 
@@ -155,6 +155,11 @@
 
             </section>
 
+            <div class="mb-3">
+                <p class="mb-1"><strong>Form Status:</strong></p>
+                <p id="feedback"></p>
+            </div>
+
             <input type="submit" value="Submit Request" class="btn btn-success w-100">
 
         </form>
@@ -189,5 +194,6 @@
         });
     </script>
 
+    <script src="../js/eventListeners.js"></script>
 </body>
 </html>
