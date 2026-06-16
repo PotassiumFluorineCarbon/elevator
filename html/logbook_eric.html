@@ -119,28 +119,36 @@
                 <li>fixed file paths for photos in about us</li>
                 <li>updated CSS file</li>
                 <li>updated logbook</li>
-                <h3>Jun 4</h3>
+            </ul>
+            <h3>Jun 4</h3>
+            <ul>
                 <li>logged into school by using vpn and doing ssh pi@10.121.111.67 -p 50012</li>
                 <li>found C code on Rpi</li>
-                <h3>Jun 5</h3>
+            </ul>
+            <h3>Jun 5</h3>
+            <ul>
                 <li>uploaded arduino code from D2L on arduino</li>
                 <li>controlled the elevator from Rpi by doing cd Desktop/ElevatorDemoLoop/src, typing ./main, and doing 1, sending can messages</li>
                 <li>controlled it by doing 3, control from website, the website on the Rpi</li>
                 <li>filmed the elevator</li>
                 <li>elevator buttons on nucleo breakout boards didn't work, except for going to floor 1</li>
                 <li>added different ID on each nucleo and edited main function</li>
-                <h3>Jun 6</h3>
+            </ul>
+            <h3>Jun 6</h3>
+            <ul>
                 <li>created STM32 programming document</li>
             </ul>
-        </section>
+</section>
 
         <section class="mb-4">
             <h2>Week 5</h2>
+            <h3>Jun 8</h3>
             <ul>
-                <h3>Jun 8</h3>
                 <li>Added event listeners to login</li>
                 <li>Debriefed</li>
-                <h3>Jun 11</h3>
+            </ul>
+            <h3>Jun 11</h3>
+            <ul>
                 <li>Fixed IDs in the transmit function</li>
                 <li>Removed magic numbers</li>
                 <li>Had a CAN bug in the Rpi</li>
@@ -151,11 +159,16 @@
                 <li>Found out it was because of an update</li>
                 <li>The PCAN driver did not exist for current drivers and was incompatible with the update</li>
                 <li>Removed the update</li>
-                <h3>Jun 12</h3>
+            </ul>
+            <h3>Jun 12</h3>
+            <ul>
                 <li>Tested and filmed the elevator</li>
                 <li>It doesn't work with the buttons, probably because the state machine was not done</li>
                 <li>Found online state machine diagram tool and made 2 floor state machine</li>
-                <h3>Jun 13</h3>
+            </ul>
+
+            <h3>Jun 13</h3>
+            <ul>
                 <li>Added initial state to the 3 floor state machine done by Dallas</li>
                 <li>Programmed state machine in mainFunctions.cpp in the Rpi code</li>
                 <li>Made variable called AT_FLOOR1 that means arrived at floor 1, and has the same definition as GO_TO_FLOOR_1, but that's a coincidence</li>
@@ -165,8 +178,20 @@
 
         <section class="mb-4">
             <h2>Week 6</h2>
+            <h3>Jun 15</h3>
             <ul>
-                <li></li>
+                <li>Added debugging statements</li>
+                <li>Elevator moved to floor 3 instead of 1</li>
+                <li>Heard that another group used the linux can driver</li>
+            </ul>
+            <h3>Jun 16</h3>
+            <ul>
+                <li>The buttons not working is probably an Arduino bug because there are no obvious Rpi bugs</li>
+                <li>We have to install Arduino IDE on the Rpi and connect the Rpi to the Arduino to see print messages</li>
+                <li>Object files added to gitignore</li>
+                <li>Blacklisted the proprietary CAN driver</li>
+                <li>Made copy of software that uses Linux CAN driver, SocketCAN</li>
+                <li>Removed magic numbers</li>
             </ul>
         </section>
 
