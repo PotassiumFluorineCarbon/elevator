@@ -18,6 +18,8 @@
     <link rel="stylesheet" href="../CSS/style.css">
 </head>
 
+
+
 <body>
 
     <header class="bg-dark text-white py-4 mb-4">
@@ -28,7 +30,7 @@
 
     <main class="container">
 
-        <form action="php/req_access.php" method="post" class="p-4 border rounded shadow-sm">
+        <form action="php/req_access.php" method="post" id="requestAccess" class="p-4 border rounded shadow-sm">
 
             <section class="mb-4">
 
@@ -132,10 +134,31 @@
 
             <section class="mb-4">
 
-                <label class="form-label"><strong>Tell us a bit more about yourself</strong></label>
-                <textarea name="details" class="form-control" placeholder="Other details..."></textarea>
+                <label class="form-label">
+                    <strong>Tell us a bit more about yourself</strong>
+                </label>
+
+                <textarea
+                    id="details"
+                    name="details"
+                    class="form-control"
+                    placeholder="Other details..."
+                    rows="4"
+                    maxlength="180"
+                ></textarea>
+
+                <small id="charCount" class="text-muted">
+                    180 characters remaining
+                </small>
+
+                <div id="errorMsg" class="text-danger"></div>
 
             </section>
+
+            <div class="mb-3">
+                <p class="mb-1"><strong>Form Status:</strong></p>
+                <p id="feedback"></p>
+            </div>
 
             <input type="submit" value="Submit Request" class="btn btn-success w-100">
 
@@ -147,5 +170,30 @@
         <p>&copy; Request Access System</p>
     </footer>
 
+    <script>
+        const textarea = document.getElementById("details");
+        const charCount = document.getElementById("charCount");
+        const errorMsg = document.getElementById("errorMsg");
+
+        const maxChars = 180;
+
+        textarea.addEventListener("input", function () {
+
+            const currentLength = textarea.value.length;
+            const remaining = maxChars - currentLength;
+
+            charCount.textContent =
+                remaining + " characters remaining";
+
+            if (currentLength >= maxChars) {
+                errorMsg.textContent =
+                    "You have reached the maximum of 180 characters.";
+            } else {
+                errorMsg.textContent = "";
+            }
+        });
+    </script>
+
+    <script src="../js/eventListeners.js"></script>
 </body>
 </html>

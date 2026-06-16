@@ -5,7 +5,7 @@
 #include <stdlib.h>
 #include <stdlib.h>
 #include <unistd.h> 
-
+#include <array>
 
 int menu(){
 	
@@ -17,7 +17,8 @@ int menu(){
 		printf("2. Receive CAN message(s) using this program\n");
 		printf("3. Control elevator from website\n");
 		printf("4. Demo mode - loop\n");
-		printf("5. Exit program\n");
+		printf("5. State machine\n");
+		printf("6. Exit program\n");
 		printf("\nYour choice: ");
 		scanf("%d", &usrchoice);
 
@@ -90,10 +91,11 @@ int chooseMsg(){
 		printf("1. Go to floor 1\n");
 		printf("2. Go to floor 2\n");
 		printf("3. Go to floor 3\n");
+		printf("4. All 0s\n");
 		printf("\nYour choice: ");
 		scanf("%d", &messageChoice);
 
-		if (messageChoice >=1 && messageChoice <= 3) {	
+		if (messageChoice >=1 && messageChoice <= 4) {	
 			switch(messageChoice) {
 				case 1:
 					messageValue = GO_TO_FLOOR1; 
@@ -105,6 +107,10 @@ int chooseMsg(){
 					break;
 				case 3:
 					messageValue = GO_TO_FLOOR3; 
+					return(messageValue);
+					break;
+				case 4:
+					messageValue = 0x000;
 					return(messageValue);
 					break;
 			}

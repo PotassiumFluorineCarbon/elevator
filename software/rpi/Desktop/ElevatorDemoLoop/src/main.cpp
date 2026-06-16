@@ -70,10 +70,13 @@ int main() {
 				break;
 				
 			case 5: 
+				printf("Elevator operator\n");
+				elevatoroperator();
+				break;
+			case 6:
 				return(0);
-			
 			default:
-				printf("Error on input values");
+				printf("Error on input values\n");
 				sleep(3);
 				break;
 		}
