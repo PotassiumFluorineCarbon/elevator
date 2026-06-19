@@ -34,25 +34,6 @@ p {
     text-indent: 15px;
 }
 
-/* =========================
-   Emphasis classes / IDs
-========================= */
-
-.mkbold {
-    font-weight: bold;
-}
-
-.mkunderlined {
-    text-decoration: underline;
-}
-
-#can {
-    font-style: italic;
-}
-
-#hcs12 {
-    font-style: italic;
-}
 
 /* =========================
    Images and Figures
@@ -96,8 +77,11 @@ figcaption {
 ul, ol {
     text-align: justify;
 }
-/* old */
-/* General table styling */
+
+
+/*==========================
+ General table styling 
+==========================*/
 table {
     border-collapse: collapse;
     width: 100%;
@@ -152,13 +136,9 @@ td:empty {
     background: transparent;
 }
 
-/* Make blank cells invisible */
-td:not(.dallas):not(.eric):not(.blaine):not(.all) {
-    background-color: #fff;
-}
 
 /* =========================
-   Request Access Form Styling
+Form Styling
 ========================= */
 
 form {
@@ -237,6 +217,7 @@ textarea:focus {
     box-shadow: 0 0 5px rgba(74,111,165,0.5);
 }
 
+
 fieldset p {
     margin: 12px 0;
     text-indent: 0;
@@ -270,7 +251,7 @@ legend {
 }
 
 /* =========================
-   Request Access Button (Rollover)
+   Request Access Button
 ========================= */
 
 .request-btn {
@@ -295,7 +276,7 @@ legend {
     background-image: url("../Images/request_access_active.png");
 }
 
-/* Make sure Older browsers show these elements as blocks*/
+/* Make sure Older browsers show elements as blocks*/
 header,
 nav,
 main,

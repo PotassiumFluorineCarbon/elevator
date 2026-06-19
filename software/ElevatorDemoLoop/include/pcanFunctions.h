@@ -1,0 +1,41 @@
+#ifndef PCANFUNCTIONS_H
+#define PCANFUNCTIONS_H
+
+#include <linux/can.h>
+#include <linux/can/raw.h>
+#include <sys/socket.h>
+#include <sys/ioctl.h>
+#include <net/if.h>
+#include <unistd.h>     // for close(), usleep()
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <fcntl.h>
+#include <errno.h>
+
+// Defines
+// ***********************************************************************************************************
+#define PCAN_RECEIVE_QUEUE_EMPTY        0x00020U  	// Receive queue is empty
+#define PCAN_NO_ERROR               	0x00000U  	// No error 
+
+// Elevator project specific 
+#define ID_SC_TO_EC  0x100	// ID for messages from Supervisory controller to elevator controller
+#define ID_EC_TO_ALL 0x101	// ID for messages from Elevator controller to all other nodes
+#define ID_CC_TO_SC  0x200	// ID for messages from Car controller to supervisory controller 
+#define ID_F1_TO_SC  0x201	// ID for messages from floor 1 controller to supervisory controller
+#define ID_F2_TO_SC  0x202	// ID for messages from floor 2 controller to supervisory controller
+#define ID_F3_TO_SC  0x203	// ID for messages from floor 3 controller to supervisory controller	
+
+#define GO_TO_FLOOR1 0x05	// Go to floor 1
+#define GO_TO_FLOOR2 0x06	// Go to floor 2
+#define GO_TO_FLOOR3 0x07	// Go to floor 3
+
+#define AT_FLOOR1 0x05
+#define AT_FLOOR2 0x06
+#define AT_FLOOR3 0x07
+// Function declarations
+int pcanTx(int id, int data);
+int pcanRx(int num_msgs);
+void elevatoroperator();
+
+#endif
