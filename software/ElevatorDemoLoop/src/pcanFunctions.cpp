@@ -180,8 +180,11 @@ void elevatoroperator() {
 				printf("Moving to 1\n");
 				if (Rxmsg.can_id == ID_EC_TO_ALL && Rxmsg.data[0] == AT_FLOOR1) {
 					state = waiting_at_1;
+					sendMsg(ID_SC_TO_EC, GO_TO_FLOOR2, can_socket);
 				}
-
+				if (Rxmsg.can_id == ID_EC_TO_ALL && (Rxmsg.data[0] == AT_FLOOR2 || Rxmsg.data[0] == AT_FLOOR3)) {
+					sendMsg(ID_SC_TO_EC, GO_TO_FLOOR1, can_socket);
+				}
 				break;
 			case waiting_at_2:
 				printf("Waiting at 2\n");
@@ -209,7 +212,9 @@ void elevatoroperator() {
 				if (Rxmsg.can_id == ID_EC_TO_ALL && Rxmsg.data[0] == AT_FLOOR2) {
 					state = waiting_at_2;
 				}
-
+				if (Rxmsg.can_id == ID_EC_TO_ALL && (Rxmsg.data[0] == AT_FLOOR1 || Rxmsg.data[0] == AT_FLOOR3)) {
+					sendMsg(ID_SC_TO_EC, GO_TO_FLOOR2, can_socket);
+				}
 				break;
 			case waiting_at_3:
 				printf("Waiting at 3\n");
@@ -238,7 +243,9 @@ void elevatoroperator() {
 				if (Rxmsg.can_id == ID_EC_TO_ALL && Rxmsg.data[0] == AT_FLOOR3) {
 					state = waiting_at_3;
 				}
-
+				if (Rxmsg.can_id == ID_EC_TO_ALL && (Rxmsg.data[0] == AT_FLOOR1 || Rxmsg.data[0] == AT_FLOOR2)) {
+					sendMsg(ID_SC_TO_EC, GO_TO_FLOOR3, can_socket);
+				}
 				break;
 			case fault:
 				printf("Error\n");
@@ -256,6 +263,7 @@ void elevatoroperator() {
 
 // Helper used by elevatoroperator (updated for SocketCAN)
 int sendMsg(int id, int data, int sock) {
+	usleep(250000);//make sure message gets sent some time after the previous message was sent because the arduino might be bad at receiving many messages quickly
 	struct can_frame frame = { 0 };
 	frame.can_id = id;
 	frame.can_dlc = 1;

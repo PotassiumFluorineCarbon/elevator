@@ -191,11 +191,19 @@
                 <li>Object files added to gitignore</li>
                 <li>Blacklisted the proprietary CAN driver</li>
                 <li>Made copy of software that uses Linux CAN driver, SocketCAN</li>
-                <li>It is in \elevator\software\ElevatorDemoLoop on the Rpi and Github</li>
+                <li>It is in elevator/software/ElevatorDemoLoop on the Rpi and Github</li>
                 <li>Removed magic numbers</li>
                 <li>The Linux driver did not fix the bug that makes the elevator buttons not make the elevator move</li>
                 <li>The EC is not responding to messages, so it is an Arduino bug</li>
                 <li>Removed clear screen from code</li>
+            </ul>
+            <h3>Jun 18</h3>
+            <ul>
+                <li>Fixed message values in the Nucleo code</li>
+                <li>The elevator responded to the buttons for floor 2 and 3</li>
+                <li>The Arduino sometimes had to be restarted to fix web control</li>
+                <li>Added sleep to the beginning of sendMsg to make sure message gets sent some time after the previous message was sent because the arduino might be bad at receiving many messages quickly</li>
+                <li>Updated state machine block diagram and code</li>
             </ul>
         </section>
 
