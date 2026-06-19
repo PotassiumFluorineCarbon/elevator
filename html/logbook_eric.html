@@ -205,6 +205,16 @@
                 <li>Added sleep to the beginning of sendMsg to make sure message gets sent some time after the previous message was sent because the arduino might be bad at receiving many messages quickly</li>
                 <li>Updated state machine block diagram and code</li>
             </ul>
+            <h3>Jun 19</h3>
+            <ul>
+                <li>Tested elevator in operator mode</li>
+                <li>It responded to buttons</li>
+                <li>It sometimes responded to buttons that it is not supposed to respond to</li>
+                <li>The elevator sometimes moved to a floor after pressing the other buttons on the floor controller</li>
+                <li>It went to floor 1 then 2 when pressing the floor 1 button</li>
+                <li>Pressing the 1 button again made it go to 1</li>
+                <li>Floor 1 and 2 are very close to each other so it might be a control system bug</li>
+            </ul>
         </section>
 
         <section class="mb-4">
