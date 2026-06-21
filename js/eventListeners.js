@@ -28,10 +28,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
         function checkPassword() {
             const min = 7;
-            if (elPassword.value.trim().length < min) {
+            const password = elPassword.value.trim();
+            if (password.length < min) {
                 elMsg.innerHTML = `<span class="text-danger">Password must be at least ${min} characters long.</span>`;
                 return false;
-            } else {
+            }
+
+            else if (!(/[A-Z]/.test(password)) || !(/[0-9]/.test(password))) {
+                elMsg.innerHTML = '<span class="text-danger">Password must contain at least one uppercase letter and one number.</span>';
+                return false;
+            }
+
+            else {
                 elMsg.innerHTML = '';
                 return true;
             }
