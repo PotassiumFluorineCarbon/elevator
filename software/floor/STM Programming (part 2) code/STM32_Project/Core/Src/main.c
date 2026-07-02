@@ -480,11 +480,14 @@ int main(void)
 		if (BUTTON != 0) {
 			if (BUTTON == BUTTON_1_PRESSED) {												// Blue button pressed --> Turn on LED2 for 2 seconds and Transmit message
 				HAL_GPIO_WritePin(GPIOA, GPIO_PIN_4, GPIO_PIN_SET);  							// Turn on LED2
-				//printf("go to floor 1");
 				// Store the 1 character message to transmit into the TxData buffer and transmit over the CAN bus
+				TxData[0]=0x01;
+				//TxData[0]=UP;
+
+				/*//printf("go to floor 1");
 				if (ID==FC1){
 					TxData[0]=0x01;
-				}
+				}*/
 				if (HAL_CAN_AddTxMessage(&hcan, &TxHeader, TxData, &TxMailbox) != HAL_OK) {	// Transmit the message
 					Error_Handler();															// Transmission error
 				}
@@ -492,10 +495,13 @@ int main(void)
 			}
 			if (BUTTON == BUTTON_2_PRESSED) {												// Blue button pressed --> Turn on LED2 for 2 seconds and Transmit message
 				HAL_GPIO_WritePin(GPIOA, GPIO_PIN_6, GPIO_PIN_SET);  							// Turn on LED2
-				//printf("go to floor 2");
+				TxData[0]=0x01;
+				//TxData[0]=DOWN;
+
+				/*//printf("go to floor 2");
 				if (ID==FC2){
 					TxData[0]=0x01;
-				}
+				}*/
 				if (HAL_CAN_AddTxMessage(&hcan, &TxHeader, TxData, &TxMailbox) != HAL_OK) {	// Transmit the message
 					Error_Handler();															// Transmission error
 				}
@@ -503,10 +509,11 @@ int main(void)
 			}
 			if (BUTTON == BUTTON_3_PRESSED) {												// Blue button pressed --> Turn on LED2 for 2 seconds and Transmit message
 				HAL_GPIO_WritePin(GPIOA, GPIO_PIN_7, GPIO_PIN_SET);  										// Turn on LED2
-				//printf("go to floor 3");
+				TxData[0]=0x01;
+				/*//printf("go to floor 3");
 				if (ID==FC3){//CC
 					TxData[0]=0x01;
-				}
+				}*/
 				if (HAL_CAN_AddTxMessage(&hcan, &TxHeader, TxData, &TxMailbox) != HAL_OK) {	// Transmit the message
 					Error_Handler();															// Transmission error
 				}
