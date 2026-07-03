@@ -7,15 +7,15 @@
       "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:pcanFunctions.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     },
     {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\elevator\\elevator\\software\\ElevatorDemoLoop\\src\\main.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:main.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\elevator\\elevator\\software\\ElevatorDemoLoop\\include\\pcanFunctions.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\elevator\\elevator\\software\\ElevatorDemoLoop\\src\\mainFunctions.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
       "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:mainFunctions.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\elevator\\elevator\\software\\ElevatorDemoLoop\\src\\main.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
-      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:main.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\elevator\\elevator\\software\\ElevatorDemoLoop\\include\\databaseFunctions.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
@@ -54,21 +54,19 @@
               "RelativeToolTip": "..\\include\\databaseFunctions.h",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
-              "WhenOpened": "2026-06-18T16:59:57.543Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-06-18T16:59:57.543Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 1,
               "Title": "main.cpp",
               "DocumentMoniker": "D:\\elevator\\elevator\\software\\ElevatorDemoLoop\\src\\main.cpp",
               "RelativeDocumentMoniker": "main.cpp",
               "ToolTip": "D:\\elevator\\elevator\\software\\ElevatorDemoLoop\\src\\main.cpp",
               "RelativeToolTip": "main.cpp",
-              "ViewState": "AgIAAEkAAAAAAAAAAAAAAE8AAAAQAAAAAAAAAA==",
+              "ViewState": "AgIAAB8AAAAAAAAAAAAAAE8AAAAQAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
-              "WhenOpened": "2026-06-10T15:06:35.823Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-06-10T15:06:35.823Z"
             },
             {
               "$type": "Document",
@@ -78,14 +76,14 @@
               "RelativeDocumentMoniker": "pcanFunctions.cpp",
               "ToolTip": "D:\\elevator\\elevator\\software\\ElevatorDemoLoop\\src\\pcanFunctions.cpp",
               "RelativeToolTip": "pcanFunctions.cpp",
-              "ViewState": "AgIAAKUAAAAAAAAAAAAAAMAAAAAeAAAAAAAAAA==",
+              "ViewState": "AgIAAPwAAAAAAAAAAAAAAAkBAAA7AAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
               "WhenOpened": "2026-06-10T18:27:59.257Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 2,
               "Title": "pcanFunctions.h",
               "DocumentMoniker": "D:\\elevator\\elevator\\software\\ElevatorDemoLoop\\include\\pcanFunctions.h",
               "RelativeDocumentMoniker": "..\\include\\pcanFunctions.h",
@@ -93,8 +91,7 @@
               "RelativeToolTip": "..\\include\\pcanFunctions.h",
               "ViewState": "AgIAAA4AAAAAAAAAAAAAAC0AAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
-              "WhenOpened": "2026-06-18T16:59:56.044Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-06-18T16:59:56.044Z"
             },
             {
               "$type": "Document",
@@ -110,7 +107,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 3,
               "Title": "mainFunctions.cpp",
               "DocumentMoniker": "D:\\elevator\\elevator\\software\\ElevatorDemoLoop\\src\\mainFunctions.cpp",
               "RelativeDocumentMoniker": "mainFunctions.cpp",
@@ -118,8 +115,7 @@
               "RelativeToolTip": "mainFunctions.cpp",
               "ViewState": "AgIAAE4AAAAAAAAAAAAAAJYAAAAJAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
-              "WhenOpened": "2026-06-10T18:23:33.833Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-06-10T18:23:33.833Z"
             },
             {
               "$type": "Document",
@@ -131,8 +127,7 @@
               "RelativeToolTip": "databaseFunctions.cpp",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAEkAAAACAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
-              "WhenOpened": "2026-06-10T15:06:43.904Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-06-10T15:06:43.904Z"
             },
             {
               "$type": "Document",

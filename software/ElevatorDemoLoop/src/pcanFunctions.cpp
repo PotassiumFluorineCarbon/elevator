@@ -147,6 +147,19 @@ void elevatoroperator() {
 			//receive message and add to word
 			if (Rxmsg.can_id == ID_F1_TO_SC) {	word |= Rxmsg.data[0] << 16;}
 			if (Rxmsg.can_id == ID_F2_TO_SC) { word |= Rxmsg.data[0] << 12;}
+#define F1U (word & (UP << 16))
+#define F1D	(word & (DOWN << 16))
+#define F1C (word & (REQUEST << 16))
+#define F2U (word & (UP << 12))
+#define F2D	(word & (DOWN << 12))
+#define F2C (word & (REQUEST << 12))
+#define F3U (word & (UP << 8))
+#define F3D (word & (DOWN << 8))
+#define F3C (word & (REQUEST << 8))
+#define F1 (word & (0x01 << 4))
+#define F2 (word & (0x02 << 4))
+#define F3 (word & (0x03 << 4))
+
 			if (Rxmsg.can_id == ID_F3_TO_SC) {	word |= Rxmsg.data[0] << 8; }
 			if (Rxmsg.can_id == ID_CC_TO_SC) { word |= Rxmsg.data[0] << 4; }
 			if (Rxmsg.can_id == ID_EC_TO_ALL) { word |= Rxmsg.data[0]; }
@@ -165,22 +178,22 @@ void elevatoroperator() {
 				printf("Arrived at 1, moving down\n");
 				// Waiting at floor 1
 				// If command received, state = moving_to_2 or 3
-				if (((word & REQUEST<<12) || (word & UP << 12) || (word & DOWN << 12)) && (word & AT_FLOOR1)) {  // FC2 is calling
+				if (F2C || F2U || F2D) {  // FC2 is calling
 					// now send message to EC to MOVE TO FLOOR 2: CAN ID 0X100, MESSAGE BYTE GO_TO_FLOOR2
 					sendMsg(ID_SC_TO_EC, GO_TO_FLOOR2, can_socket);
 					state = moving_up_to_2;
 				}
-				if ((word & 0x02 << 4) && (word & AT_FLOOR1)) {
+				if (F2) {
 					sendMsg(ID_SC_TO_EC, GO_TO_FLOOR2, can_socket);
 					state = moving_up_to_2;
 				}
 
-				if (((word & REQUEST << 8) || (word & UP << 8) || (word & DOWN << 8)) && (word & AT_FLOOR1)) {
+				if (F3C || F3U || F3D) {
 					sendMsg(ID_SC_TO_EC, GO_TO_FLOOR3, can_socket);
 					state = moving_up_to_3;
 				}
 
-				if ((word & 0x03 << 4) && (word & AT_FLOOR1)) {
+				if (F3) {
 					sendMsg(ID_SC_TO_EC, GO_TO_FLOOR3, can_socket);
 					state = moving_up_to_3;
 				}
@@ -188,15 +201,15 @@ void elevatoroperator() {
 
 			case arrived_at_2_moving_down:
 				printf("Arrived at 2, moving down\n");
-				if (((word & REQUEST << 16) || (word & DOWN << 16)) && (word & AT_FLOOR2)) {
+				if (F1C || F1D) {
 					sendMsg(ID_SC_TO_EC, GO_TO_FLOOR3, can_socket);
 					state = moving_down_to_1;
 				}
-				if ((word & 0x01 << 4) && (word & AT_FLOOR2)) {
+				if (F1) {
 					sendMsg(ID_SC_TO_EC, GO_TO_FLOOR3, can_socket);
 					state = moving_down_to_1;
 				}
-				if ((word & 0x03 << 4) && (word & UP << 8) && (word & AT_FLOOR2) && ((word & DOWN << 16) == 0) && ((word & 0x01 << 4) == 0)) {
+				if (F3 && F3U && (F1D == 0) && (F1 == 0)) {
 					sendMsg(ID_SC_TO_EC, GO_TO_FLOOR3, can_socket);
 					state = moving_up_to_3;
 				}
@@ -204,15 +217,15 @@ void elevatoroperator() {
 
 			case arrived_at_2_moving_up:
 				printf("Arrived at 2, moving up\n");
-				if (((word & REQUEST << 8) || (word & DOWN << 8)) && (word & AT_FLOOR2)) {
+				if (F3C || F3D) {
 					sendMsg(ID_SC_TO_EC, GO_TO_FLOOR3, can_socket);
 					state = moving_up_to_3;
 				}
-				if ((word & 0x03 << 4) && (word & AT_FLOOR2)) {
+				if (F3) {
 					sendMsg(ID_SC_TO_EC, GO_TO_FLOOR3, can_socket);
 					state = moving_up_to_3;
 				}
-				if ((word & 0x01 << 4) && (word & UP << 16) && (word & AT_FLOOR2) && ((word & DOWN << 8) == 0) && ((word & 0x03 << 4) == 0)) {
+				if (F1 && F1U && (F3D == 0) && (F3 == 0)) {
 					sendMsg(ID_SC_TO_EC, GO_TO_FLOOR3, can_socket);
 					state = moving_down_to_1;
 				}
@@ -220,22 +233,22 @@ void elevatoroperator() {
 
 			case arrived_at_3_moving_up:
 				printf("Arrived at 3, moving up\n");
-				if (((word & REQUEST << 12) || (word & UP << 12) || (word & DOWN << 12)) && (word & AT_FLOOR3)) {  // FC2 is calling
+				if (F2C || F2U || F2D) {  // FC2 is calling
 					// now send message to EC to MOVE TO FLOOR 2: CAN ID 0X100, MESSAGE BYTE GO_TO_FLOOR2
 					sendMsg(ID_SC_TO_EC, GO_TO_FLOOR2, can_socket);
 					state = moving_down_to_2;
 				}
-				if ((word & 0x02 << 4) && (word & AT_FLOOR3)) {
+				if (F2) {
 					sendMsg(ID_SC_TO_EC, GO_TO_FLOOR2, can_socket);
 					state = moving_down_to_2;
 				}
 
-				if ((word & REQUEST << 16) || (word & UP << 16) && (word & AT_FLOOR3)) {
+				if (F1C || F1U) {
 					sendMsg(ID_SC_TO_EC, GO_TO_FLOOR3, can_socket);
 					state = moving_down_to_1;
 				}
 
-				if ((word & 0x01 << 4) && (word & AT_FLOOR3)) {
+				if (F1) {
 					sendMsg(ID_SC_TO_EC, GO_TO_FLOOR3, can_socket);
 					state = moving_down_to_1;
 				}
