@@ -33,6 +33,10 @@
 #define AT_FLOOR1 0x05
 #define AT_FLOOR2 0x06
 #define AT_FLOOR3 0x07
+
+#define UP 0x04
+#define DOWN 0x02
+#define REQUEST 0x01
 // Function declarations
 int pcanTx(int id, int data);
 int pcanRx(int num_msgs);

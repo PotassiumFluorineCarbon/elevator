@@ -40,9 +40,9 @@
 
 #define ID                  FC3 // set personality of this program for one controller
 
-#define UP					0x08		//up button pressed
-#define DOWN					0x09		//down button pressed
-#define GO_TO_FLOOR			0x01		//go to floor at request button
+#define UP					0x04		//up button pressed
+#define DOWN					0x02		//down button pressed
+#define REQUEST				0x01		//go to floor at request button
 #define GO_TO_FLOOR_1		0x05		// arrived at Floor 1
 #define GO_TO_FLOOR_2		0x06		// Floor 2
 #define GO_TO_FLOOR_3		0x07		// Floor 3
@@ -483,7 +483,6 @@ int main(void)
 			if (BUTTON == BUTTON_1_PRESSED) {												// Button pressed --> Turn on LED1 and Transmit message
 				HAL_GPIO_WritePin(GPIOA, GPIO_PIN_4, GPIO_PIN_SET);  							// Turn on LED1
 				// Store the 1 character message to transmit into the TxData buffer and transmit over the CAN bus
-				TxData[0]=GO_TO_FLOOR;
 				TxData[0]=UP;
 
 				/*//printf("go to floor 1");
@@ -497,7 +496,6 @@ int main(void)
 			}
 			if (BUTTON == BUTTON_2_PRESSED) {												// Button pressed --> Turn on LED2 and Transmit message
 				HAL_GPIO_WritePin(GPIOA, GPIO_PIN_6, GPIO_PIN_SET);  							// Turn on LED2
-				TxData[0]=GO_TO_FLOOR;
 				TxData[0]=DOWN;
 
 				/*//printf("go to floor 2");
@@ -511,7 +509,7 @@ int main(void)
 			}
 			if (BUTTON == BUTTON_3_PRESSED) {												// Button pressed --> Turn on LED3 and Transmit message
 				HAL_GPIO_WritePin(GPIOA, GPIO_PIN_7, GPIO_PIN_SET);  							// Turn on LED3
-				TxData[0]=GO_TO_FLOOR;
+				TxData[0]=REQUEST;
 				/*//printf("go to floor 3");
 				if (ID==FC3){//CC
 					TxData[0]=0x01;
