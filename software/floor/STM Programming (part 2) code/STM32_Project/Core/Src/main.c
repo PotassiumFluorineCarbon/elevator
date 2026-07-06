@@ -40,7 +40,9 @@
 
 #define ID                  FC3 // set personality of this program for one controller
 
-
+#define UP					0x04		//up button pressed
+#define DOWN					0x02		//down button pressed
+#define REQUEST				0x01		//go to floor at request button
 #define GO_TO_FLOOR_1		0x05		// arrived at Floor 1
 #define GO_TO_FLOOR_2		0x06		// Floor 2
 #define GO_TO_FLOOR_3		0x07		// Floor 3
@@ -446,17 +448,17 @@ int main(void)
 
 		/* USER CODE BEGIN 3 */
 		// Receive
-		if (RxData[0] == GO_TO_FLOOR_1) {										// Turn on LED2
+		if (RxData[0] == GO_TO_FLOOR_1) {
 			HAL_Delay(2000);					    											// Keep LED on for 2 seconds
 			for (i=0; i<8; i++) {
 				RxData[i] = 0x00;																	// Reset the RxData[] buffer (used as flag)
 			}
-			HAL_GPIO_WritePin(GPIOA, GPIO_PIN_4, GPIO_PIN_RESET);  											// Turn off LED2
+			HAL_GPIO_WritePin(GPIOA, GPIO_PIN_4, GPIO_PIN_RESET);  											// Turn off LED1
 			HAL_Delay(100);																		// Need a delay after toggle
 			printf("Rxdata: %d",RxData[0]);
 		}
 
-		if (RxData[0] == GO_TO_FLOOR_2) { 											// Turn on LED2
+		if (RxData[0] == GO_TO_FLOOR_2) {
 			HAL_Delay(2000);					    											// Keep LED on for 2 seconds
 			for (i=0; i<8; i++) {
 				RxData[i] = 0x00;																	// Reset the RxData[] buffer (used as flag)
@@ -466,47 +468,52 @@ int main(void)
 			printf("Rxdata: %d",RxData[0]);
 		}
 
-		if (RxData[0] == GO_TO_FLOOR_3) {											// Turn on LED2
+		if (RxData[0] == GO_TO_FLOOR_3) {
 			HAL_Delay(2000);					    											// Keep LED on for 2 seconds
 			for (i = 0; i < 8; i++) {
 				RxData[i] = 0x00;																	// Reset the RxData[] buffer (used as flag)
 			}
-			HAL_GPIO_WritePin(GPIOA, GPIO_PIN_7, GPIO_PIN_RESET);  											// Turn off LED2
+			HAL_GPIO_WritePin(GPIOA, GPIO_PIN_7, GPIO_PIN_RESET);  											// Turn off LED3
 			HAL_Delay(100);																		// Need a delay after toggle
 			printf("Rxdata: %d", RxData[0]);
 		}
 
 		// Transmit
 		if (BUTTON != 0) {
-			if (BUTTON == BUTTON_1_PRESSED) {												// Blue button pressed --> Turn on LED2 for 2 seconds and Transmit message
-				HAL_GPIO_WritePin(GPIOA, GPIO_PIN_4, GPIO_PIN_SET);  							// Turn on LED2
-				//printf("go to floor 1");
+			if (BUTTON == BUTTON_1_PRESSED) {												// Button pressed --> Turn on LED1 and Transmit message
+				HAL_GPIO_WritePin(GPIOA, GPIO_PIN_4, GPIO_PIN_SET);  							// Turn on LED1
 				// Store the 1 character message to transmit into the TxData buffer and transmit over the CAN bus
+				TxData[0]=UP;
+
+				/*//printf("go to floor 1");
 				if (ID==FC1){
 					TxData[0]=0x01;
-				}
+				}*/
 				if (HAL_CAN_AddTxMessage(&hcan, &TxHeader, TxData, &TxMailbox) != HAL_OK) {	// Transmit the message
 					Error_Handler();															// Transmission error
 				}
 				BUTTON = NO_BUTTON_PRESSED; 													// Reset the BUTTON flag
 			}
-			if (BUTTON == BUTTON_2_PRESSED) {												// Blue button pressed --> Turn on LED2 for 2 seconds and Transmit message
+			if (BUTTON == BUTTON_2_PRESSED) {												// Button pressed --> Turn on LED2 and Transmit message
 				HAL_GPIO_WritePin(GPIOA, GPIO_PIN_6, GPIO_PIN_SET);  							// Turn on LED2
-				//printf("go to floor 2");
+				TxData[0]=DOWN;
+
+				/*//printf("go to floor 2");
 				if (ID==FC2){
 					TxData[0]=0x01;
-				}
+				}*/
 				if (HAL_CAN_AddTxMessage(&hcan, &TxHeader, TxData, &TxMailbox) != HAL_OK) {	// Transmit the message
 					Error_Handler();															// Transmission error
 				}
 				BUTTON = NO_BUTTON_PRESSED; 													// Reset the BUTTON flag
 			}
-			if (BUTTON == BUTTON_3_PRESSED) {												// Blue button pressed --> Turn on LED2 for 2 seconds and Transmit message
-				HAL_GPIO_WritePin(GPIOA, GPIO_PIN_7, GPIO_PIN_SET);  										// Turn on LED2
-				//printf("go to floor 3");
+			if (BUTTON == BUTTON_3_PRESSED) {												// Button pressed --> Turn on LED3 and Transmit message
+				HAL_GPIO_WritePin(GPIOA, GPIO_PIN_7, GPIO_PIN_SET);  							// Turn on LED3
+				TxData[0]=REQUEST;
+				/*//printf("go to floor 3");
 				if (ID==FC3){//CC
 					TxData[0]=0x01;
-				}
+				}*/
 				if (HAL_CAN_AddTxMessage(&hcan, &TxHeader, TxData, &TxMailbox) != HAL_OK) {	// Transmit the message
 					Error_Handler();															// Transmission error
 				}

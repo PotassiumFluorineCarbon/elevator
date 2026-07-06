@@ -114,6 +114,200 @@ int pcanRx(int num_msgs) {
 
 enum State {
 	initial,
+	arrived_at_1_moving_down,
+	moving_down_to_1,
+	arrived_at_2_moving_up,
+	arrived_at_2_moving_down,
+	moving_down_to_2,
+	moving_up_to_2,
+	arrived_at_3_moving_up,
+	moving_up_to_3,
+	fault
+};
+
+void elevatoroperator() {
+	if (can_open() < 0) {
+		printf("Failed to open CAN socket!\n");
+		return;
+	}
+
+	struct can_frame Rxmsg;
+	enum State state = initial;
+	int word = 0;
+
+	printf("\nElevator Operator State Machine Started (SocketCAN)\n");
+	printf("Press Ctrl+C to exit\n\n");
+
+	while (1) {
+		ssize_t nbytes = read(can_socket, &Rxmsg, sizeof(Rxmsg));
+
+		if (nbytes == sizeof(Rxmsg)) {
+			printf("Rx ID: 0x%X  Data: 0x%02X\n", Rxmsg.can_id, Rxmsg.data[0]);
+
+			//receive message and add to word
+			if (Rxmsg.can_id == ID_F1_TO_SC) {	word |= Rxmsg.data[0] << 16;}
+			if (Rxmsg.can_id == ID_F2_TO_SC) { word |= Rxmsg.data[0] << 12;}
+#define F1U (word & (UP << 16))
+#define F1D	(word & (DOWN << 16))
+#define F1C (word & (REQUEST << 16))
+#define F2U (word & (UP << 12))
+#define F2D	(word & (DOWN << 12))
+#define F2C (word & (REQUEST << 12))
+#define F3U (word & (UP << 8))
+#define F3D (word & (DOWN << 8))
+#define F3C (word & (REQUEST << 8))
+#define F1 (word & (0x01 << 4))
+#define F2 (word & (0x02 << 4))
+#define F3 (word & (0x03 << 4))
+
+			if (Rxmsg.can_id == ID_F3_TO_SC) {	word |= Rxmsg.data[0] << 8; }
+			if (Rxmsg.can_id == ID_CC_TO_SC) { word |= Rxmsg.data[0] << 4; }
+			if (Rxmsg.can_id == ID_EC_TO_ALL) { word |= Rxmsg.data[0]; }
+
+			switch (state) {
+			case initial:
+				printf("Initial\n");//Initialize elevator
+				if (Rxmsg.can_id == ID_EC_TO_ALL) {
+					if (Rxmsg.data[0] == AT_FLOOR1) state = arrived_at_1_moving_down;
+					else if (Rxmsg.data[0] == AT_FLOOR2) state = arrived_at_2_moving_down;
+					else if (Rxmsg.data[0] == AT_FLOOR3) state = arrived_at_3_moving_up;
+				}
+				break;
+
+			case arrived_at_1_moving_down:
+				printf("Arrived at 1, moving down\n");
+				// Waiting at floor 1
+				// If command received, state = moving_to_2 or 3
+				if (F2C || F2U || F2D) {  // FC2 is calling
+					// now send message to EC to MOVE TO FLOOR 2: CAN ID 0X100, MESSAGE BYTE GO_TO_FLOOR2
+					sendMsg(ID_SC_TO_EC, GO_TO_FLOOR2, can_socket);
+					state = moving_up_to_2;
+				}
+				if (F2) {
+					sendMsg(ID_SC_TO_EC, GO_TO_FLOOR2, can_socket);
+					state = moving_up_to_2;
+				}
+
+				if (F3C || F3U || F3D) {
+					sendMsg(ID_SC_TO_EC, GO_TO_FLOOR3, can_socket);
+					state = moving_up_to_3;
+				}
+
+				if (F3) {
+					sendMsg(ID_SC_TO_EC, GO_TO_FLOOR3, can_socket);
+					state = moving_up_to_3;
+				}
+				break;
+
+			case arrived_at_2_moving_down:
+				printf("Arrived at 2, moving down\n");
+				if (F1C || F1D) {
+					sendMsg(ID_SC_TO_EC, GO_TO_FLOOR3, can_socket);
+					state = moving_down_to_1;
+				}
+				if (F1) {
+					sendMsg(ID_SC_TO_EC, GO_TO_FLOOR3, can_socket);
+					state = moving_down_to_1;
+				}
+				if (F3 && F3U && (F1D == 0) && (F1 == 0)) {
+					sendMsg(ID_SC_TO_EC, GO_TO_FLOOR3, can_socket);
+					state = moving_up_to_3;
+				}
+				break;
+
+			case arrived_at_2_moving_up:
+				printf("Arrived at 2, moving up\n");
+				if (F3C || F3D) {
+					sendMsg(ID_SC_TO_EC, GO_TO_FLOOR3, can_socket);
+					state = moving_up_to_3;
+				}
+				if (F3) {
+					sendMsg(ID_SC_TO_EC, GO_TO_FLOOR3, can_socket);
+					state = moving_up_to_3;
+				}
+				if (F1 && F1U && (F3D == 0) && (F3 == 0)) {
+					sendMsg(ID_SC_TO_EC, GO_TO_FLOOR3, can_socket);
+					state = moving_down_to_1;
+				}
+				break;
+
+			case arrived_at_3_moving_up:
+				printf("Arrived at 3, moving up\n");
+				if (F2C || F2U || F2D) {  // FC2 is calling
+					// now send message to EC to MOVE TO FLOOR 2: CAN ID 0X100, MESSAGE BYTE GO_TO_FLOOR2
+					sendMsg(ID_SC_TO_EC, GO_TO_FLOOR2, can_socket);
+					state = moving_down_to_2;
+				}
+				if (F2) {
+					sendMsg(ID_SC_TO_EC, GO_TO_FLOOR2, can_socket);
+					state = moving_down_to_2;
+				}
+
+				if (F1C || F1U) {
+					sendMsg(ID_SC_TO_EC, GO_TO_FLOOR3, can_socket);
+					state = moving_down_to_1;
+				}
+
+				if (F1) {
+					sendMsg(ID_SC_TO_EC, GO_TO_FLOOR3, can_socket);
+					state = moving_down_to_1;
+				}
+				break;
+
+			case moving_down_to_1:
+				if (Rxmsg.can_id == ID_EC_TO_ALL && (word & AT_FLOOR1)) {
+					state = arrived_at_1_moving_down;
+				}
+				if (Rxmsg.can_id == ID_EC_TO_ALL && ((word & AT_FLOOR2) || (word & AT_FLOOR3))) {
+					sendMsg(ID_SC_TO_EC, GO_TO_FLOOR1, can_socket);
+				}
+				break;
+
+			case moving_down_to_2:
+				if (Rxmsg.can_id == ID_EC_TO_ALL && (word & AT_FLOOR2)) {
+					state = arrived_at_2_moving_down;
+				}
+				if (Rxmsg.can_id == ID_EC_TO_ALL && ((word & AT_FLOOR1) || (word & AT_FLOOR3))) {
+					sendMsg(ID_SC_TO_EC, GO_TO_FLOOR2, can_socket);
+				}
+				break;
+
+			case moving_up_to_2:
+				if (Rxmsg.can_id == ID_EC_TO_ALL && (word & AT_FLOOR2)) {
+					state = arrived_at_2_moving_up;
+				}
+				if (Rxmsg.can_id == ID_EC_TO_ALL && ((word & AT_FLOOR1) || (word & AT_FLOOR3))) {
+					sendMsg(ID_SC_TO_EC, GO_TO_FLOOR2, can_socket);
+				}
+				break;
+
+			case moving_up_to_3:
+				if (Rxmsg.can_id == ID_EC_TO_ALL && (word & AT_FLOOR3)) {
+					state = arrived_at_3_moving_up;
+				}
+				if (Rxmsg.can_id == ID_EC_TO_ALL && ((word & AT_FLOOR1) || (word & AT_FLOOR2))) {
+					sendMsg(ID_SC_TO_EC, GO_TO_FLOOR3, can_socket);
+				}
+				break;
+
+			case fault:
+				printf("Error\n");
+				// Handle fault condition (e.g. stop elevator, sound alarm, etc.)
+				break;
+			default:
+				break;
+			}
+		}
+		else if (nbytes < 0 && errno != EAGAIN && errno != EWOULDBLOCK) {
+			perror("CAN read");
+		}
+	}
+}
+
+//Old state machine
+/*
+enum State {
+	initial,
 	waiting_at_1,
 	moving_to_1,
 	waiting_at_2,
@@ -260,6 +454,7 @@ void elevatoroperator() {
 		}
 	}
 }
+*/
 
 // Helper used by elevatoroperator (updated for SocketCAN)
 int sendMsg(int id, int data, int sock) {
