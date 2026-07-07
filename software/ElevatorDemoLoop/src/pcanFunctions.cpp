@@ -178,83 +178,61 @@ void elevatoroperator() {
 				printf("Arrived at 1, moving down\n");
 				// Waiting at floor 1
 				// If command received, state = moving_to_2 or 3
-				word &= ~(F1U | F1D | F1);
-				if (F2C || F2U || F2D) {  // FC2 is calling
+				if (F2C || F2U || F2D || F2) {  // FC2 is calling
 					// now send message to EC to MOVE TO FLOOR 2: CAN ID 0X100, MESSAGE BYTE GO_TO_FLOOR2
 					sendMsg(ID_SC_TO_EC, GO_TO_FLOOR2, can_socket);
 					state = moving_up_to_2;
-				}
-				if (F2) {
-					sendMsg(ID_SC_TO_EC, GO_TO_FLOOR2, can_socket);
-					state = moving_up_to_2;
+					word &= ~(F1U | F1D | F1C | F1);
 				}
 
-				if (F3C || F3U || F3D) {
+				if (F3C || F3U || F3D || F3) {
 					sendMsg(ID_SC_TO_EC, GO_TO_FLOOR3, can_socket);
 					state = moving_up_to_3;
-				}
-
-				if (F3) {
-					sendMsg(ID_SC_TO_EC, GO_TO_FLOOR3, can_socket);
-					state = moving_up_to_3;
+					word &= ~(F1U | F1D | F1C | F1);
 				}
 				break;
 
 			case arrived_at_2_moving_down:
 				printf("Arrived at 2, moving down\n");
-				word &= ~(F2U | F2D | F2);
-				if (F1C || F1D) {
-					sendMsg(ID_SC_TO_EC, GO_TO_FLOOR3, can_socket);
+				if (F1C || F1U || F1D || F1) {
+					sendMsg(ID_SC_TO_EC, GO_TO_FLOOR1, can_socket);
 					state = moving_down_to_1;
-				}
-				if (F1) {
-					sendMsg(ID_SC_TO_EC, GO_TO_FLOOR3, can_socket);
-					state = moving_down_to_1;
+					word &= ~(F2D | F2);
 				}
 				if (F3 && F3U && (F1D == 0) && (F1 == 0)) {
 					sendMsg(ID_SC_TO_EC, GO_TO_FLOOR3, can_socket);
 					state = moving_up_to_3;
+					word &= ~(F2D | F2);
 				}
 				break;
 
 			case arrived_at_2_moving_up:
 				printf("Arrived at 2, moving up\n");
-				word &= ~(F2U | F2D | F2);
-				if (F3C || F3D) {
+				if (F3C || F3U || F3D || F3) {
 					sendMsg(ID_SC_TO_EC, GO_TO_FLOOR3, can_socket);
 					state = moving_up_to_3;
-				}
-				if (F3) {
-					sendMsg(ID_SC_TO_EC, GO_TO_FLOOR3, can_socket);
-					state = moving_up_to_3;
+					word &= ~(F2U | F2);
 				}
 				if (F1 && F1U && (F3D == 0) && (F3 == 0)) {
-					sendMsg(ID_SC_TO_EC, GO_TO_FLOOR3, can_socket);
+					sendMsg(ID_SC_TO_EC, GO_TO_FLOOR1, can_socket);
 					state = moving_down_to_1;
+					word &= ~(F2U | F2);
 				}
 				break;
 
 			case arrived_at_3_moving_up:
 				printf("Arrived at 3, moving up\n");
-				word &= ~(F3U | F3D | F3);
-				if (F2C || F2U || F2D) {  // FC2 is calling
+				if (F2C || F2U || F2D || F2) {
 					// now send message to EC to MOVE TO FLOOR 2: CAN ID 0X100, MESSAGE BYTE GO_TO_FLOOR2
 					sendMsg(ID_SC_TO_EC, GO_TO_FLOOR2, can_socket);
 					state = moving_down_to_2;
-				}
-				if (F2) {
-					sendMsg(ID_SC_TO_EC, GO_TO_FLOOR2, can_socket);
-					state = moving_down_to_2;
+					word &= ~(F3U | F3D | F3C | F3);
 				}
 
-				if (F1C || F1U) {
-					sendMsg(ID_SC_TO_EC, GO_TO_FLOOR3, can_socket);
+				if (F1C || F1U || F1D || F1) {
+					sendMsg(ID_SC_TO_EC, GO_TO_FLOOR1, can_socket);
 					state = moving_down_to_1;
-				}
-
-				if (F1) {
-					sendMsg(ID_SC_TO_EC, GO_TO_FLOOR3, can_socket);
-					state = moving_down_to_1;
+					word &= ~(F3U | F3D | F3C | F3);
 				}
 				break;
 

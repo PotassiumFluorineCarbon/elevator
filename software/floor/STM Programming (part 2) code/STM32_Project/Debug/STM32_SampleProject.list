@@ -415,7 +415,7 @@ static void MX_CAN_Init(void)
  8000408:	605a      	str	r2, [r3, #4]
       TxHeader.StdId = ID;	 		 					// Standard mode ID is 0x100 -- CHANGE THIS LATER --- sets can id for all messages based on personality
  800040a:	4b0b      	ldr	r3, [pc, #44]	@ (8000438 <MX_CAN_Init+0xfc>)
- 800040c:	f240 2203 	movw	r2, #515	@ 0x203
+ 800040c:	f240 2201 	movw	r2, #513	@ 0x201
  8000410:	601a      	str	r2, [r3, #0]
       TxHeader.RTR = CAN_RTR_DATA;	 					// Send a data frame not an RTR
  8000412:	4b09      	ldr	r3, [pc, #36]	@ (8000438 <MX_CAN_Init+0xfc>)
