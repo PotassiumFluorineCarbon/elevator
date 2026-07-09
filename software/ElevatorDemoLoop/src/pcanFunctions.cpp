@@ -161,7 +161,11 @@ void elevatoroperator() {
 #define F3 (word & (0x03 << 4))
 
 			if (Rxmsg.can_id == ID_F3_TO_SC) {	word |= Rxmsg.data[0] << 8; }
-			if (Rxmsg.can_id == ID_CC_TO_SC) { word |= Rxmsg.data[0] << 4; }
+			if (Rxmsg.can_id == ID_CC_TO_SC) {
+				if (Rxmsg.data[0] == 0x01) word |= 0x01 << 4; // F1
+				else if (Rxmsg.data[0] == 0x02) word |= 0x01 << 5; // F2
+				else if (Rxmsg.data[0] == 0x03) word |= 0x01 << 6; // F3
+			}
 			if (Rxmsg.can_id == ID_EC_TO_ALL) {
 				word = (word & 0xfffffff0) | Rxmsg.data[0];
 			}
