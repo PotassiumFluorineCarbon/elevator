@@ -1,22 +1,47 @@
 <!DOCTYPE html>
-<html>
-    <head>
-        <title>Control page</title>
-        <link href="../CSS/style.css" type="text/css" rel="stylesheet" />
-    </head>
+<html lang="en">
 
-    <body>
-        
-        <form action="php/login.php" method="post" id="login">
-            <h1>Elevator controls:</h1>
-            <input type="submit" value="up"/>
-            <input type="submit" value="down"/>
-            <input type="submit" value="1"/>
-            <input type="submit" value="2"/>
-            <input type="submit" value="3"/>
-            <input type="submit" value="4"/>
+<head>
+    <meta charset="UTF-8">
+    <title>Elevator Controls</title>
+    <link rel="stylesheet" href="../CSS/style.css">
+</head>
 
-            <p><a href="request_access.html"> Request Access</a></p>
-        </form>
-    </body>
+<body>
+
+<h1>Elevator Controls</h1>
+
+<h2>Select Direction</h2>
+
+<button onclick="sendDirection('up')">
+    Up
+</button>
+
+<button onclick="sendDirection('down')">
+    Down
+</button>
+
+
+<h2>Select Floor</h2>
+
+<button onclick="requestFloor(1)">
+    Floor 1
+</button>
+
+<button onclick="requestFloor(2)">
+    Floor 2
+</button>
+
+<button onclick="requestFloor(3)">
+    Floor 3
+</button>
+
+
+<p id="message"></p>
+
+
+<script src="../js/controls.js"></script>
+
+</body>
+
 </html>

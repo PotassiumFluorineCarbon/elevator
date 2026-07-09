@@ -38,7 +38,7 @@
 #define FC3					0x203
 #define CC 					0x200
 
-#define ID                  FC3 // set personality of this program for one controller
+#define ID                  FC1 // set personality of this program for one controller
 
 #define UP					0x04		//up button pressed
 #define DOWN					0x02		//down button pressed
