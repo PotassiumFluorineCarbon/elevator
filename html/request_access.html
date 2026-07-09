@@ -3,22 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <title>Request Access</title>
 
-    <!-- HTML5 Shiv -->
-    <!--[if lt IE 9]>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.min.js"></script>
-    <![endif]-->
-
-    <!-- Bootstrap -->
     <link rel="stylesheet" href="../node_modules/bootstrap/dist/css/bootstrap.min.css">
 
-    <!-- Custom Styles -->
     <link rel="stylesheet" href="../CSS/style.css">
 </head>
-
-
 
 <body>
 
@@ -29,11 +19,29 @@
     </header>
 
     <main class="container">
-
-        <form action="php/req_access.php" method="post" id="requestAccess" class="p-4 border rounded shadow-sm">
+        <form action="../php/addcredentials.php" method="post" id="requestAccess" class="p-4 border rounded shadow-sm">
 
             <section class="mb-4">
+                <fieldset>
+                    <legend>Account Details</legend>
+                    <div class="mb-3">
+                        <label class="form-label" for="username">Username:</label>
+                        <input type="text" id="username" name="username" class="form-control" required>
+                    </div>
 
+                    <div class="mb-3">
+                        <label class="form-label" for="password">Password:</label>
+                        <input type="password" id="password" name="password" class="form-control" required>
+                    </div>
+                    
+                    <small class="text-muted">
+                        Username and password must be at least 7 characters long. Password must have at least one UPPER case letter and one number.
+                    </small>
+                </fieldset>
+            </section>
+            <hr>
+
+            <section class="mb-4">
                 <fieldset>
                     <legend>Contact Details</legend>
 
@@ -75,65 +83,38 @@
                             <label class="form-check-label">Student</label>
                         </div>
                     </div>
-
                 </fieldset>
-
             </section>
 
             <section class="mb-4">
-
                 <h3>Current Involvement</h3>
 
                 <div class="form-check">
-                    <input class="form-check-input" type="checkbox" name="involvement" value="none">
+                    <input class="form-check-input" type="checkbox" name="involvement[]" value="none">
                     <label class="form-check-label">Have no involvement in project</label>
                 </div>
 
                 <div class="form-check">
-                    <input class="form-check-input" type="checkbox" name="involvement" value="instructor">
+                    <input class="form-check-input" type="checkbox" name="involvement[]" value="instructor">
                     <label class="form-check-label">I instruct on the project</label>
                 </div>
 
                 <div class="form-check">
-                    <input class="form-check-input" type="checkbox" name="involvement" value="boss">
+                    <input class="form-check-input" type="checkbox" name="involvement[]" value="boss">
                     <label class="form-check-label">You will respect my authority</label>
                 </div>
-
-                <div class="form-check">
-                    <input class="form-check-input" type="checkbox" name="involvement" value="investor">
-                    <label class="form-check-label">I bring the money</label>
-                </div>
-
-                <div class="form-check">
-                    <input class="form-check-input" type="checkbox" name="involvement" value="admin">
-                    <label class="form-check-label">I admin the thing</label>
-                </div>
-
-                <div class="form-check">
-                    <input class="form-check-input" type="checkbox" name="involvement" value="it">
-                    <label class="form-check-label">I handle IT</label>
-                </div>
-
-                <div class="form-check">
-                    <input class="form-check-input" type="checkbox" name="involvement" value="superboss">
-                    <label class="form-check-label">I am superboss</label>
-                </div>
-
             </section>
 
             <section class="mb-4">
-
                 <label class="form-label"><strong>Do you drive a car?</strong></label>
                 <select name="drives_car" class="form-select mb-3">
                     <option value="no_answer" selected></option>
                     <option value="yes">Yes</option>
                     <option value="no">No</option>
                 </select>
-
             </section>
 
             <section class="mb-4">
-
                 <label class="form-label">
                     <strong>Tell us a bit more about yourself</strong>
                 </label>
@@ -152,7 +133,6 @@
                 </small>
 
                 <div id="errorMsg" class="text-danger"></div>
-
             </section>
 
             <div class="mb-3">
@@ -163,7 +143,6 @@
             <input type="submit" value="Submit Request" class="btn btn-success w-100">
 
         </form>
-
     </main>
 
     <footer class="text-center py-3 border-top mt-4">
@@ -174,26 +153,20 @@
         const textarea = document.getElementById("details");
         const charCount = document.getElementById("charCount");
         const errorMsg = document.getElementById("errorMsg");
-
         const maxChars = 180;
 
         textarea.addEventListener("input", function () {
-
             const currentLength = textarea.value.length;
             const remaining = maxChars - currentLength;
-
-            charCount.textContent =
-                remaining + " characters remaining";
+            charCount.textContent = remaining + " characters remaining";
 
             if (currentLength >= maxChars) {
-                errorMsg.textContent =
-                    "You have reached the maximum of 180 characters.";
+                errorMsg.textContent = "You have reached the maximum of 180 characters.";
             } else {
                 errorMsg.textContent = "";
             }
         });
     </script>
-
     <script src="../js/eventListeners.js"></script>
 </body>
 </html>
