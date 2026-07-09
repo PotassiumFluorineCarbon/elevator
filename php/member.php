@@ -1,13 +1,22 @@
 <?php
-    session_start();
-        if(isset($_SESSION['username'])){
-            echo "Welcome," . $_SESSION['username'] . "!";
+session_start();
 
-            //Add 'members only' content here
-            echo "<p>Members only content - for your eyes only</p>";
-
-            echo "Click to <a href='logout.php'>Logout</a>";
-        } else {
-            echo "You must be logged in!";
-        }
+// Kick user back to login if they bypassed the login screen
+if (!isset($_SESSION['username'])) {
+    header("Location: ../html/login.html");
+    exit();
+}
 ?>
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Members Only</title>
+</head>
+<body>
+    <p>Welcome, <?php echo htmlspecialchars($_SESSION['username']); ?>!</p>
+    
+    <p>Members only content - for your eyes only</p>
+
+    <p>Click to <a href='logout.php'>Logout</a></p>
+</body>
+</html>
