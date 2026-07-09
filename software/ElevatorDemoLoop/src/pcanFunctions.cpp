@@ -163,7 +163,7 @@ void elevatoroperator() {
 			if (Rxmsg.can_id == ID_F3_TO_SC) {	word |= Rxmsg.data[0] << 8; }
 			if (Rxmsg.can_id == ID_CC_TO_SC) { word |= Rxmsg.data[0] << 4; }
 			if (Rxmsg.can_id == ID_EC_TO_ALL) {
-				word = (word & 0xfffffff0) | rxdata[0];
+				word = (word & 0xfffffff0) | Rxmsg.data[0];
 				word |= Rxmsg.data[0];
 			}
 
