@@ -186,7 +186,7 @@ void elevatoroperator() {
 					word &= ~(F1U | F1);
 				}
 
-				if (F3D || F3) {
+				else if (F3D || F3) {
 					sendMsg(ID_SC_TO_EC, GO_TO_FLOOR3, can_socket);
 					state = moving_up_to_3;
 					word &= ~(F1U | F1);
@@ -201,7 +201,7 @@ void elevatoroperator() {
 					state = moving_down_to_1;
 					word &= ~(F2D | F2);
 				}
-				if ((F3 || F3D) && (F1U == 0) && (F1 == 0)) {
+				else if ((F3 || F3D) && (F1U == 0) && (F1 == 0)) {
 					sendMsg(ID_SC_TO_EC, GO_TO_FLOOR3, can_socket);
 					state = moving_up_to_3;
 					word &= ~(F2D | F2);
@@ -216,7 +216,7 @@ void elevatoroperator() {
 					state = moving_up_to_3;
 					word &= ~(F2U | F2);
 				}
-				if ((F1 || F1U) && (F3D == 0) && (F3 == 0)) {
+				else if ((F1 || F1U) && (F3D == 0) && (F3 == 0)) {
 					sendMsg(ID_SC_TO_EC, GO_TO_FLOOR1, can_socket);
 					state = moving_down_to_1;
 					word &= ~(F2U | F2);
@@ -233,7 +233,7 @@ void elevatoroperator() {
 					word &= ~(F3D | F3);
 				}
 
-				if (F1U || F1) {
+				else if (F1U || F1) {
 					sendMsg(ID_SC_TO_EC, GO_TO_FLOOR1, can_socket);
 					state = moving_down_to_1;
 					word &= ~(F3D | F3);
@@ -244,7 +244,7 @@ void elevatoroperator() {
 				if (Rxmsg.can_id == ID_EC_TO_ALL && (word & AT_FLOOR1)) {
 					state = arrived_at_1_moving_down;
 				}
-				if (Rxmsg.can_id == ID_EC_TO_ALL && ((word & AT_FLOOR2) || (word & AT_FLOOR3))) {
+				else if (Rxmsg.can_id == ID_EC_TO_ALL && ((word & AT_FLOOR2) || (word & AT_FLOOR3))) {
 					sendMsg(ID_SC_TO_EC, GO_TO_FLOOR1, can_socket);
 				}
 				break;
@@ -253,7 +253,7 @@ void elevatoroperator() {
 				if (Rxmsg.can_id == ID_EC_TO_ALL && (word & AT_FLOOR2)) {
 					state = arrived_at_2_moving_down;
 				}
-				if (Rxmsg.can_id == ID_EC_TO_ALL && ((word & AT_FLOOR1) || (word & AT_FLOOR3))) {
+				else if (Rxmsg.can_id == ID_EC_TO_ALL && ((word & AT_FLOOR1) || (word & AT_FLOOR3))) {
 					sendMsg(ID_SC_TO_EC, GO_TO_FLOOR2, can_socket);
 				}
 				break;
@@ -262,7 +262,7 @@ void elevatoroperator() {
 				if (Rxmsg.can_id == ID_EC_TO_ALL && (word & AT_FLOOR2)) {
 					state = arrived_at_2_moving_up;
 				}
-				if (Rxmsg.can_id == ID_EC_TO_ALL && ((word & AT_FLOOR1) || (word & AT_FLOOR3))) {
+				else if (Rxmsg.can_id == ID_EC_TO_ALL && ((word & AT_FLOOR1) || (word & AT_FLOOR3))) {
 					sendMsg(ID_SC_TO_EC, GO_TO_FLOOR2, can_socket);
 				}
 				break;
@@ -271,7 +271,7 @@ void elevatoroperator() {
 				if (Rxmsg.can_id == ID_EC_TO_ALL && (word & AT_FLOOR3)) {
 					state = arrived_at_3_moving_up;
 				}
-				if (Rxmsg.can_id == ID_EC_TO_ALL && ((word & AT_FLOOR1) || (word & AT_FLOOR2))) {
+				else if (Rxmsg.can_id == ID_EC_TO_ALL && ((word & AT_FLOOR1) || (word & AT_FLOOR2))) {
 					sendMsg(ID_SC_TO_EC, GO_TO_FLOOR3, can_socket);
 				}
 				break;
