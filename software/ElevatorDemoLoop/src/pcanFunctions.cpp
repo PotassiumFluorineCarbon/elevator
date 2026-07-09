@@ -162,7 +162,10 @@ void elevatoroperator() {
 
 			if (Rxmsg.can_id == ID_F3_TO_SC) {	word |= Rxmsg.data[0] << 8; }
 			if (Rxmsg.can_id == ID_CC_TO_SC) { word |= Rxmsg.data[0] << 4; }
-			if (Rxmsg.can_id == ID_EC_TO_ALL) { word |= Rxmsg.data[0]; }
+			if (Rxmsg.can_id == ID_EC_TO_ALL) {
+				word = (word & 0xfffffff0) | rxdata[0];
+				word |= Rxmsg.data[0];
+			}
 
 			switch (state) {
 			case initial:
@@ -241,6 +244,7 @@ void elevatoroperator() {
 				break;
 
 			case moving_down_to_1:
+				printf("word: %08x state: Moving down to 1\n", (unsigned int)word);
 				if (Rxmsg.can_id == ID_EC_TO_ALL && (word & 0x0F == AT_FLOOR1)) {
 					state = arrived_at_1_moving_down;
 				}
@@ -250,6 +254,7 @@ void elevatoroperator() {
 				break;
 
 			case moving_down_to_2:
+				printf("word: %08x state: Moving down to 2\n", (unsigned int)word);
 				if (Rxmsg.can_id == ID_EC_TO_ALL && (word & 0x0F == AT_FLOOR2)) {
 					state = arrived_at_2_moving_down;
 				}
@@ -259,6 +264,7 @@ void elevatoroperator() {
 				break;
 
 			case moving_up_to_2:
+				printf("word: %08x state: Moving up to 2\n", (unsigned int)word);
 				if (Rxmsg.can_id == ID_EC_TO_ALL && (word & 0x0F == AT_FLOOR2)) {
 					state = arrived_at_2_moving_up;
 				}
@@ -268,6 +274,7 @@ void elevatoroperator() {
 				break;
 
 			case moving_up_to_3:
+				printf("word: %08x state: Moving up to 3\n", (unsigned int)word);
 				if (Rxmsg.can_id == ID_EC_TO_ALL && (word & 0x0F == AT_FLOOR3)) {
 					state = arrived_at_3_moving_up;
 				}
