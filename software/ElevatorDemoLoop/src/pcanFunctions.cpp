@@ -175,10 +175,11 @@ void elevatoroperator() {
 				break;
 
 			case arrived_at_1_moving_down:
-				printf("Arrived at 1, moving down\n");
+				printf("word: %08x state: Arrived at 1, moving down\n", (unsigned int)word);
+
 				// Waiting at floor 1
 				// If command received, state = moving_to_2 or 3
-				if (F2U || F2D || F2) {  // FC2 is calling
+				if (F2U || F2D || F2) { // FC2 is calling
 					// now send message to EC to MOVE TO FLOOR 2: CAN ID 0X100, MESSAGE BYTE GO_TO_FLOOR2
 					sendMsg(ID_SC_TO_EC, GO_TO_FLOOR2, can_socket);
 					state = moving_up_to_2;
@@ -193,7 +194,8 @@ void elevatoroperator() {
 				break;
 
 			case arrived_at_2_moving_down:
-				printf("Arrived at 2, moving down\n");
+				printf("word: %08x state: Arrived at 2, moving down\n", (unsigned int)word);
+
 				if (F1U || F1) {
 					sendMsg(ID_SC_TO_EC, GO_TO_FLOOR1, can_socket);
 					state = moving_down_to_1;
@@ -207,7 +209,8 @@ void elevatoroperator() {
 				break;
 
 			case arrived_at_2_moving_up:
-				printf("Arrived at 2, moving up\n");
+				printf("word: %08x state: Arrived at 2, moving up\n", (unsigned int)word);
+
 				if (F3D || F3) {
 					sendMsg(ID_SC_TO_EC, GO_TO_FLOOR3, can_socket);
 					state = moving_up_to_3;
@@ -221,7 +224,8 @@ void elevatoroperator() {
 				break;
 
 			case arrived_at_3_moving_up:
-				printf("Arrived at 3, moving up\n");
+				printf("word: %08x state: Arrived at 3, moving up\n", (unsigned int)word);
+
 				if (F2U || F2D || F2) {
 					// now send message to EC to MOVE TO FLOOR 2: CAN ID 0X100, MESSAGE BYTE GO_TO_FLOOR2
 					sendMsg(ID_SC_TO_EC, GO_TO_FLOOR2, can_socket);
