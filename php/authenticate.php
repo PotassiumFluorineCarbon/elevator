@@ -32,6 +32,6 @@ if ($authenticated) {
     exit();
 } else {
     // Invalid credentials flow
-    echo "<p>Invalid credentials. Please click <a href='login.html'>here</a> to try again.</p>";
+    echo "<p>Invalid credentials. Please click <a href='../html/login.html'>here</a> to try again.</p>";
 }
 ?>
