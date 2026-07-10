@@ -10,6 +10,9 @@
       "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\elevator\\elevator\\software\\ElevatorDemoLoop\\include\\pcanFunctions.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     },
     {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\elevator\\elevator\\software\\ElevatorDemoLoop\\include\\databaseFunctions.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\elevator\\elevator\\html\\logbook_eric.html||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
     {
@@ -19,9 +22,6 @@
     {
       "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\elevator\\elevator\\software\\ElevatorDemoLoop\\src\\mainFunctions.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
       "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:mainFunctions.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\elevator\\elevator\\software\\ElevatorDemoLoop\\include\\databaseFunctions.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\elevator\\elevator\\software\\ElevatorDemoLoop\\src\\databaseFunctions.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
@@ -46,7 +46,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 4,
               "Title": "main.cpp",
               "DocumentMoniker": "D:\\elevator\\elevator\\software\\ElevatorDemoLoop\\src\\main.cpp",
               "RelativeDocumentMoniker": "main.cpp",
@@ -64,14 +64,14 @@
               "RelativeDocumentMoniker": "pcanFunctions.cpp",
               "ToolTip": "D:\\elevator\\elevator\\software\\ElevatorDemoLoop\\src\\pcanFunctions.cpp",
               "RelativeToolTip": "pcanFunctions.cpp",
-              "ViewState": "AgIAAKwAAAAAAAAAAAAAALQAAAAcAAAAAAAAAA==",
+              "ViewState": "AgIAAJsAAAAAAAAAAAAAAKUAAAAnAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
               "WhenOpened": "2026-06-10T18:27:59.257Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 2,
               "Title": "databaseFunctions.h",
               "DocumentMoniker": "D:\\elevator\\elevator\\software\\ElevatorDemoLoop\\include\\databaseFunctions.h",
               "RelativeDocumentMoniker": "..\\include\\databaseFunctions.h",
@@ -79,7 +79,8 @@
               "RelativeToolTip": "..\\include\\databaseFunctions.h",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
-              "WhenOpened": "2026-06-18T16:59:57.543Z"
+              "WhenOpened": "2026-06-18T16:59:57.543Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
@@ -89,13 +90,14 @@
               "RelativeDocumentMoniker": "..\\include\\pcanFunctions.h",
               "ToolTip": "D:\\elevator\\elevator\\software\\ElevatorDemoLoop\\include\\pcanFunctions.h",
               "RelativeToolTip": "..\\include\\pcanFunctions.h",
-              "ViewState": "AgIAABEAAAAAAAAAAAAawCQAAAAKAAAAAAAAAA==",
+              "ViewState": "AgIAABIAAAAAAAAAAAAAACcAAAAYAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
-              "WhenOpened": "2026-06-18T16:59:56.044Z"
+              "WhenOpened": "2026-06-18T16:59:56.044Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 3,
               "Title": "logbook_eric.html",
               "DocumentMoniker": "D:\\elevator\\elevator\\html\\logbook_eric.html",
               "RelativeDocumentMoniker": "..\\..\\..\\html\\logbook_eric.html",
@@ -107,7 +109,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 5,
               "Title": "mainFunctions.cpp",
               "DocumentMoniker": "D:\\elevator\\elevator\\software\\ElevatorDemoLoop\\src\\mainFunctions.cpp",
               "RelativeDocumentMoniker": "mainFunctions.cpp",
