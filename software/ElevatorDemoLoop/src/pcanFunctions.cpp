@@ -145,61 +145,76 @@ void elevatoroperator() {
 			printf("Rx ID: 0x%X  Data: 0x%02X\n", Rxmsg.can_id, Rxmsg.data[0]);
 
 			//receive message and add to word
-			if (Rxmsg.can_id == ID_F1_TO_SC) {	word |= Rxmsg.data[0] << 16;}
-			if (Rxmsg.can_id == ID_F2_TO_SC) { word |= Rxmsg.data[0] << 12;}
+			if (Rxmsg.can_id == ID_F1_TO_SC) {
+				word |= Rxmsg.data[0] << 16;
+			}
+			if (Rxmsg.can_id == ID_F2_TO_SC) {
+				word |= Rxmsg.data[0] << 12;
+			}
+			if (Rxmsg.can_id == ID_F3_TO_SC) {
+				word |= Rxmsg.data[0] << 8;
+			}
 #define F1U (word & (UP << 16))
-#define F1D	(word & (DOWN << 16))
-#define F1C (word & (REQUEST << 16))
+//#define F1D	(word & (DOWN << 16))
+//#define F1C (word & (REQUEST << 16))
 #define F2U (word & (UP << 12))
 #define F2D	(word & (DOWN << 12))
-#define F2C (word & (REQUEST << 12))
-#define F3U (word & (UP << 8))
+//#define F2C (word & (REQUEST << 12))
+//#define F3U (word & (UP << 8))
 #define F3D (word & (DOWN << 8))
-#define F3C (word & (REQUEST << 8))
+//#define F3C (word & (REQUEST << 8))
+
 #define F1 (word & (0x01 << 4))
 #define F2 (word & (0x02 << 4))
-#define F3 (word & (0x03 << 4))
+#define F3 (word & (0x04 << 4))
 
-			if (Rxmsg.can_id == ID_F3_TO_SC) {	word |= Rxmsg.data[0] << 8; }
-			if (Rxmsg.can_id == ID_CC_TO_SC) { word |= Rxmsg.data[0] << 4; }
-			if (Rxmsg.can_id == ID_EC_TO_ALL) { word |= Rxmsg.data[0]; }
+			if (Rxmsg.can_id == ID_CC_TO_SC) {
+				if (Rxmsg.data[0] == 0x01) word |= 0x01 << 4; // F1
+				else if (Rxmsg.data[0] == 0x02) word |= 0x02 << 4; // F2
+				else if (Rxmsg.data[0] == 0x03) word |= 0x04 << 4; // F3
+			}
+
+			if (Rxmsg.can_id == ID_EC_TO_ALL) {
+				word = (word & 0xfffffff0) | Rxmsg.data[0];
+			}
 
 			switch (state) {
 			case initial:
 				printf("Initial\n");//Initialize elevator
-				if (Rxmsg.can_id == ID_EC_TO_ALL) {
-					if (Rxmsg.data[0] == AT_FLOOR1) state = arrived_at_1_moving_down;
-					else if (Rxmsg.data[0] == AT_FLOOR2) state = arrived_at_2_moving_down;
-					else if (Rxmsg.data[0] == AT_FLOOR3) state = arrived_at_3_moving_up;
-				}
+				if ((word & 0x0F) == AT_FLOOR1) state = arrived_at_1_moving_down;
+				else if ((word & 0x0F) == AT_FLOOR2) state = arrived_at_2_moving_down;
+				else if ((word & 0x0F) == AT_FLOOR3) state = arrived_at_3_moving_up;
+				//handle disabled mode later
 				break;
 
 			case arrived_at_1_moving_down:
-				printf("Arrived at 1, moving down\n");
+				printf("word: %08x state: Arrived at 1, moving down\n", (unsigned int)word);
+
 				// Waiting at floor 1
 				// If command received, state = moving_to_2 or 3
-				if (F2C || F2U || F2D || F2) {  // FC2 is calling
+				if (F2U || F2D || F2) { // FC2 is calling
 					// now send message to EC to MOVE TO FLOOR 2: CAN ID 0X100, MESSAGE BYTE GO_TO_FLOOR2
 					sendMsg(ID_SC_TO_EC, GO_TO_FLOOR2, can_socket);
 					state = moving_up_to_2;
-					word &= ~(F1U | F1D | F1C | F1);
+					word &= ~(F1U | F1);
 				}
 
-				if (F3C || F3U || F3D || F3) {
+				else if (F3D || F3) {
 					sendMsg(ID_SC_TO_EC, GO_TO_FLOOR3, can_socket);
 					state = moving_up_to_3;
-					word &= ~(F1U | F1D | F1C | F1);
+					word &= ~(F1U | F1);
 				}
 				break;
 
 			case arrived_at_2_moving_down:
-				printf("Arrived at 2, moving down\n");
-				if (F1C || F1U || F1D || F1) {
+				printf("word: %08x state: Arrived at 2, moving down\n", (unsigned int)word);
+
+				if (F1U || F1) {
 					sendMsg(ID_SC_TO_EC, GO_TO_FLOOR1, can_socket);
 					state = moving_down_to_1;
 					word &= ~(F2D | F2);
 				}
-				if (F3 && F3U && (F1D == 0) && (F1 == 0)) {
+				else if ((F3 || F3D) && (F1U == 0) && (F1 == 0)) {
 					sendMsg(ID_SC_TO_EC, GO_TO_FLOOR3, can_socket);
 					state = moving_up_to_3;
 					word &= ~(F2D | F2);
@@ -207,13 +222,14 @@ void elevatoroperator() {
 				break;
 
 			case arrived_at_2_moving_up:
-				printf("Arrived at 2, moving up\n");
-				if (F3C || F3U || F3D || F3) {
+				printf("word: %08x state: Arrived at 2, moving up\n", (unsigned int)word);
+
+				if (F3D || F3) {
 					sendMsg(ID_SC_TO_EC, GO_TO_FLOOR3, can_socket);
 					state = moving_up_to_3;
 					word &= ~(F2U | F2);
 				}
-				if (F1 && F1U && (F3D == 0) && (F3 == 0)) {
+				else if ((F1 || F1U) && (F3D == 0) && (F3 == 0)) {
 					sendMsg(ID_SC_TO_EC, GO_TO_FLOOR1, can_socket);
 					state = moving_down_to_1;
 					word &= ~(F2U | F2);
@@ -221,54 +237,71 @@ void elevatoroperator() {
 				break;
 
 			case arrived_at_3_moving_up:
-				printf("Arrived at 3, moving up\n");
-				if (F2C || F2U || F2D || F2) {
+				printf("word: %08x state: Arrived at 3, moving up\n", (unsigned int)word);
+
+				if (F2U || F2D || F2) {
 					// now send message to EC to MOVE TO FLOOR 2: CAN ID 0X100, MESSAGE BYTE GO_TO_FLOOR2
 					sendMsg(ID_SC_TO_EC, GO_TO_FLOOR2, can_socket);
 					state = moving_down_to_2;
-					word &= ~(F3U | F3D | F3C | F3);
+					word &= ~(F3D | F3);
 				}
 
-				if (F1C || F1U || F1D || F1) {
+				else if (F1U || F1) {
 					sendMsg(ID_SC_TO_EC, GO_TO_FLOOR1, can_socket);
 					state = moving_down_to_1;
-					word &= ~(F3U | F3D | F3C | F3);
+					word &= ~(F3D | F3);
 				}
 				break;
 
 			case moving_down_to_1:
-				if (Rxmsg.can_id == ID_EC_TO_ALL && (word & AT_FLOOR1)) {
+				printf("word: %08x state: Moving down to 1\n", (unsigned int)word);
+				if ((word & 0x0F) == AT_FLOOR1) {
 					state = arrived_at_1_moving_down;
 				}
-				if (Rxmsg.can_id == ID_EC_TO_ALL && ((word & AT_FLOOR2) || (word & AT_FLOOR3))) {
+				else if (((word & 0x0F) == AT_FLOOR2) || ((word & 0x0F) == AT_FLOOR3)) {
 					sendMsg(ID_SC_TO_EC, GO_TO_FLOOR1, can_socket);
+				}
+				else if ((word & 0x04) == 0) { //disabled somehow??
+					sendMsg(ID_SC_TO_EC, GO_TO_FLOOR1, can_socket);  // wake up, slacker, hut hut hut
 				}
 				break;
 
 			case moving_down_to_2:
-				if (Rxmsg.can_id == ID_EC_TO_ALL && (word & AT_FLOOR2)) {
+				printf("word: %08x state: Moving down to 2\n", (unsigned int)word);
+				if ((word & 0x0F) == AT_FLOOR2) {
 					state = arrived_at_2_moving_down;
 				}
-				if (Rxmsg.can_id == ID_EC_TO_ALL && ((word & AT_FLOOR1) || (word & AT_FLOOR3))) {
+				else if (((word & 0x0F) == AT_FLOOR1) || ((word & 0x0F) == AT_FLOOR3)) {//enabled but at a different floor
 					sendMsg(ID_SC_TO_EC, GO_TO_FLOOR2, can_socket);
+				}
+				else if ((word & 0x04) == 0) { //disabled somehow??
+					sendMsg(ID_SC_TO_EC, GO_TO_FLOOR2, can_socket);  // wake up, slacker, hut hut hut
 				}
 				break;
 
 			case moving_up_to_2:
-				if (Rxmsg.can_id == ID_EC_TO_ALL && (word & AT_FLOOR2)) {
+				printf("word: %08x state: Moving up to 2\n", (unsigned int)word);
+				if ((word & 0x0F) == AT_FLOOR2) {
 					state = arrived_at_2_moving_up;
 				}
-				if (Rxmsg.can_id == ID_EC_TO_ALL && ((word & AT_FLOOR1) || (word & AT_FLOOR3))) {
+				else if (((word & 0x0F) == AT_FLOOR1) || ((word & 0x0F) == AT_FLOOR3)) {
 					sendMsg(ID_SC_TO_EC, GO_TO_FLOOR2, can_socket);
+				}
+				else if ((word & 0x04) == 0) { //disabled somehow??
+					sendMsg(ID_SC_TO_EC, GO_TO_FLOOR2, can_socket);  // wake up, slacker, hut hut hut
 				}
 				break;
 
 			case moving_up_to_3:
-				if (Rxmsg.can_id == ID_EC_TO_ALL && (word & AT_FLOOR3)) {
+				printf("word: %08x state: Moving up to 3\n", (unsigned int)word);
+				if ((word & 0x0F) == AT_FLOOR3) {
 					state = arrived_at_3_moving_up;
 				}
-				if (Rxmsg.can_id == ID_EC_TO_ALL && ((word & AT_FLOOR1) || (word & AT_FLOOR2))) {
+				else if (((word & 0x0F) == AT_FLOOR1) || ((word & 0x0F) == AT_FLOOR2)) {
 					sendMsg(ID_SC_TO_EC, GO_TO_FLOOR3, can_socket);
+				}
+				else if ((word & 0x04) == 0) { //disabled somehow??
+					sendMsg(ID_SC_TO_EC, GO_TO_FLOOR3, can_socket);  // wake up, slacker, hut hut hut
 				}
 				break;
 
