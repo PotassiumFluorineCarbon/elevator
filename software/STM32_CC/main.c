@@ -1,4 +1,4 @@
- /* USER CODE BEGIN Header */
+/* USER CODE BEGIN Header */
 /**
   ******************************************************************************
   * @file           : main.c
@@ -18,8 +18,7 @@
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
-#include <stdio.h>
-#include "stm32f3xx_it.h"
+
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 
@@ -44,12 +43,14 @@
 #define AT_FLOOR_1		0x05		// arrived at Floor 1
 #define AT_FLOOR_2		0x06		// Floor 2
 #define AT_FLOOR_3		0x07		// Floor 3
-#define NO_BUTTON_PRESSED	0			// Default value of the BUTTON flag - no button has been pressed
-#define BLUE_BUTTON_PRESSED	1			// Default value of the BUTTON flag when blue button is pressed (later can add other buttons)
 #define BUTTON_1_PRESSED	1			// Default value of the BUTTON flag when blue button is pressed (later can add other buttons)
 #define BUTTON_2_PRESSED	2			// Default value of the BUTTON flag when blue button is pressed (later can add other buttons)
 #define BUTTON_3_PRESSED	3			// Default value of the BUTTON flag when blue button is pressed (later can add other buttons)
-#define BUTTON_PRESSED      1
+
+#define DOOR_CONTROL_ID  0x10
+
+#define DOOR_CLOSED      0x00
+#define DOOR_OPEN        0x01
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -70,16 +71,21 @@ CAN_RxHeaderTypeDef		RxHeader;
 uint8_t					TxData[8];		// 8 bytes of data per frame
 uint8_t					RxData[8];
 uint32_t				TxMailbox;
-uint8_t BUTTON = NO_BUTTON_PRESSED;		// Initial value is that no BUTTON has been pressed
+uint8_t msg1 = GO_TO_FLOOR_1;			// Initial message is GO_TO_FLOOR_1
+uint8_t msg2 = GO_TO_FLOOR_2;
+uint8_t msg3 = GO_TO_FLOOR_3;
 uint8_t i;								// For loop variable
-uint8_t Floor1Requested = 0;
-uint8_t Floor2Requested = 0;
-uint8_t Floor3Requested = 0;
+volatile uint8_t Floor1Requested = 0;
+volatile uint8_t Floor2Requested = 0;
+volatile uint8_t Floor3Requested = 0;
 uint8_t Floor1Pending = 0;
 uint8_t Floor2Pending = 0;
 uint8_t Floor3Pending = 0;
 uint8_t CurrentFloor = 0;
-
+volatile uint8_t DoorOpenReq = 0;
+volatile uint8_t DoorCloseReq = 0;
+uint8_t DoorOpenLED = 0;
+uint8_t DoorClosedLED = 1;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -111,7 +117,7 @@ void SystemClock_Config(void)
   RCC_ClkInitTypeDef RCC_ClkInitStruct = {0};
   RCC_PeriphCLKInitTypeDef PeriphClkInit = {0};
 
-  /** Initializes the RCC Oscillator according to the specified parameters
+  /** Initializes the RCC Oscillators according to the specified parameters
   * in the RCC_OscInitTypeDef structure.
   */
   RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSI;
@@ -214,7 +220,7 @@ static void MX_CAN_Init(void)
       /* *** Prepare header fields for Standard Mode CAN Transmission *** */
       TxHeader.IDE = CAN_ID_STD;		 				// Using standard mode. Note this = CAN_ID_EXT for extended mode
       TxHeader.ExtId = 0x00;			 				// Extended ID is not used
-      TxHeader.StdId = ID;	 		 					// CC = 0x200
+      TxHeader.StdId = ID;	 		 					// Standard mode ID is 0x100 -- CHANGE THIS LATER --- sets can id for all messages based on personality
       TxHeader.RTR = CAN_RTR_DATA;	 					// Send a data frame not an RTR
       TxHeader.DLC = 1;				 					// Data length code = 1 (only send one byte)
       TxHeader.TransmitGlobalTime = DISABLE;
@@ -279,13 +285,14 @@ static void MX_GPIO_Init(void)
   __HAL_RCC_GPIOB_CLK_ENABLE();
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOA, PB1_LED_Pin|LD2_Pin|PB2_LED_Pin|PB3_LED_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOA, PB1_LED_Pin|LD2_Pin|PB2_LED_Pin|PB3_LED_Pin
+                          |Door_Open_LED_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(Floor_1_indicator_LED_GPIO_Port, Floor_1_indicator_LED_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOB, Floor_2_indicator_LED_Pin|Floor_3_indicator_LED_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOB, Floor_2_indicator_LED_Pin|Floor_3_indicator_LED_Pin|Door_Close_LED_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin : B1_Pin */
   GPIO_InitStruct.Pin = B1_Pin;
@@ -293,8 +300,10 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(B1_GPIO_Port, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : PB1_LED_Pin LD2_Pin PB2_LED_Pin PB3_LED_Pin */
-  GPIO_InitStruct.Pin = PB1_LED_Pin|LD2_Pin|PB2_LED_Pin|PB3_LED_Pin;
+  /*Configure GPIO pins : PB1_LED_Pin LD2_Pin PB2_LED_Pin PB3_LED_Pin
+                           Door_Open_LED_Pin */
+  GPIO_InitStruct.Pin = PB1_LED_Pin|LD2_Pin|PB2_LED_Pin|PB3_LED_Pin
+                          |Door_Open_LED_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
@@ -307,15 +316,17 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(Floor_1_indicator_LED_GPIO_Port, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : Floor_2_indicator_LED_Pin Floor_3_indicator_LED_Pin */
-  GPIO_InitStruct.Pin = Floor_2_indicator_LED_Pin|Floor_3_indicator_LED_Pin;
+  /*Configure GPIO pins : Floor_2_indicator_LED_Pin Floor_3_indicator_LED_Pin Door_Close_LED_Pin */
+  GPIO_InitStruct.Pin = Floor_2_indicator_LED_Pin|Floor_3_indicator_LED_Pin|Door_Close_LED_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : Pushbutton_1_Pin Pushbutton_3_Pin Pushbutton_2_Pin */
-  GPIO_InitStruct.Pin = Pushbutton_1_Pin|Pushbutton_3_Pin|Pushbutton_2_Pin;
+  /*Configure GPIO pins : Pushbutton_1_Pin Pushbutton_3_Pin Pushbutton_2_Pin Door_Open_Pin
+                           Door_Closed_Pin */
+  GPIO_InitStruct.Pin = Pushbutton_1_Pin|Pushbutton_3_Pin|Pushbutton_2_Pin|Door_Open_Pin
+                          |Door_Closed_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_IT_FALLING;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
@@ -351,32 +362,48 @@ void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan)
 // Override the HAL_GPIO Callback -- 1. light up LED2 and 2. Transmit message when the blue button is pushed
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 {
+	 if (GPIO_Pin == GPIO_PIN_12 && CurrentFloor != 1)					// GPIO pin 12 is the Floor1
+	  {
+	  	  if (HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_12) == GPIO_PIN_RESET){
+	  		Floor1Requested = 1;
+	  		Floor1Pending = 1;
+	  	  }
+	  }
+	  if (GPIO_Pin == GPIO_PIN_15 && CurrentFloor != 2)					// GPIO pin 15 is the Floor 2
+	      {
+	      	  if (HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_15) == GPIO_PIN_RESET){
+	      		Floor2Requested = 1;
+	      		Floor2Pending = 1;
+	      	  }
+	      }
+	  if (GPIO_Pin == GPIO_PIN_14 && CurrentFloor != 3)					// GPIO pin 13 is the Floor 3
+	    {
+	    	  if (HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_14) == GPIO_PIN_RESET){
+	    		  Floor3Requested = 1;
+	    		  Floor3Pending = 1;
+	    	  }
+	    }
+  // Open Button (PB4)
+	  if (GPIO_Pin == GPIO_PIN_4)
+	  {
+	      if (HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_4) == GPIO_PIN_RESET)
+	      {
+	          DoorOpenReq = 1;
+	          DoorOpenLED = 1;
+	          DoorClosedLED = 0;
+	      }
+	  }
 
-
-  if (GPIO_Pin == GPIO_PIN_12 && CurrentFloor != 1)					// GPIO pin 12 is the Floor1
-  {
-  	  if (HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_12) == GPIO_PIN_RESET){
-  		Floor1Requested = 1;
-  		Floor1Pending = 1;
-  		BUTTON = BUTTON_PRESSED;
-  	  }
-  }
-  if (GPIO_Pin == GPIO_PIN_15 && CurrentFloor != 2)					// GPIO pin 15 is the Floor 2
-      {
-      	  if (HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_15) == GPIO_PIN_RESET){
-      		Floor2Requested = 1;
-      		Floor2Pending = 1;
-      		BUTTON = BUTTON_PRESSED;
-      	  }
-      }
-  if (GPIO_Pin == GPIO_PIN_14 && CurrentFloor != 3)					// GPIO pin 13 is the Floor 3
-    {
-    	  if (HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_14) == GPIO_PIN_RESET){
-    		  Floor3Requested = 1;
-    		  Floor3Pending = 1;
-    		  BUTTON = BUTTON_PRESSED;
-    	  }
-    }
+     // Close Button (PB5)
+	  if (GPIO_Pin == GPIO_PIN_5)
+	  {
+	      if (HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_5) == GPIO_PIN_RESET)
+	      {
+	          DoorCloseReq = 1;
+	          DoorOpenLED = 0;
+	          DoorClosedLED = 1;
+	      }
+	  }
 }
 
 /************************************************************************************************ */
@@ -491,56 +518,85 @@ int main(void)
 		}
 
 		// Transmit
-		if (BUTTON != 0) {
 
-			//Clear button push
-			BUTTON = NO_BUTTON_PRESSED;
+		// Door Open Button
+		if (DoorOpenReq == 1)
+	    {
+			TxHeader.StdId = DOOR_CONTROL_ID;
+			TxData[0] = DOOR_OPEN;
+
+	       while(HAL_CAN_GetTxMailboxesFreeLevel(&hcan) == 0);
+
+	       if (HAL_CAN_AddTxMessage(&hcan, &TxHeader, TxData, &TxMailbox) != HAL_OK)
+	       {
+	          Error_Handler();
+	       }
+
+	       DoorOpenReq = 0;
+	       TxHeader.StdId = ID;
+	    }
+
+		// Door Close Button
+		if (DoorCloseReq == 1)
+	    {
+			TxHeader.StdId = DOOR_CONTROL_ID;
+			TxData[0] = DOOR_CLOSED;
+
+	       while(HAL_CAN_GetTxMailboxesFreeLevel(&hcan) == 0);
+
+	       if (HAL_CAN_AddTxMessage(&hcan, &TxHeader, TxData, &TxMailbox) != HAL_OK)
+	       {
+	            Error_Handler();
+	       }
+	       DoorCloseReq = 0;
+	       TxHeader.StdId = ID;
+	    }
 
 
 
-			if (Floor1Requested == 1) {
+		if (Floor1Requested == 1) {
 
+			TxData[0]=0x01;
 
+			//Wait till at least 1 mailbox is free
+			while(HAL_CAN_GetTxMailboxesFreeLevel(&hcan) == 0);
 
-				TxData[0]=0x01;
-
-				//Wait till at least 1 mailbox is free
-				while(HAL_CAN_GetTxMailboxesFreeLevel(&hcan) == 0);
-
-				if (HAL_CAN_AddTxMessage(&hcan, &TxHeader, TxData, &TxMailbox) != HAL_OK) {	// Transmit the message
-					Error_Handler();															// Transmission error
-				}
-
-				Floor1Requested = 0;// Reset the BUTTON flag
-
+			if (HAL_CAN_AddTxMessage(&hcan, &TxHeader, TxData, &TxMailbox) != HAL_OK) {	// Transmit the message
+				Error_Handler();															// Transmission error
 			}
-			if (Floor2Requested == 1) {
 
-				TxData[0]=0x02;
+			Floor1Requested = 0;// Reset the BUTTON flag
 
-				//Wait till at least 1 mailbox is free
-				while(HAL_CAN_GetTxMailboxesFreeLevel(&hcan) == 0);
-
-				if (HAL_CAN_AddTxMessage(&hcan, &TxHeader, TxData, &TxMailbox) != HAL_OK) {	// Transmit the message
-					Error_Handler();														// Transmission error
-				}
-
-				Floor2Requested = 0;												// Reset the BUTTON flag
-			}
-			if (Floor3Requested == 1) {
-
-				TxData[0]=0x03;
-
-				//Wait till at least 1 mailbox is free
-				while(HAL_CAN_GetTxMailboxesFreeLevel(&hcan) == 0);
-
-				if (HAL_CAN_AddTxMessage(&hcan, &TxHeader, TxData, &TxMailbox) != HAL_OK) {	// Transmit the message
-					Error_Handler();															// Transmission error
-				}
-
-				Floor3Requested = 0;													// Reset the BUTTON flag
-			}
 		}
+
+		if (Floor2Requested == 1) {
+
+			TxData[0]=0x02;
+
+			//Wait till at least 1 mailbox is free
+			while(HAL_CAN_GetTxMailboxesFreeLevel(&hcan) == 0);
+
+			if (HAL_CAN_AddTxMessage(&hcan, &TxHeader, TxData, &TxMailbox) != HAL_OK) {	// Transmit the message
+				Error_Handler();														// Transmission error
+			}
+
+			Floor2Requested = 0;												// Reset the BUTTON flag
+		}
+
+		if (Floor3Requested == 1) {
+
+			TxData[0]=0x03;
+
+			//Wait till at least 1 mailbox is free
+			while(HAL_CAN_GetTxMailboxesFreeLevel(&hcan) == 0);
+
+			if (HAL_CAN_AddTxMessage(&hcan, &TxHeader, TxData, &TxMailbox) != HAL_OK) {	// Transmit the message
+				Error_Handler();															// Transmission error
+			}
+
+			Floor3Requested = 0;													// Reset the BUTTON flag
+		}
+
 		// =====================
 		// LED OUTPUT CONTROL
 		// =====================
@@ -551,6 +607,12 @@ int main(void)
 
 		HAL_GPIO_WritePin(GPIOA, GPIO_PIN_7, (Floor3Pending) ? GPIO_PIN_SET : GPIO_PIN_RESET);
 
+		// Door LED Control
+		HAL_GPIO_WritePin(Door_Open_LED_GPIO_Port, Door_Open_LED_Pin, DoorOpenLED ? GPIO_PIN_SET : GPIO_PIN_RESET);
+
+		HAL_GPIO_WritePin(Door_Close_LED_GPIO_Port, Door_Close_LED_Pin, DoorClosedLED ? GPIO_PIN_SET : GPIO_PIN_RESET);
+
 	}
 	/* USER CODE END 3 */
 }
+
