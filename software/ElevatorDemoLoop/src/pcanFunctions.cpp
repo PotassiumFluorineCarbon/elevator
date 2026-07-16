@@ -134,8 +134,6 @@ void elevatoroperator() {
 	struct can_frame Rxmsg;
 	enum State state = initial;
 	int word = 0;
-	auto start;
-	auto end;
 
 	printf("\nElevator Operator State Machine Started (SocketCAN)\n");
 	printf("Press Ctrl+C to exit\n\n");
@@ -224,11 +222,9 @@ void elevatoroperator() {
 				break;
 
 			case arrived_at_2_moving_down_door_open:
-				start = std::chrono::steady_clock::now();
-				end = start + std::chrono::seconds(10);
-
-				if (C || (std::chrono::steady_clock::now() >= end)) {
+				if (C || F1U || F1 || F3 || F3D) {
 					state = arrived_at_2_moving_down_door_closed;
+					word &= ~C;
 				}
 				break;
 
@@ -236,6 +232,7 @@ void elevatoroperator() {
 				printf("word: %08x state: Arrived at 2, moving down\n", (unsigned int)word);
 				if (F2U || F2D || O) {
 					state = arrived_at_2_moving_down_door_open;
+					word &= ~(F2U | F2D | O);
 				}
 				if (F1U || F1) {
 					sendMsg(ID_SC_TO_EC, GO_TO_FLOOR1, can_socket);
@@ -250,11 +247,9 @@ void elevatoroperator() {
 				break;
 
 			case arrived_at_2_moving_up_door_open:
-				start = std::chrono::steady_clock::now();
-				end = start + std::chrono::seconds(10);
-
-				if (C || (std::chrono::steady_clock::now() >= end)) {
+				if (C || F1U || F1 || F3 || F3D) {
 					state = arrived_at_2_moving_up_door_closed;
+					word &= ~C;
 				}
 				break;
 
@@ -262,6 +257,7 @@ void elevatoroperator() {
 				printf("word: %08x state: Arrived at 2, moving up\n", (unsigned int)word);
 				if (F2U || F2D || O) {
 					state = arrived_at_2_moving_up_door_open;
+					word &= ~(F2U | F2D | O);
 				}
 				if (F3D || F3) {
 					sendMsg(ID_SC_TO_EC, GO_TO_FLOOR3, can_socket);
@@ -276,11 +272,9 @@ void elevatoroperator() {
 				break;
 
 			case arrived_at_3_moving_up_door_open:
-				start = std::chrono::steady_clock::now();
-				end = start + std::chrono::seconds(10);
-
-				if (C || (std::chrono::steady_clock::now() >= end)) {
+				if (C || F2U || F2D || F2 || F1U || F1) {
 					state = arrived_at_3_moving_up_door_closed;
+					word &= ~C;
 				}
 				break;
 
@@ -288,6 +282,7 @@ void elevatoroperator() {
 				printf("word: %08x state: Arrived at 3, moving up\n", (unsigned int)word);
 				if (F3D || O) {
 					state = arrived_at_3_moving_up_door_open;
+					word &= ~(F3D | O);
 				}
 				if (F2U || F2D || F2) {
 					// now send message to EC to MOVE TO FLOOR 2: CAN ID 0X100, MESSAGE BYTE GO_TO_FLOOR2
