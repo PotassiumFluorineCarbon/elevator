@@ -19,6 +19,7 @@
 #define PCAN_NO_ERROR               	0x00000U  	// No error 
 
 // Elevator project specific 
+#define ID_CC_TO_SC_DOOR  0x10	// ID for door messages from Car controller to supervisory controller 
 #define ID_SC_TO_EC  0x100	// ID for messages from Supervisory controller to elevator controller
 #define ID_EC_TO_ALL 0x101	// ID for messages from Elevator controller to all other nodes
 #define ID_CC_TO_SC  0x200	// ID for messages from Car controller to supervisory controller 
