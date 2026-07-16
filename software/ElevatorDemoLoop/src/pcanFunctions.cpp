@@ -175,8 +175,11 @@ void elevatoroperator() {
 				if (Rxmsg.data[0] == 0x01) word |= 0x01 << 4; // F1
 				else if (Rxmsg.data[0] == 0x02) word |= 0x02 << 4; // F2
 				else if (Rxmsg.data[0] == 0x03) word |= 0x04 << 4; // F3
-				else if (Rxmsg.data[0] == 0x04) word |= 0x01 << 20;//O
-				else if (Rxmsg.data[0] == 0x05) word |= 0x02 << 20;//C
+			}
+
+			if (Rxmsg.can_id == ID_CC_TO_SC_DOOR) {
+				else if (Rxmsg.data[0] == 0x00) word |= 0x01 << 20;//O
+				else if (Rxmsg.data[0] == 0x01) word |= 0x02 << 20;//C
 			}
 
 			if (Rxmsg.can_id == ID_EC_TO_ALL) {
