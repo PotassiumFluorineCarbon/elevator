@@ -114,13 +114,17 @@ int pcanRx(int num_msgs) {
 
 enum State {
 	initial,
-	arrived_at_1_moving_down,
+	arrived_at_1_moving_down_door_open,
+	arrived_at_1_moving_down_door_closed,
 	moving_down_to_1,
-	arrived_at_2_moving_up,
-	arrived_at_2_moving_down,
+	arrived_at_2_moving_up_door_open,
+	arrived_at_2_moving_up_door_closed,
+	arrived_at_2_moving_down_door_open,
+	arrived_at_2_moving_down_door_closed,
 	moving_down_to_2,
 	moving_up_to_2,
-	arrived_at_3_moving_up,
+	arrived_at_3_moving_up_door_open,
+	arrived_at_3_moving_up_door_closed,
 	moving_up_to_3,
 	fault
 };
