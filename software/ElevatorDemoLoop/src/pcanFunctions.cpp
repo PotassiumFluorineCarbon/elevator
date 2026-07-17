@@ -200,6 +200,7 @@ void elevatoroperator() {
 				break;
 
 			case arrived_at_1_moving_down_door_open:
+				printf("word: %08x state: Arrived at 1, moving down door open\n", (unsigned int)word);
 				if (C || F2U || F2D || F2 || F3D || F3) {//close door if close door is pressed or elevator is called to any other floor
 					state = arrived_at_1_moving_down_door_closed;
 					word &= ~C;
@@ -207,7 +208,7 @@ void elevatoroperator() {
 				break;
 
 			case arrived_at_1_moving_down_door_closed:
-				printf("word: %08x state: Arrived at 1, moving down\n", (unsigned int)word);
+				printf("word: %08x state: Arrived at 1, moving down door closed\n", (unsigned int)word);
 				if (F1U || O) {
 					state = arrived_at_1_moving_down_door_open;
 					word &= ~(F1U | O);
@@ -229,6 +230,7 @@ void elevatoroperator() {
 				break;
 
 			case arrived_at_2_moving_down_door_open:
+				printf("word: %08x state: Arrived at 2, moving down door open\n", (unsigned int)word);
 				if (C || F1U || F1 || F3 || F3D) {
 					state = arrived_at_2_moving_down_door_closed;
 					word &= ~C;
@@ -236,7 +238,7 @@ void elevatoroperator() {
 				break;
 
 			case arrived_at_2_moving_down_door_closed:
-				printf("word: %08x state: Arrived at 2, moving down\n", (unsigned int)word);
+				printf("word: %08x state: Arrived at 2, moving down door closed\n", (unsigned int)word);
 				if (F2U || F2D || O) {
 					state = arrived_at_2_moving_down_door_open;
 					word &= ~(F2U | F2D | O);
@@ -254,6 +256,7 @@ void elevatoroperator() {
 				break;
 
 			case arrived_at_2_moving_up_door_open:
+				printf("word: %08x state: Arrived at 2, moving up door open\n", (unsigned int)word);
 				if (C || F1U || F1 || F3 || F3D) {
 					state = arrived_at_2_moving_up_door_closed;
 					word &= ~C;
@@ -261,7 +264,7 @@ void elevatoroperator() {
 				break;
 
 			case arrived_at_2_moving_up_door_closed:
-				printf("word: %08x state: Arrived at 2, moving up\n", (unsigned int)word);
+				printf("word: %08x state: Arrived at 2, moving up door closed\n", (unsigned int)word);
 				if (F2U || F2D || O) {
 					state = arrived_at_2_moving_up_door_open;
 					word &= ~(F2U | F2D | O);
@@ -279,6 +282,7 @@ void elevatoroperator() {
 				break;
 
 			case arrived_at_3_moving_up_door_open:
+				printf("word: %08x state: Arrived at 3, moving up door open\n", (unsigned int)word);
 				if (C || F2U || F2D || F2 || F1U || F1) {
 					state = arrived_at_3_moving_up_door_closed;
 					word &= ~C;
@@ -286,7 +290,7 @@ void elevatoroperator() {
 				break;
 
 			case arrived_at_3_moving_up_door_closed:
-				printf("word: %08x state: Arrived at 3, moving up\n", (unsigned int)word);
+				printf("word: %08x state: Arrived at 3, moving up door closed\n", (unsigned int)word);
 				if (F3D || O) {
 					state = arrived_at_3_moving_up_door_open;
 					word &= ~(F3D | O);
