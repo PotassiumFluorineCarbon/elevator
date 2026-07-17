@@ -20,10 +20,8 @@ echo "Database functions loaded";
 
 
 $path = "mysql:host=localhost;dbname=elevator";
-
-$user = "elevator";
-
-$password = "";
+$user = "elevator_user";
+$password = "password";
 
 
 

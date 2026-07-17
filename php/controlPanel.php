@@ -11,8 +11,8 @@ if(!isset($_SESSION['username'])){
 require_once "databaseFunctions.php";
 
 $path="mysql:host=localhost;dbname=elevator";
-$user="elevator";
-$password="";
+$user="elevator_user"; 
+$password="password";
 
 function press($name,$can,$data,$path,$user,$password){
     if(isset($_POST[$name])){

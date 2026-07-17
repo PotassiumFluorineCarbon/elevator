@@ -1,33 +1,37 @@
 <?php 
 session_start();
 
-$username = $_POST['username'] ?? '';  
-$password = $_POST['password'] ?? '';  
+require 'database.php';
 
-// Initialize variable to prevent undefined warnings
+$inputUser = $_POST['username'] ?? '';  
+$inputPass = $_POST['password'] ?? '';  
+
 $authenticated = false;
 
-// Load users from JSON
-$jsonData = @file_get_contents('../json/users.json');
-$users = json_decode($jsonData, true);
-
-if ($users === null) {
-    die("<p>Error: Could not load user data.</p>");
-}
-
-// Check each user in the array
-foreach ($users as $user) {
-    if ($user['username'] === $username && $user['password'] === $password) {
-        $authenticated = true;
-        break;
+if (!empty($inputUser) && !empty($inputPass)) {
+    // Prepare the SQL statement to find the user
+    $stmt = $conn->prepare("SELECT Password FROM Users WHERE Username = ?");
+    $stmt->bind_param("s", $inputUser);
+    $stmt->execute();
+    
+    $result = $stmt->get_result();
+    
+    if ($row = $result->fetch_assoc()) {
+        // Verify the password. 
+        // This checks both hashed passwords (new accounts) AND plain text passwords 
+        // just in case your SQL backup currently contains plain-text passwords.
+        if (password_verify($inputPass, $row['Password']) || $inputPass === $row['Password']) {
+            $authenticated = true;
+        }
     }
+    $stmt->close();
 }
 
 if ($authenticated) {
     // Set session variable
-    $_SESSION['username'] = $username;
+    $_SESSION['username'] = $inputUser;
     
-    // Auto-redirect to members page (from your working project logic)
+    // Auto-redirect to members page
     header("Location: member.php");
     exit();
 } else {
