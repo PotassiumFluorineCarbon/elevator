@@ -182,7 +182,7 @@ void elevatoroperator() {
 			}
 
 			if (Rxmsg.can_id == ID_CC_TO_SC_DOOR) {
-				else if (Rxmsg.data[0] == 0x00) word |= 0x01 << 20;//O
+				if (Rxmsg.data[0] == 0x00) word |= 0x01 << 20;//O
 				else if (Rxmsg.data[0] == 0x01) word |= 0x02 << 20;//C
 			}
 
