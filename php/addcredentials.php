@@ -2,32 +2,34 @@
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
-$usersFile = '../json/users.json';
+// database connection
+require 'database.php';
 
-$usersData = file_exists($usersFile) ? file_get_contents($usersFile) : '[]';
-$usersArray = json_decode($usersData, true);
+$username = $_POST['username'] ?? '';
+$password = $_POST['password'] ?? '';
 
-if (!is_array($usersArray)) {
-    $usersArray = [];
-}
-
-$newUser = array(
-    "username" => $_POST['username'] ?? '',
-    "password" => $_POST['password'] ?? '',
-);
-
-$userExists = false;
-foreach ($usersArray as $user) {
-    if (strtolower($user['username']) === strtolower($newUser['username'])) {
-        $userExists = true;
-        break;
+if (!empty($username) && !empty($password)) {
+    // Check if the username already exists in the database
+    $checkStmt = $conn->prepare("SELECT UserID FROM Users WHERE Username = ?");
+    $checkStmt->bind_param("s", $username);
+    $checkStmt->execute();
+    $result = $checkStmt->get_result();
+    
+    // If num_rows is 0, the username is available
+    if ($result->num_rows === 0) {
+        // Hash the password for security before storing it
+        $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
+        
+        // Insert the new user into the Users table
+        $insertStmt = $conn->prepare("INSERT INTO Users (Username, Password) VALUES (?, ?)");
+        $insertStmt->bind_param("ss", $username, $hashedPassword);
+        $insertStmt->execute();
+        $insertStmt->close();
     }
+    $checkStmt->close();
 }
 
-if (!$userExists && !empty($newUser['username']) && !empty($newUser['password'])) {
-    $usersArray[] = $newUser;
-    file_put_contents($usersFile, json_encode($usersArray, JSON_PRETTY_PRINT));
-}
+$conn->close();
 
 header("Location: ../html/login.html");
 exit();
