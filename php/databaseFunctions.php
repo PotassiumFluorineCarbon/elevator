@@ -253,5 +253,37 @@ function delete(
 
 }
 
+function updateCommand(
+    string $path,
+    string $user,
+    string $password,
+    int $canid,
+    int $data
+)
+{
+    $db = connect($path,$user,$password);
+
+    $query = "
+
+    UPDATE ElevatorCommands
+
+    SET
+
+    Timestamp = NOW(),
+    Status='pending'
+
+    WHERE CANID=:canid
+    AND Data=:data
+
+    ";
+
+    $statement = $db->prepare($query);
+
+    $statement->bindValue("canid",$canid);
+    $statement->bindValue("data",$data);
+
+    $statement->execute();
+}
+
 
 ?>

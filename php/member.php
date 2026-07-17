@@ -96,12 +96,40 @@ if(isset($_POST['delete']))
 
 <html>
 
-
 <head>
-
-<title>Members Only</title>
-
+    <title>Members Only</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
+
+<header class="bg-dark text-white py-4 mb-3">
+    <div class="container text-center">
+        <h1 class="display-5 fw-bold">Elevator Control System</h1>
+    </div>
+</header>
+
+<nav class="container mb-4">
+    <ul class="nav nav-pills justify-content-center bg-white py-2 rounded shadow">
+
+        <li class="nav-item">
+            <a class="nav-link text-dark" href="controlPanel.php">
+                Control Panel
+            </a>
+        </li>
+
+        <li class="nav-item">
+            <a class="nav-link active bg-dark text-white" href="member.php">
+                Members
+            </a>
+        </li>
+
+        <li class="nav-item">
+            <a class="nav-link text-dark" href="logout.php">
+                Logout
+            </a>
+        </li>
+
+    </ul>
+</nav>
 
 
 
