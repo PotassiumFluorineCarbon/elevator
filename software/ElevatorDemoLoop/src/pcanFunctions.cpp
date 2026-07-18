@@ -6,6 +6,7 @@
 #include <fcntl.h>
 #include <errno.h>
 #include <signal.h>
+#include "audio.h"
 
 static int can_socket = -1;
 int sendMsg(int id, int data, int sock);
@@ -138,6 +139,13 @@ void elevatoroperator() {
 	struct can_frame Rxmsg;
 	enum State state = initial;
 	int word = 0;
+	int sabbath_mode = 0; // 0 = normal, 1 = sabbath mode
+	int maintenance_lock_out = 0; // 0 = normal, 1 = maintenance lock-out
+
+	if (maintenance_lock_out == 1) {
+		printf("The elevator is in maintenance lock-out mode. No operations will be performed.\n");
+		return;
+	}
 
 	printf("\nElevator Operator State Machine Started (SocketCAN)\n");
 	printf("Press Ctrl+C to exit\n\n");
@@ -201,7 +209,8 @@ void elevatoroperator() {
 
 			case arrived_at_1_moving_down_door_open:
 				printf("word: %08x state: Arrived at 1, moving down door open\n", (unsigned int)word);
-				if (C || F2U || F2D || F2 || F3D || F3) {//close door if close door is pressed or elevator is called to any other floor
+				playAudio("../audio/arrived_at_1.wav");
+				if (C || F2U || F2D || F2 || F3D || F3 || (sabbath_mode==1)) {//close door if close door is pressed or elevator is called to any other floor
 					state = arrived_at_1_moving_down_door_closed;
 					word &= ~C;
 				}
@@ -215,7 +224,7 @@ void elevatoroperator() {
 				}
 				// Waiting at floor 1
 				// If command received, state = moving_to_2 or 3
-				if (F2U || F2D || F2) { // FC2 is calling
+				if (F2U || F2D || F2 || (sabbath_mode == 1)) { // FC2 is calling
 					// now send message to EC to MOVE TO FLOOR 2: CAN ID 0X100, MESSAGE BYTE GO_TO_FLOOR2
 					sendMsg(ID_SC_TO_EC, GO_TO_FLOOR2, can_socket);
 					state = moving_up_to_2;
@@ -231,7 +240,8 @@ void elevatoroperator() {
 
 			case arrived_at_2_moving_down_door_open:
 				printf("word: %08x state: Arrived at 2, moving down door open\n", (unsigned int)word);
-				if (C || F1U || F1 || F3 || F3D) {
+				playAudio("../audio/arrived_at_2.wav");
+				if (C || F1U || F1 || F3 || F3D || (sabbath_mode == 1)) {
 					state = arrived_at_2_moving_down_door_closed;
 					word &= ~C;
 				}
@@ -243,7 +253,7 @@ void elevatoroperator() {
 					state = arrived_at_2_moving_down_door_open;
 					word &= ~(F2U | F2D | O);
 				}
-				if (F1U || F1) {
+				if (F1U || F1 || (sabbath_mode == 1)) {
 					sendMsg(ID_SC_TO_EC, GO_TO_FLOOR1, can_socket);
 					state = moving_down_to_1;
 					word &= ~(F2D | F2);
@@ -257,7 +267,8 @@ void elevatoroperator() {
 
 			case arrived_at_2_moving_up_door_open:
 				printf("word: %08x state: Arrived at 2, moving up door open\n", (unsigned int)word);
-				if (C || F1U || F1 || F3 || F3D) {
+				playAudio("../audio/arrived_at_2.wav");
+				if (C || F1U || F1 || F3 || F3D || (sabbath_mode == 1)) {
 					state = arrived_at_2_moving_up_door_closed;
 					word &= ~C;
 				}
@@ -269,7 +280,7 @@ void elevatoroperator() {
 					state = arrived_at_2_moving_up_door_open;
 					word &= ~(F2U | F2D | O);
 				}
-				if (F3D || F3) {
+				if (F3D || F3 || (sabbath_mode == 1)) {
 					sendMsg(ID_SC_TO_EC, GO_TO_FLOOR3, can_socket);
 					state = moving_up_to_3;
 					word &= ~(F2U | F2);
@@ -283,7 +294,8 @@ void elevatoroperator() {
 
 			case arrived_at_3_moving_up_door_open:
 				printf("word: %08x state: Arrived at 3, moving up door open\n", (unsigned int)word);
-				if (C || F2U || F2D || F2 || F1U || F1) {
+				playAudio("../audio/arrived_at_3.wav");
+				if (C || F2U || F2D || F2 || F1U || F1 || (sabbath_mode == 1)) {
 					state = arrived_at_3_moving_up_door_closed;
 					word &= ~C;
 				}
@@ -295,7 +307,7 @@ void elevatoroperator() {
 					state = arrived_at_3_moving_up_door_open;
 					word &= ~(F3D | O);
 				}
-				if (F2U || F2D || F2) {
+				if (F2U || F2D || F2 || (sabbath_mode == 1)) {
 					// now send message to EC to MOVE TO FLOOR 2: CAN ID 0X100, MESSAGE BYTE GO_TO_FLOOR2
 					sendMsg(ID_SC_TO_EC, GO_TO_FLOOR2, can_socket);
 					state = moving_down_to_2;
