@@ -285,5 +285,65 @@ function updateCommand(
     $statement->execute();
 }
 
+function clearCommands(
+    string $path,
+    string $user,
+    string $password
+)
+{
+    $db = connect($path,$user,$password);
+
+    $query = "
+        UPDATE ElevatorCommands
+        SET Status='complete'
+        WHERE Status='pending'
+    ";
+
+    $statement = $db->prepare($query);
+    $statement->execute();
+}
+
+function clearDiagnostic(
+    string $path,
+    string $user,
+    string $password,
+    int $diagnosticID
+) : void
+{
+    $db = connect($path,$user,$password);
+
+    $query = "
+        DELETE FROM Diagnostics
+        WHERE DiagnosticID = :id
+    ";
+
+    $statement = $db->prepare($query);
+
+    $statement->bindValue("id",$diagnosticID);
+
+    $statement->execute();
+}
+
+function clearMessages(
+    string $path,
+    string $user,
+    string $password,
+    int $messageID
+) : void
+{
+    $db = connect($path,$user,$password);
+
+    $query = "
+        DELETE FROM CAN_messages
+        WHERE MessageID = :id
+    ";
+
+    $statement = $db->prepare($query);
+
+    $statement->bindValue("id",$messageID);
+
+    $statement->execute();
+}
+
 
 ?>
