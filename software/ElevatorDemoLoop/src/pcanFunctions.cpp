@@ -154,7 +154,7 @@ void elevatoroperator() {
 	int word = 0;
 	int sabbath_mode = 0; // 0 = normal, 1 = sabbath mode
 	int maintenance_lock_out = 0; // 0 = normal, 1 = maintenance lock-out
-	int previousState = 0;
+	int previousState=0;
 
 	if (maintenance_lock_out == 1) {
 		printf("The elevator is in maintenance lock-out mode. No operations will be performed.\n");
@@ -225,6 +225,7 @@ void elevatoroperator() {
 				printf("word: %08x state: Arrived at 1, moving down door open\n", (unsigned int)word);
 				if (previousState != 10) {
 					playAudioVLC("../../../audio/arrived_at_1.wav");
+					printf("previous state not current state");
 				}
 				previousState = 10;
 				if (C || F2U || F2D || F2 || F3D || F3 || (sabbath_mode==1)) {//close door if close door is pressed or elevator is called to any other floor
@@ -260,6 +261,7 @@ void elevatoroperator() {
 				printf("word: %08x state: Arrived at 2, moving down door open\n", (unsigned int)word);
 				if (previousState != 20) {
 					playAudioVLC("../../../audio/arrived_at_2.wav");
+					printf("previous state not current state");
 				}
 				previousState = 20;
 				if (C || F1U || F1 || F3 || F3D || (sabbath_mode == 1)) {
@@ -291,6 +293,7 @@ void elevatoroperator() {
 				printf("word: %08x state: Arrived at 2, moving up door open\n", (unsigned int)word);
 				if (previousState != 30) {
 					playAudioVLC("../../../audio/arrived_at_2.wav");
+					printf("previous state not current state");
 				}
 				previousState = 30;
 				if (C || F1U || F1 || F3 || F3D || (sabbath_mode == 1)) {
@@ -322,6 +325,7 @@ void elevatoroperator() {
 				printf("word: %08x state: Arrived at 3, moving up door open\n", (unsigned int)word);
 				if (previousState != 40) {
 					playAudioVLC("../../../audio/arrived_at_3.wav");
+					printf("previous state not current state");
 				}
 				previousState = 40;
 				if (C || F2U || F2D || F2 || F1U || F1 || (sabbath_mode == 1)) {
