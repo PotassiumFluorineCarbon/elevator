@@ -6,7 +6,6 @@
 #include <fcntl.h>
 #include <errno.h>
 #include <signal.h>
-#include "audio.h"
 #include <string>
 #include <stdio.h>
 
