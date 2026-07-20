@@ -14,8 +14,9 @@
 static void playAudioVLC(const char* filename) {
 	if (!filename) return;
 	char cmd[1024];
-	// Use dummy interface and play-and-exit so VLC does not keep running
-	snprintf(cmd, sizeof(cmd), "vlc --intf dummy --play-and-exit \"%s\" >/dev/null 2>&1 &", filename);
+	// Use dummy interface; disable loop/repeat and exit when finished so the file does not replay
+	// --no-media-library avoids indexing, --quiet reduces output
+	snprintf(cmd, sizeof(cmd), "vlc --intf dummy --no-loop --no-repeat --play-and-exit --no-media-library --quiet \"%s\" >/dev/null 2>&1 &", filename);
 	system(cmd);
 }
 
@@ -142,7 +143,7 @@ enum State {
 };
 
 void elevatoroperator() {
-	playAudioVLC("../../../audio/elevator.wav");
+	playAudioVLC("../../../audio/elephant_instrumental.wav");
 	if (can_open() < 0) {
 		printf("Failed to open CAN socket!\n");
 		return;
