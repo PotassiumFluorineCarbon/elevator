@@ -131,6 +131,7 @@ enum State {
 };
 
 void elevatoroperator() {
+	playAudio("../../../audio/elevator.wav");
 	if (can_open() < 0) {
 		printf("Failed to open CAN socket!\n");
 		return;
@@ -209,7 +210,7 @@ void elevatoroperator() {
 
 			case arrived_at_1_moving_down_door_open:
 				printf("word: %08x state: Arrived at 1, moving down door open\n", (unsigned int)word);
-				playAudio("../audio/arrived_at_1.wav");
+				playAudio("../../../audio/arrived_at_1.wav");
 				if (C || F2U || F2D || F2 || F3D || F3 || (sabbath_mode==1)) {//close door if close door is pressed or elevator is called to any other floor
 					state = arrived_at_1_moving_down_door_closed;
 					word &= ~C;
@@ -240,7 +241,7 @@ void elevatoroperator() {
 
 			case arrived_at_2_moving_down_door_open:
 				printf("word: %08x state: Arrived at 2, moving down door open\n", (unsigned int)word);
-				playAudio("../audio/arrived_at_2.wav");
+				playAudio("../../../audio/arrived_at_2.wav");
 				if (C || F1U || F1 || F3 || F3D || (sabbath_mode == 1)) {
 					state = arrived_at_2_moving_down_door_closed;
 					word &= ~C;
@@ -267,7 +268,7 @@ void elevatoroperator() {
 
 			case arrived_at_2_moving_up_door_open:
 				printf("word: %08x state: Arrived at 2, moving up door open\n", (unsigned int)word);
-				playAudio("../audio/arrived_at_2.wav");
+				playAudio("../../../audio/arrived_at_2.wav");
 				if (C || F1U || F1 || F3 || F3D || (sabbath_mode == 1)) {
 					state = arrived_at_2_moving_up_door_closed;
 					word &= ~C;
@@ -294,7 +295,7 @@ void elevatoroperator() {
 
 			case arrived_at_3_moving_up_door_open:
 				printf("word: %08x state: Arrived at 3, moving up door open\n", (unsigned int)word);
-				playAudio("../audio/arrived_at_3.wav");
+				playAudio("../../../audio/arrived_at_3.wav");
 				if (C || F2U || F2D || F2 || F1U || F1 || (sabbath_mode == 1)) {
 					state = arrived_at_3_moving_up_door_closed;
 					word &= ~C;
