@@ -143,7 +143,7 @@ enum State {
 };
 
 void elevatoroperator() {
-	playAudioVLC("../../../audio/elephant_instrumental.wav");
+	playAudioVLC("../../../audio/elevator.mp3");
 	if (can_open() < 0) {
 		printf("Failed to open CAN socket!\n");
 		return;
@@ -154,6 +154,7 @@ void elevatoroperator() {
 	int word = 0;
 	int sabbath_mode = 0; // 0 = normal, 1 = sabbath mode
 	int maintenance_lock_out = 0; // 0 = normal, 1 = maintenance lock-out
+	int previousState = 0;
 
 	if (maintenance_lock_out == 1) {
 		printf("The elevator is in maintenance lock-out mode. No operations will be performed.\n");
@@ -222,7 +223,10 @@ void elevatoroperator() {
 
 			case arrived_at_1_moving_down_door_open:
 				printf("word: %08x state: Arrived at 1, moving down door open\n", (unsigned int)word);
-				playAudioVLC("../../../audio/arrived_at_1.wav");
+				if (previousState != 10) {
+					playAudioVLC("../../../audio/arrived_at_1.wav");
+				}
+				previousState = 10;
 				if (C || F2U || F2D || F2 || F3D || F3 || (sabbath_mode==1)) {//close door if close door is pressed or elevator is called to any other floor
 					state = arrived_at_1_moving_down_door_closed;
 					word &= ~C;
@@ -231,6 +235,7 @@ void elevatoroperator() {
 
 			case arrived_at_1_moving_down_door_closed:
 				printf("word: %08x state: Arrived at 1, moving down door closed\n", (unsigned int)word);
+				previousState = 11;
 				if (F1U || O) {
 					state = arrived_at_1_moving_down_door_open;
 					word &= ~(F1U | O);
@@ -253,7 +258,10 @@ void elevatoroperator() {
 
 			case arrived_at_2_moving_down_door_open:
 				printf("word: %08x state: Arrived at 2, moving down door open\n", (unsigned int)word);
-				playAudioVLC("../../../audio/arrived_at_2.wav");
+				if (previousState != 20) {
+					playAudioVLC("../../../audio/arrived_at_2.wav");
+				}
+				previousState = 20;
 				if (C || F1U || F1 || F3 || F3D || (sabbath_mode == 1)) {
 					state = arrived_at_2_moving_down_door_closed;
 					word &= ~C;
@@ -262,6 +270,7 @@ void elevatoroperator() {
 
 			case arrived_at_2_moving_down_door_closed:
 				printf("word: %08x state: Arrived at 2, moving down door closed\n", (unsigned int)word);
+				previousState = 21;
 				if (F2U || F2D || O) {
 					state = arrived_at_2_moving_down_door_open;
 					word &= ~(F2U | F2D | O);
@@ -280,7 +289,10 @@ void elevatoroperator() {
 
 			case arrived_at_2_moving_up_door_open:
 				printf("word: %08x state: Arrived at 2, moving up door open\n", (unsigned int)word);
-				playAudioVLC("../../../audio/arrived_at_2.wav");
+				if (previousState != 30) {
+					playAudioVLC("../../../audio/arrived_at_2.wav");
+				}
+				previousState = 30;
 				if (C || F1U || F1 || F3 || F3D || (sabbath_mode == 1)) {
 					state = arrived_at_2_moving_up_door_closed;
 					word &= ~C;
@@ -289,6 +301,7 @@ void elevatoroperator() {
 
 			case arrived_at_2_moving_up_door_closed:
 				printf("word: %08x state: Arrived at 2, moving up door closed\n", (unsigned int)word);
+				previousState = 31;
 				if (F2U || F2D || O) {
 					state = arrived_at_2_moving_up_door_open;
 					word &= ~(F2U | F2D | O);
@@ -307,7 +320,10 @@ void elevatoroperator() {
 
 			case arrived_at_3_moving_up_door_open:
 				printf("word: %08x state: Arrived at 3, moving up door open\n", (unsigned int)word);
-				playAudioVLC("../../../audio/arrived_at_3.wav");
+				if (previousState != 40) {
+					playAudioVLC("../../../audio/arrived_at_3.wav");
+				}
+				previousState = 40;
 				if (C || F2U || F2D || F2 || F1U || F1 || (sabbath_mode == 1)) {
 					state = arrived_at_3_moving_up_door_closed;
 					word &= ~C;
@@ -316,6 +332,7 @@ void elevatoroperator() {
 
 			case arrived_at_3_moving_up_door_closed:
 				printf("word: %08x state: Arrived at 3, moving up door closed\n", (unsigned int)word);
+				previousState = 41;
 				if (F3D || O) {
 					state = arrived_at_3_moving_up_door_open;
 					word &= ~(F3D | O);
