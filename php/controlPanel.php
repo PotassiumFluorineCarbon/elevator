@@ -31,6 +31,15 @@ press("f1up",201,4,$path,$user,$password);
 press("f2down",202,2,$path,$user,$password);
 press("f2up",202,4,$path,$user,$password);
 press("f3down",203,2,$path,$user,$password);
+clear($path,$user,$password);
+
+function clear($path,$user,$password){
+    if(isset($_POST["clearCommands"])){
+        clearCommands($path,$user,$password);
+        header("Location: controlPanel.php");
+        exit();
+    }
+}
 
 $db=connect($path,$user,$password);
 $status=$db->query("SELECT * FROM ElevatorStatus ORDER BY Timestamp DESC LIMIT 1")->fetch();
@@ -68,6 +77,18 @@ $commands=$db->query("SELECT * FROM ElevatorCommands ORDER BY Timestamp DESC");
         <li class="nav-item">
             <a class="nav-link active bg-dark text-white" href="controlPanel.php">
                 Control Panel
+            </a>
+        </li>
+
+        <li class="nav-item">
+            <a class="nav-link text-dark" href="diagnostics.php">
+                Diagnostics
+            </a>
+        </li>
+
+        <li class="nav-item">
+            <a class="nav-link text-dark" href="messages.php">
+                Messages
             </a>
         </li>
 
@@ -116,7 +137,13 @@ $commands=$db->query("SELECT * FROM ElevatorCommands ORDER BY Timestamp DESC");
 <button name="f2up">Floor 2 Up</button><br>
 <button name="f2down">Floor 2 Down</button><br>
 <button name="f3down">Floor 3 Down</button>
+
+<h4>Clear</h4>
+<button name="clearCommands">Clear</button>
+
 </form>
+
+
 
 </div>
 </div>
