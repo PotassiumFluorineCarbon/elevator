@@ -26,6 +26,10 @@ h3 {
     font-size: 110%;
 }
 
+h4{
+    text-align: center;
+}
+
 /* =========================
    Paragraph styling
 ========================= */
@@ -285,4 +289,76 @@ article,
 aside,
 footer {
     display: block;
+}
+
+/* =========================
+   Elevator Control Panel
+========================= */
+
+.control-panel {
+    background: #eee;
+    margin: 30px;
+}
+
+
+/* Main layout */
+.panel {
+    display: flex;
+    gap: 40px;
+}
+
+
+/* Status and button sections */
+.left,
+.right {
+    background: #fff;
+    padding: 20px;
+    border-radius: 8px;
+}
+
+
+/* Control buttons only */
+.control-panel button {
+    width: 180px;
+    height: 42px;
+    margin: 4px;
+    font-size: 15px;
+}
+
+
+/* Command status table only */
+.command-table {
+    border-collapse: collapse;
+    margin-top: 20px;
+    background: #fff;
+    width: 100%;
+}
+
+
+.command-table td,
+.command-table th {
+    border: 1px solid #555;
+    padding: 6px 10px;
+}
+
+
+/* Elevator shaft */
+.shaft {
+    width: 120px;
+    border: 2px solid #000;
+}
+
+
+.floor {
+    height: 70px;
+    border-top: 1px solid #888;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+
+.current {
+    background: #8f8;
+    font-weight: bold;
 }

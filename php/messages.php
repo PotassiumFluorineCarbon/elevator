@@ -51,40 +51,13 @@ $messages = $db->query(
 <title>Messages</title>
 
 
-<style>
-
-body{
-    font-family:Arial;
-    background:#eee;
-    margin:30px;
-}
-
-
-table{
-    border-collapse:collapse;
-    background:white;
-    width:100%;
-}
-
-
-td,th{
-    border:1px solid #555;
-    padding:8px;
-}
-
-
-button{
-    width:100px;
-}
-
-
-</style>
+<link rel="stylesheet" href="../CSS/style.css">
 
 
 </head>
 
 
-<body>
+<body class="control-panel">
 
 
 <header class="bg-dark text-white py-4 mb-3">
@@ -154,11 +127,11 @@ Welcome
 
 
 
-<h3>CAN Messages</h3>
+<h4>CAN Messages</h4>
 
 
 
-<table>
+<table class="command-table">
 
 
 <tr>
