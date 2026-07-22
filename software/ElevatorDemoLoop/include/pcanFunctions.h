@@ -25,7 +25,8 @@
 #define ID_CC_TO_SC  0x200	// ID for messages from Car controller to supervisory controller 
 #define ID_F1_TO_SC  0x201	// ID for messages from floor 1 controller to supervisory controller
 #define ID_F2_TO_SC  0x202	// ID for messages from floor 2 controller to supervisory controller
-#define ID_F3_TO_SC  0x203	// ID for messages from floor 3 controller to supervisory controller	
+#define ID_F3_TO_SC  0x203	// ID for messages from floor 3 controller to supervisory controller
+#define ID_MODE      0x300	// ID for messages from supervisory controller to all other nodes to set sabbath or maintenance mode  	
 
 #define GO_TO_FLOOR1 0x05	// Go to floor 1
 #define GO_TO_FLOOR2 0x06	// Go to floor 2

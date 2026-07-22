@@ -3,8 +3,8 @@
 require_once "databaseFunctions.php";
 
 $path="mysql:host=localhost;dbname=elevator";
-$user="elevator";
-$password="";
+$user="elevator_user";
+$password="password";
 
 $db=connect($path,$user,$password);
 

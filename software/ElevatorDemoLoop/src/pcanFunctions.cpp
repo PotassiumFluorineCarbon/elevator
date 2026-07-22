@@ -155,11 +155,6 @@ void elevatoroperator() {
 	int maintenance_lock_out = 0; // 0 = normal, 1 = maintenance lock-out
 	int previousState=0;
 
-	if (maintenance_lock_out == 1) {
-		printf("The elevator is in maintenance lock-out mode. No operations will be performed.\n");
-		return;
-	}
-
 	printf("\nElevator Operator State Machine Started (SocketCAN)\n");
 	printf("Press Ctrl+C to exit\n\n");
 
@@ -210,6 +205,22 @@ void elevatoroperator() {
 			if (Rxmsg.can_id == ID_EC_TO_ALL) {
 				word = (word & 0xfffffff0) | Rxmsg.data[0];
 			}
+			if (Rxmsg.can_id == ID_MODE) {
+				if (Rxmsg.data[0] == 0x01){
+					sabbath_mode = 1; 
+					maintenance_lock_out = 0;
+				}
+				else if (Rxmsg.data[0] == 0x02){
+					sabbath_mode = 0;
+					maintenance_lock_out = 1;
+					printf("The elevator is in maintenance lock-out mode. No operations will be performed.\n");
+					return;
+				}
+				else if (Rxmsg.data[0] == 0x00) {
+					sabbath_mode = 0;
+					maintenance_lock_out = 0;
+				}
+			}
 
 			switch (state) {
 			case initial:
@@ -217,6 +228,7 @@ void elevatoroperator() {
 				if ((word & 0x0F) == AT_FLOOR1) state = arrived_at_1_moving_down_door_open;
 				else if ((word & 0x0F) == AT_FLOOR2) state = arrived_at_2_moving_down_door_open;
 				else if ((word & 0x0F) == AT_FLOOR3) state = arrived_at_3_moving_up_door_open;
+
 				//handle disabled mode later
 				break;
 
