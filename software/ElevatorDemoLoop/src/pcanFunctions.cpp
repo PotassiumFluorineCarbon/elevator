@@ -205,7 +205,7 @@ void elevatoroperator() {
 			if (Rxmsg.can_id == ID_EC_TO_ALL) {
 				word = (word & 0xfffffff0) | Rxmsg.data[0];
 			}
-			if (Rxmsg.can_id == ID_MODE) {
+			/*if (Rxmsg.can_id == ID_MODE) {
 				if (Rxmsg.data[0] == 0x01){
 					sabbath_mode = 1; 
 					maintenance_lock_out = 0;
@@ -220,7 +220,7 @@ void elevatoroperator() {
 					sabbath_mode = 0;
 					maintenance_lock_out = 0;
 				}
-			}
+			}*/
 
 			switch (state) {
 			case initial:
