@@ -10,12 +10,15 @@
 #include <stdio.h>
 
 // Use VLC to play audio files instead of the ALSA-based playAudio implementation
-static void playAudioVLC(const char* filename) {
+static void playAudioVLC(const char* filename,int repeat) {
 	if (!filename) return;
 	char cmd[1024];
 	// Use dummy interface; disable loop/repeat and exit when finished so the file does not replay
 	// --no-media-library avoids indexing, --quiet reduces output
-	snprintf(cmd, sizeof(cmd), "vlc --intf dummy --no-loop --no-repeat --play-and-exit --no-media-library --quiet \"%s\" >/dev/null 2>&1 &", filename);
+	if(repeat==0)
+		snprintf(cmd, sizeof(cmd), "vlc --intf dummy --no-loop --no-repeat --play-and-exit --no-media-library --quiet \"%s\" >/dev/null 2>&1 &", filename);
+	else
+		snprintf(cmd, sizeof(cmd), "vlc --intf dummy --loop --repeat --no-media-library --quiet \"%s\" >/dev/null 2>&1 &", filename);
 	system(cmd);
 }
 
@@ -142,7 +145,7 @@ enum State {
 };
 
 void elevatoroperator() {
-	playAudioVLC("../../../audio/elevator.mp3");
+	playAudioVLC("../../../audio/elevator.mp3",1);
 	if (can_open() < 0) {
 		printf("Failed to open CAN socket!\n");
 		return;
@@ -151,8 +154,8 @@ void elevatoroperator() {
 	struct can_frame Rxmsg;
 	enum State state = initial;
 	int word = 0;
-	int sabbath_mode = 1; // 0 = normal, 1 = sabbath mode
-	int maintenance_lock_out = 0; // 0 = normal, 1 = maintenance lock-out
+	int sabbath_mode = 0; // 0 = normal, 1 = sabbath mode
+	int maintenance_lock_out = 1; // 0 = normal, 1 = maintenance lock-out
 	int previousState=0;
 
 	printf("\nElevator Operator State Machine Started (SocketCAN)\n");
@@ -235,7 +238,7 @@ void elevatoroperator() {
 			case arrived_at_1_moving_down_door_open:
 				printf("word: %08x state: Arrived at 1, moving down door open\n", (unsigned int)word);
 				if (previousState != 10) {
-					playAudioVLC("../../../audio/arrived_at_1.wav");
+					playAudioVLC("../../../audio/arrived_at_1.wav", 0);
 					printf("previous state not current state");
 				}
 				previousState = 10;
@@ -271,7 +274,7 @@ void elevatoroperator() {
 			case arrived_at_2_moving_down_door_open:
 				printf("word: %08x state: Arrived at 2, moving down door open\n", (unsigned int)word);
 				if (previousState != 20) {
-					playAudioVLC("../../../audio/arrived_at_2.wav");
+					playAudioVLC("../../../audio/arrived_at_2.wav", 0);
 					printf("previous state not current state");
 				}
 				previousState = 20;
@@ -303,7 +306,7 @@ void elevatoroperator() {
 			case arrived_at_2_moving_up_door_open:
 				printf("word: %08x state: Arrived at 2, moving up door open\n", (unsigned int)word);
 				if (previousState != 30) {
-					playAudioVLC("../../../audio/arrived_at_2.wav");
+					playAudioVLC("../../../audio/arrived_at_2.wav", 0);
 					printf("previous state not current state");
 				}
 				previousState = 30;
@@ -335,7 +338,7 @@ void elevatoroperator() {
 			case arrived_at_3_moving_up_door_open:
 				printf("word: %08x state: Arrived at 3, moving up door open\n", (unsigned int)word);
 				if (previousState != 40) {
-					playAudioVLC("../../../audio/arrived_at_3.wav");
+					playAudioVLC("../../../audio/arrived_at_3.wav", 0);
 					printf("previous state not current state");
 				}
 				previousState = 40;
