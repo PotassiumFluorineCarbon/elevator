@@ -151,7 +151,7 @@ void elevatoroperator() {
 	struct can_frame Rxmsg;
 	enum State state = initial;
 	int word = 0;
-	int sabbath_mode = 0; // 0 = normal, 1 = sabbath mode
+	int sabbath_mode = 1; // 0 = normal, 1 = sabbath mode
 	int maintenance_lock_out = 0; // 0 = normal, 1 = maintenance lock-out
 	int previousState=0;
 
