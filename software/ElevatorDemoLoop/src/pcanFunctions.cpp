@@ -156,6 +156,10 @@ void elevatoroperator() {
 	int word = 0;
 	int sabbath_mode = 0; // 0 = normal, 1 = sabbath mode
 	int maintenance_lock_out = 1; // 0 = normal, 1 = maintenance lock-out
+	if (maintenance_lock_out == 1) {
+		printf("The elevator is in maintenance lock-out mode. No operations will be performed.\n");
+		return;
+	}
 	int previousState=0;
 
 	printf("\nElevator Operator State Machine Started (SocketCAN)\n");
