@@ -145,7 +145,6 @@ enum State {
 };
 
 void elevatoroperator() {
-	playAudioVLC("../../../audio/elevator.mp3",1);
 	if (can_open() < 0) {
 		printf("Failed to open CAN socket!\n");
 		return;
@@ -161,6 +160,7 @@ void elevatoroperator() {
 		return;
 	}
 	int previousState=0;
+	playAudioVLC("../../../audio/elevator.mp3", 1);
 
 	printf("\nElevator Operator State Machine Started (SocketCAN)\n");
 	printf("Press Ctrl+C to exit\n\n");
