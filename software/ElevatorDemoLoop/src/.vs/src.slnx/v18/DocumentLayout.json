@@ -50,9 +50,9 @@
               "Title": "pcanFunctions.cpp",
               "DocumentMoniker": "D:\\elevator\\elevator\\software\\ElevatorDemoLoop\\src\\pcanFunctions.cpp",
               "RelativeDocumentMoniker": "pcanFunctions.cpp",
-              "ToolTip": "D:\\elevator\\elevator\\software\\ElevatorDemoLoop\\src\\pcanFunctions.cpp*",
-              "RelativeToolTip": "pcanFunctions.cpp*",
-              "ViewState": "AgIAAAYAAAAAAAAAAAAAABEAAAAPAAAAAAAAAA==",
+              "ToolTip": "D:\\elevator\\elevator\\software\\ElevatorDemoLoop\\src\\pcanFunctions.cpp",
+              "RelativeToolTip": "pcanFunctions.cpp",
+              "ViewState": "AgIAAGYAAAAAAAAAAAAAAKYAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
               "WhenOpened": "2026-07-17T15:20:48.637Z",
               "EditorCaption": ""
@@ -65,9 +65,10 @@
               "RelativeDocumentMoniker": "..\\..\\..\\html\\logbook_eric.html",
               "ToolTip": "D:\\elevator\\elevator\\html\\logbook_eric.html",
               "RelativeToolTip": "..\\..\\..\\html\\logbook_eric.html",
-              "ViewState": "AgIAAAgBAAAAAAAAAAAAAB0BAAAcAAAAAAAAAA==",
+              "ViewState": "AgIAABoBAAAAAAAAAAAAACgBAAAQAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001512|",
-              "WhenOpened": "2026-06-13T16:13:39.018Z"
+              "WhenOpened": "2026-06-13T16:13:39.018Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
