@@ -97,13 +97,7 @@ if(isset($_POST['delete']))
 <head>
     <title>Members Only</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-body{
-    font-family:Arial;
-    background:#eee;
-    margin:30px;
-}
-</style>
+    <link rel="stylesheet" href="../CSS/style.css">
 </head>
 
 <header class="bg-dark text-white py-4 mb-3">
@@ -148,26 +142,14 @@ body{
     </ul>
 </nav>
 
-
-
-<body>
-
-
+<body class="control-panel">
 
 <p>
 Welcome,
 <?php echo htmlspecialchars($_SESSION['username']); ?>
 </p>
 
-
-
-<p>
-<a href="logout.php">Logout</a>
-</p>
-
-
-
-<h1>Elevator Network</h1>
+<h4>Elevator Network</h4>
 
 
 
@@ -184,124 +166,78 @@ showtable(
 
 
 
-<h2>Add Node</h2>
-
+<h4>Add Node</h4>
 
 <form method="post">
 
+<fieldset>
 
-Node Name:
+<p>
+<label for="NodeName">Node Name:</label>
+<input name="NodeName" id="NodeName">
+</p>
 
-<input name="NodeName">
+<p>
+<label for="nodeType">Node Type:</label>
+<input name="nodeType" id="nodeType">
+</p>
 
+<p>
+<label for="NetworkType">Network Type:</label>
+<input name="NetworkType" id="NetworkType">
+</p>
 
-<br><br>
+<p>
+<label for="Status">Status:</label>
+<input name="Status" id="Status">
+</p>
 
+<p>
+<button name="insert">INSERT</button>
+</p>
 
-Node Type:
-
-<input name="nodeType">
-
-
-<br><br>
-
-
-Network Type:
-
-<input name="NetworkType">
-
-
-<br><br>
-
-
-Status:
-
-<input name="Status">
-
-
-<br><br>
-
-
-<button name="insert">
-
-INSERT
-
-</button>
-
-
-
+</fieldset>
 
 </form>
 
 
-
-
-
-<h2>Update/Delete Node</h2>
-
+<h4>Update/Delete Node</h4>
 
 <form method="post">
 
+<fieldset>
 
-Node ID:
+<p>
+<label for="nodeID">Node ID:</label>
+<input name="nodeID" id="nodeID">
+</p>
 
-<input name="nodeID">
+<p>
+<label for="NodeName2">Node Name:</label>
+<input name="NodeName" id="NodeName2">
+</p>
 
+<p>
+<label for="nodeType2">Node Type:</label>
+<input name="nodeType" id="nodeType2">
+</p>
 
-<br><br>
+<p>
+<label for="NetworkType2">Network Type:</label>
+<input name="NetworkType" id="NetworkType2">
+</p>
 
+<p>
+<label for="Status2">Status:</label>
+<input name="Status" id="Status2">
+</p>
 
-Node Name:
+<p>
+<button name="update">UPDATE</button>
 
-<input name="NodeName">
+<button name="delete">DELETE</button>
+</p>
 
-
-<br><br>
-
-
-Node Type:
-
-<input name="nodeType">
-
-
-<br><br>
-
-
-Network Type:
-
-<input name="NetworkType">
-
-
-<br><br>
-
-
-Status:
-
-<input name="Status">
-
-
-<br><br>
-
-
-<button name="update">
-
-UPDATE
-
-</button>
-
-
-
-<button name="delete">
-
-DELETE
-
-</button>
-
+</fieldset>
 
 </form>
-
-
-
-</body>
-
-</html>

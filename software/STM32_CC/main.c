@@ -71,9 +71,7 @@ CAN_RxHeaderTypeDef		RxHeader;
 uint8_t					TxData[8];		// 8 bytes of data per frame
 uint8_t					RxData[8];
 uint32_t				TxMailbox;
-uint8_t msg1 = GO_TO_FLOOR_1;			// Initial message is GO_TO_FLOOR_1
-uint8_t msg2 = GO_TO_FLOOR_2;
-uint8_t msg3 = GO_TO_FLOOR_3;
+
 uint8_t i;								// For loop variable
 volatile uint8_t Floor1Requested = 0;
 volatile uint8_t Floor2Requested = 0;
@@ -332,6 +330,12 @@ static void MX_GPIO_Init(void)
   HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
   /* EXTI interrupt init*/
+  HAL_NVIC_SetPriority(EXTI4_IRQn, 0, 0);
+  HAL_NVIC_EnableIRQ(EXTI4_IRQn);
+
+  HAL_NVIC_SetPriority(EXTI9_5_IRQn, 0, 0);
+  HAL_NVIC_EnableIRQ(EXTI9_5_IRQn);
+
   HAL_NVIC_SetPriority(EXTI15_10_IRQn, 0, 0);
   HAL_NVIC_EnableIRQ(EXTI15_10_IRQn);
 
@@ -615,4 +619,3 @@ int main(void)
 	}
 	/* USER CODE END 3 */
 }
-

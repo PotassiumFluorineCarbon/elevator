@@ -45,30 +45,7 @@ $diagnostics = $db->query(
 
 <title>Diagnostics</title>
 
-<style>
-
-body{
-    font-family:Arial;
-    background:#eee;
-    margin:30px;
-}
-
-table{
-    border-collapse:collapse;
-    background:white;
-    width:100%;
-}
-
-td,th{
-    border:1px solid #555;
-    padding:8px;
-}
-
-button{
-    width:100px;
-}
-
-</style>
+<link rel="stylesheet" href="../CSS/style.css">
 
 </head>
 
@@ -116,16 +93,16 @@ Logout
 </ul>
 </nav>
 
-<body>
+<body class="control-panel">
 
 <h2>
 Welcome
 <?= htmlspecialchars($_SESSION["username"]) ?>
 </h2>
 
-<h3>Diagnostics</h3>
+<h4>Diagnostics</h4>
 
-<table>
+<table class="command-table">
 
 <tr>
 

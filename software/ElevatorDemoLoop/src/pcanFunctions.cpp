@@ -6,7 +6,21 @@
 #include <fcntl.h>
 #include <errno.h>
 #include <signal.h>
-#include "audio.h"
+#include <string>
+#include <stdio.h>
+
+// Use VLC to play audio files instead of the ALSA-based playAudio implementation
+static void playAudioVLC(const char* filename,int repeat) {
+	if (!filename) return;
+	char cmd[1024];
+	// Use dummy interface; disable loop/repeat and exit when finished so the file does not replay
+	// --no-media-library avoids indexing, --quiet reduces output
+	if(repeat==0)
+		snprintf(cmd, sizeof(cmd), "vlc --intf dummy --no-loop --no-repeat --play-and-exit --no-media-library --quiet \"%s\" >/dev/null 2>&1 &", filename);
+	else
+		snprintf(cmd, sizeof(cmd), "vlc --intf dummy --loop --repeat --no-media-library --quiet \"%s\" >/dev/null 2>&1 &", filename);
+	system(cmd);
+}
 
 static int can_socket = -1;
 int sendMsg(int id, int data, int sock);
@@ -141,11 +155,12 @@ void elevatoroperator() {
 	int word = 0;
 	int sabbath_mode = 0; // 0 = normal, 1 = sabbath mode
 	int maintenance_lock_out = 0; // 0 = normal, 1 = maintenance lock-out
-
 	if (maintenance_lock_out == 1) {
 		printf("The elevator is in maintenance lock-out mode. No operations will be performed.\n");
 		return;
 	}
+	int previousState=0;
+	playAudioVLC("../../../audio/elevator.mp3", 1);
 
 	printf("\nElevator Operator State Machine Started (SocketCAN)\n");
 	printf("Press Ctrl+C to exit\n\n");
@@ -197,6 +212,22 @@ void elevatoroperator() {
 			if (Rxmsg.can_id == ID_EC_TO_ALL) {
 				word = (word & 0xfffffff0) | Rxmsg.data[0];
 			}
+			/*if (Rxmsg.can_id == ID_MODE) {
+				if (Rxmsg.data[0] == 0x01){
+					sabbath_mode = 1; 
+					maintenance_lock_out = 0;
+				}
+				else if (Rxmsg.data[0] == 0x02){
+					sabbath_mode = 0;
+					maintenance_lock_out = 1;
+					printf("The elevator is in maintenance lock-out mode. No operations will be performed.\n");
+					return;
+				}
+				else if (Rxmsg.data[0] == 0x00) {
+					sabbath_mode = 0;
+					maintenance_lock_out = 0;
+				}
+			}*/
 
 			switch (state) {
 			case initial:
@@ -204,12 +235,17 @@ void elevatoroperator() {
 				if ((word & 0x0F) == AT_FLOOR1) state = arrived_at_1_moving_down_door_open;
 				else if ((word & 0x0F) == AT_FLOOR2) state = arrived_at_2_moving_down_door_open;
 				else if ((word & 0x0F) == AT_FLOOR3) state = arrived_at_3_moving_up_door_open;
+
 				//handle disabled mode later
 				break;
 
 			case arrived_at_1_moving_down_door_open:
 				printf("word: %08x state: Arrived at 1, moving down door open\n", (unsigned int)word);
-				playAudio("../audio/arrived_at_1.wav");
+				if (previousState != 10) {
+					playAudioVLC("../../../audio/arrived_at_1.wav", 0);
+					printf("previous state not current state");
+				}
+				previousState = 10;
 				if (C || F2U || F2D || F2 || F3D || F3 || (sabbath_mode==1)) {//close door if close door is pressed or elevator is called to any other floor
 					state = arrived_at_1_moving_down_door_closed;
 					word &= ~C;
@@ -218,6 +254,7 @@ void elevatoroperator() {
 
 			case arrived_at_1_moving_down_door_closed:
 				printf("word: %08x state: Arrived at 1, moving down door closed\n", (unsigned int)word);
+				previousState = 11;
 				if (F1U || O) {
 					state = arrived_at_1_moving_down_door_open;
 					word &= ~(F1U | O);
@@ -240,7 +277,11 @@ void elevatoroperator() {
 
 			case arrived_at_2_moving_down_door_open:
 				printf("word: %08x state: Arrived at 2, moving down door open\n", (unsigned int)word);
-				playAudio("../audio/arrived_at_2.wav");
+				if (previousState != 20) {
+					playAudioVLC("../../../audio/arrived_at_2.wav", 0);
+					printf("previous state not current state");
+				}
+				previousState = 20;
 				if (C || F1U || F1 || F3 || F3D || (sabbath_mode == 1)) {
 					state = arrived_at_2_moving_down_door_closed;
 					word &= ~C;
@@ -249,6 +290,7 @@ void elevatoroperator() {
 
 			case arrived_at_2_moving_down_door_closed:
 				printf("word: %08x state: Arrived at 2, moving down door closed\n", (unsigned int)word);
+				previousState = 21;
 				if (F2U || F2D || O) {
 					state = arrived_at_2_moving_down_door_open;
 					word &= ~(F2U | F2D | O);
@@ -267,7 +309,11 @@ void elevatoroperator() {
 
 			case arrived_at_2_moving_up_door_open:
 				printf("word: %08x state: Arrived at 2, moving up door open\n", (unsigned int)word);
-				playAudio("../audio/arrived_at_2.wav");
+				if (previousState != 30) {
+					playAudioVLC("../../../audio/arrived_at_2.wav", 0);
+					printf("previous state not current state");
+				}
+				previousState = 30;
 				if (C || F1U || F1 || F3 || F3D || (sabbath_mode == 1)) {
 					state = arrived_at_2_moving_up_door_closed;
 					word &= ~C;
@@ -276,6 +322,7 @@ void elevatoroperator() {
 
 			case arrived_at_2_moving_up_door_closed:
 				printf("word: %08x state: Arrived at 2, moving up door closed\n", (unsigned int)word);
+				previousState = 31;
 				if (F2U || F2D || O) {
 					state = arrived_at_2_moving_up_door_open;
 					word &= ~(F2U | F2D | O);
@@ -294,7 +341,11 @@ void elevatoroperator() {
 
 			case arrived_at_3_moving_up_door_open:
 				printf("word: %08x state: Arrived at 3, moving up door open\n", (unsigned int)word);
-				playAudio("../audio/arrived_at_3.wav");
+				if (previousState != 40) {
+					playAudioVLC("../../../audio/arrived_at_3.wav", 0);
+					printf("previous state not current state");
+				}
+				previousState = 40;
 				if (C || F2U || F2D || F2 || F1U || F1 || (sabbath_mode == 1)) {
 					state = arrived_at_3_moving_up_door_closed;
 					word &= ~C;
@@ -303,6 +354,7 @@ void elevatoroperator() {
 
 			case arrived_at_3_moving_up_door_closed:
 				printf("word: %08x state: Arrived at 3, moving up door closed\n", (unsigned int)word);
+				previousState = 41;
 				if (F3D || O) {
 					state = arrived_at_3_moving_up_door_open;
 					word &= ~(F3D | O);
@@ -386,158 +438,6 @@ void elevatoroperator() {
 		}
 	}
 }
-
-//Old state machine
-/*
-enum State {
-	initial,
-	waiting_at_1,
-	moving_to_1,
-	waiting_at_2,
-	moving_to_2,
-	waiting_at_3,
-	moving_to_3,
-	fault
-};
-
-void elevatoroperator() {
-	if (can_open() < 0) {
-		printf("Failed to open CAN socket!\n");
-		return;
-	}
-
-	struct can_frame Rxmsg;
-	enum State state = initial;
-
-	printf("\nElevator Operator State Machine Started (SocketCAN)\n");
-	printf("Press Ctrl+C to exit\n\n");
-
-	while (1) {
-		ssize_t nbytes = read(can_socket, &Rxmsg, sizeof(Rxmsg));
-
-		if (nbytes == sizeof(Rxmsg)) {
-			printf("Rx ID: 0x%X  Data: 0x%02X\n", Rxmsg.can_id, Rxmsg.data[0]);
-
-			switch (state) {
-			case initial:
-				printf("Initial\n");//Initialize elevator
-				if (Rxmsg.can_id == ID_EC_TO_ALL) {
-					if (Rxmsg.data[0] == AT_FLOOR1) state = waiting_at_1;
-					else if (Rxmsg.data[0] == AT_FLOOR2) state = waiting_at_2;
-					else if (Rxmsg.data[0] == AT_FLOOR3) state = waiting_at_3;
-				}
-				break;
-
-			case waiting_at_1:
-				printf("Waiting at 1\n");
-				// Waiting at floor 1
-				// If command received, state = moving_to_2 or 3
-				if (Rxmsg.can_id == ID_F2_TO_SC && Rxmsg.data[0] == 0x01) {  // FC2 is calling
-					// now send message to EC to MOVE TO FLOOR 2: CAN ID 0X100, MESSAGE BYTE GO_TO_FLOOR2
-					sendMsg(ID_SC_TO_EC, GO_TO_FLOOR2, can_socket);
-					state = moving_to_2;
-				}
-				if (Rxmsg.can_id == ID_CC_TO_SC && Rxmsg.data[0] == 0x02) {
-					sendMsg(ID_SC_TO_EC, GO_TO_FLOOR2, can_socket);
-					state = moving_to_2;
-				}
-
-				if (Rxmsg.can_id == ID_F3_TO_SC && Rxmsg.data[0] == 0x01) {
-					sendMsg(ID_SC_TO_EC, GO_TO_FLOOR3, can_socket);
-					state = moving_to_3;
-				}
-
-				if (Rxmsg.can_id == ID_CC_TO_SC && Rxmsg.data[0] == 0x03) {
-					sendMsg(ID_SC_TO_EC, GO_TO_FLOOR3, can_socket);
-					state = moving_to_3;
-				}
-				break;
-
-			case moving_to_1:
-				printf("Moving to 1\n");
-				if (Rxmsg.can_id == ID_EC_TO_ALL && Rxmsg.data[0] == AT_FLOOR1) {
-					state = waiting_at_1;
-					sendMsg(ID_SC_TO_EC, GO_TO_FLOOR2, can_socket);
-				}
-				if (Rxmsg.can_id == ID_EC_TO_ALL && (Rxmsg.data[0] == AT_FLOOR2 || Rxmsg.data[0] == AT_FLOOR3)) {
-					sendMsg(ID_SC_TO_EC, GO_TO_FLOOR1, can_socket);
-				}
-				break;
-			case waiting_at_2:
-				printf("Waiting at 2\n");
-				if (Rxmsg.can_id == ID_F1_TO_SC && Rxmsg.data[0] == 0x01) {
-					sendMsg(ID_SC_TO_EC, GO_TO_FLOOR1, can_socket);
-					state = moving_to_1;
-				}
-				if (Rxmsg.can_id == ID_CC_TO_SC && Rxmsg.data[0] == 0x01) {
-					sendMsg(ID_SC_TO_EC, GO_TO_FLOOR1, can_socket);
-					state = moving_to_1;
-				}
-
-				if (Rxmsg.can_id == ID_F3_TO_SC && Rxmsg.data[0] == 0x01) {
-					sendMsg(ID_SC_TO_EC, GO_TO_FLOOR3, can_socket);
-					state = moving_to_3;
-				}
-
-				if (Rxmsg.can_id == ID_CC_TO_SC && Rxmsg.data[0] == 0x03) {
-					sendMsg(ID_SC_TO_EC, GO_TO_FLOOR3, can_socket);
-					state = moving_to_3;
-				}
-				break;
-			case moving_to_2:
-				printf("Moving to 2\n");
-				if (Rxmsg.can_id == ID_EC_TO_ALL && Rxmsg.data[0] == AT_FLOOR2) {
-					state = waiting_at_2;
-				}
-				if (Rxmsg.can_id == ID_EC_TO_ALL && (Rxmsg.data[0] == AT_FLOOR1 || Rxmsg.data[0] == AT_FLOOR3)) {
-					sendMsg(ID_SC_TO_EC, GO_TO_FLOOR2, can_socket);
-				}
-				break;
-			case waiting_at_3:
-				printf("Waiting at 3\n");
-				if (Rxmsg.can_id == ID_F1_TO_SC && Rxmsg.data[0] == 0x01) {
-					sendMsg(ID_SC_TO_EC, GO_TO_FLOOR1, can_socket);
-					state = moving_to_1;
-				}
-				if (Rxmsg.can_id == ID_CC_TO_SC && Rxmsg.data[0] == 0x01) {
-					sendMsg(ID_SC_TO_EC, GO_TO_FLOOR1, can_socket);
-					state = moving_to_1;
-				}
-
-				if (Rxmsg.can_id == ID_F2_TO_SC && Rxmsg.data[0] == 0x01) {
-					sendMsg(ID_SC_TO_EC, GO_TO_FLOOR2, can_socket);
-					state = moving_to_2;
-				}
-
-				if (Rxmsg.can_id == ID_CC_TO_SC && Rxmsg.data[0] == 0x02) {
-					sendMsg(ID_SC_TO_EC, GO_TO_FLOOR2, can_socket);
-					state = moving_to_2;
-				}
-
-				break;
-			case moving_to_3:
-				printf("Moving to 3\n");
-				if (Rxmsg.can_id == ID_EC_TO_ALL && Rxmsg.data[0] == AT_FLOOR3) {
-					state = waiting_at_3;
-				}
-				if (Rxmsg.can_id == ID_EC_TO_ALL && (Rxmsg.data[0] == AT_FLOOR1 || Rxmsg.data[0] == AT_FLOOR2)) {
-					sendMsg(ID_SC_TO_EC, GO_TO_FLOOR3, can_socket);
-				}
-				break;
-			case fault:
-				printf("Error\n");
-				// Handle fault condition (e.g. stop elevator, sound alarm, etc.)
-				break;
-			default:
-				break;
-			}
-		}
-		 else if (nbytes < 0 && errno != EAGAIN && errno != EWOULDBLOCK) {
-			 perror("CAN read");
-		}
-	}
-}
-*/
 
 // Helper used by elevatoroperator (updated for SocketCAN)
 int sendMsg(int id, int data, int sock) {

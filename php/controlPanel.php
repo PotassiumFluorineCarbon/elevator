@@ -31,6 +31,8 @@ press("f1up",201,4,$path,$user,$password);
 press("f2down",202,2,$path,$user,$password);
 press("f2up",202,4,$path,$user,$password);
 press("f3down",203,2,$path,$user,$password);
+press("sabbathMode",300,1,$path,$user,$password);
+press("maintenanceLockout",300,2,$path,$user,$password);
 clear($path,$user,$password);
 
 function clear($path,$user,$password){
@@ -43,7 +45,7 @@ function clear($path,$user,$password){
 
 $db=connect($path,$user,$password);
 $status=$db->query("SELECT * FROM ElevatorStatus ORDER BY Timestamp DESC LIMIT 1")->fetch();
-$commands=$db->query("SELECT * FROM ElevatorCommands ORDER BY Timestamp DESC");
+$commands=$db->query("SELECT * FROM ElevatorCommands ORDER BY CommandID ASC");
 ?>
 <!DOCTYPE html>
 <html>
@@ -52,17 +54,7 @@ $commands=$db->query("SELECT * FROM ElevatorCommands ORDER BY Timestamp DESC");
     <meta charset="utf-8">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <title>Control Panel</title>
-    <style>
-        body{font-family:Arial;background:#eee;margin:30px}
-        .panel{display:flex;gap:40px}
-        .left,.right{background:#fff;padding:20px;border-radius:8px}
-        button{width:180px;height:42px;margin:4px;font-size:15px}
-        table{border-collapse:collapse;margin-top:20px;background:#fff}
-        td,th{border:1px solid #555;padding:6px 10px}
-        .shaft{width:120px;border:2px solid #000}
-        .floor{height:70px;border-top:1px solid #888;display:flex;align-items:center;justify-content:center}
-        .current{background:#8f8;font-weight:bold}
-    </style>
+    <link rel="stylesheet" href="../CSS/style.css">
 </head>
 
 <header class="bg-dark text-white py-4 mb-3">
@@ -107,9 +99,8 @@ $commands=$db->query("SELECT * FROM ElevatorCommands ORDER BY Timestamp DESC");
     </ul>
 </nav>
 
-<body>
+<body class="control-panel">
     <h2>Welcome <?php echo htmlspecialchars($_SESSION['username']); ?></h2>
-    <p><a href="logout.php">Logout</a></p>
 
     <div class="panel">
     <div class="left" id="status">
@@ -138,6 +129,10 @@ $commands=$db->query("SELECT * FROM ElevatorCommands ORDER BY Timestamp DESC");
 <button name="f2down">Floor 2 Down</button><br>
 <button name="f3down">Floor 3 Down</button>
 
+<h4>Special Modes</h4>
+<button name="sabbathMode">Sabbath Mode</button><br>
+<button name="maintenanceLockout">Maintenance Lockout</button>
+
 <h4>Clear</h4>
 <button name="clearCommands">Clear</button>
 
@@ -148,8 +143,8 @@ $commands=$db->query("SELECT * FROM ElevatorCommands ORDER BY Timestamp DESC");
 </div>
 </div>
 
-<h3>Command Status</h3>
-<table>
+<h4>Command Status</h4>
+<table class="command-table">
     <tr><th>ID</th><th>CANID</th><th>Data</th><th>Timestamp</th><th>Status</th></tr>
     <?php foreach($commands as $row){ ?>
         <tr>
