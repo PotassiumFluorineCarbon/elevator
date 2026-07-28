@@ -22,6 +22,28 @@ require_once __DIR__ . "/databaseFunctions.php";
 $path = "mysql:host=localhost;dbname=elevator";
 $user = "elevator_user";
 $password = "password";
+$tablename = "elevatorNetwork";
+
+// --- DEMONSTRATION for Q7 and 8
+
+// 1. Display initial state
+//showtable($path, $user, $password, $tablename);
+
+// 2. Demonstrate Question 7
+//updateField($path, $user, $password, $tablename, 3, 'Status', '10');
+
+// 3. Demonstrate Question 8
+//updateFieldWithTransaction($path, $user, $password, $tablename, 1, 'Status', '10');
+
+// 4. Demonstrate Exception Handling
+/*try {
+    updateFieldWithTransaction($path, $user, $password, $tablename, 1, 'nodeID', 99);
+} catch (Exception $e) {
+    echo "Caught expected error: " . $e->getMessage() . "<br>";
+}*/
+
+// 5. Display updated state
+//showtable($path, $user, $password, $tablename);
 
 
 

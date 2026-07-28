@@ -16,6 +16,86 @@ function connect(string $path, string $user, string $password) {
     return $db; 
 }
 
+/**
+ * Question 7: Function for updating ANY field in a table (except primary key)
+ */
+function updateField(
+    string $path, 
+    string $user, 
+    string $password, 
+    string $tablename, 
+    int $nodeID, 
+    string $fieldToUpdate, 
+    $newValue
+): void {
+    // 1. Whitelist of allowed fields to prevent SQL Injection (excluding PK 'nodeID')
+    $allowedFields = ['NodeName', 'nodeType', 'NetworkType', 'Status'];
+
+    if (!in_array($fieldToUpdate, $allowedFields)) {
+        throw new InvalidArgumentException("Invalid field name or primary key update is forbidden.");
+    }
+
+    $db = connect($path, $user, $password);
+
+    // 2. Build query dynamically with the validated field name
+    $query = "UPDATE $tablename SET $fieldToUpdate = :newValue WHERE nodeID = :id";
+    
+    $statement = $db->prepare($query);
+    $statement->bindValue(':newValue', $newValue);
+    $statement->bindValue(':id', $nodeID);
+    
+    $statement->execute();
+}
+
+/**
+ * Question 8: Updated function using Transactions and Exception handling
+ */
+function updateFieldWithTransaction(
+    string $path, 
+    string $user, 
+    string $password, 
+    string $tablename, 
+    int $nodeID, 
+    string $fieldToUpdate, 
+    $newValue
+): void {
+    // Whitelist check for safety
+    $allowedFields = ['NodeName', 'nodeType', 'NetworkType', 'Status'];
+    if (!in_array($fieldToUpdate, $allowedFields)) {
+        throw new InvalidArgumentException("Error: '{$fieldToUpdate}' is an invalid column or primary key.");
+    }
+
+    $db = connect($path, $user, $password);
+
+    try {
+        // Begin Transaction
+        $db->beginTransaction();
+
+        $query = "UPDATE $tablename SET $fieldToUpdate = :newValue WHERE nodeID = :id";
+        $statement = $db->prepare($query);
+        $statement->bindValue(':newValue', $newValue);
+        $statement->bindValue(':id', $nodeID);
+        
+        $statement->execute();
+
+        // Check if any row was actually updated
+        if ($statement->rowCount() === 0) {
+            throw new Exception("Update failed or no row matched nodeID = {$nodeID}. Rolling back.");
+        }
+
+        // Commit Transaction
+        $db->commit();
+        echo "Update successful for nodeID {$nodeID}!<br>";
+
+    } catch (Exception $e) {
+        // Rollback on any failure/exception
+        if ($db->inTransaction()) {
+            $db->rollBack();
+        }
+        echo "Transaction Failed: " . $e->getMessage() . "<br>";
+    }
+}
+
 
 
 // Create
