@@ -8,6 +8,13 @@
 #include <signal.h>
 #include <string>
 #include <stdio.h>
+#include <mysql_driver.h>
+#include <mysql_connection.h>
+#include <cppconn/statement.h>
+#include <cppconn/resultset.h>
+#include <cppconn/exception.h>
+using namespace std;
+using namespace sql;
 
 // Use VLC to play audio files instead of the ALSA-based playAudio implementation
 static void playAudioVLC(const char* filename,int repeat) {
@@ -149,6 +156,9 @@ void elevatoroperator() {
 		printf("Failed to open CAN socket!\n");
 		return;
 	}
+	Driver* driver = get_driver_instance();
+	Connection* con = driver->connect("tcp://127.0.0.1", "elevator_user", "password");
+	con->setSchema("elevator");
 
 	struct can_frame Rxmsg;
 	enum State state = initial;
@@ -198,33 +208,39 @@ void elevatoroperator() {
 				if (Rxmsg.data[0] == 0x01) word |= 0x01 << 4; // F1
 				else if (Rxmsg.data[0] == 0x02) word |= 0x02 << 4; // F2
 				else if (Rxmsg.data[0] == 0x03) word |= 0x04 << 4; // F3
+				//add to can message history
 			}
 
 			if (Rxmsg.can_id == ID_CC_TO_SC_DOOR) {
 				if (Rxmsg.data[0] == 0x00) word |= 0x01 << 20;//O
 				else if (Rxmsg.data[0] == 0x01) word |= 0x02 << 20;//C
+				//add to can message history
 			}
 
 			if (Rxmsg.can_id == ID_EC_TO_ALL) {
 				word = (word & 0xfffffff0) | Rxmsg.data[0];
+				//add to can message history
 			}
-			/*if (Rxmsg.can_id == ID_MODE) {
-				if (Rxmsg.data[0] == 0x01){
-					sabbath_mode = 1; 
-					maintenance_lock_out = 0;
-				}
-				else if (Rxmsg.data[0] == 0x02){
-					sabbath_mode = 0;
-					maintenance_lock_out = 1;
-					printf("The elevator is in maintenance lock-out mode. No operations will be performed.\n");
-					return;
-				}
-				else if (Rxmsg.data[0] == 0x00) {
-					sabbath_mode = 0;
-					maintenance_lock_out = 0;
-				}
-			}*/
+			
+			//check database for pending elevator commands
+			Statement* stmt = con->createStatement();
+        	ResultSet* res = stmt->executeQuery("SELECT status, requestedFloor FROM elevatorNetwork");
 
+			while (res->next()) {
+            // Access by column name or numeric index (1-based)
+            string status = res->getString("status");
+            int requestedFloor = res->getInt("requestedFloor");
+			//edit word
+			if(status == "pending") {
+				if(requestedFloor == 1) {
+					word |= 0x01 << 4; // F1
+				} else if(requestedFloor == 2) {
+					word |= 0x02 << 4; // F2
+				} else if(requestedFloor == 3) {
+					word |= 0x04 << 4; // F3
+				}
+        	}
+			
 			switch (state) {
 			case initial:
 				printf("Initial\n");//Initialize elevator
