@@ -11,6 +11,7 @@
 #include <mysql_driver.h>
 #include <mysql_connection.h>
 #include <cppconn/statement.h>
+#include <cppconn/prepared_statement.h>
 #include <cppconn/resultset.h>
 #include <cppconn/exception.h>
 using namespace std;
@@ -176,6 +177,12 @@ void elevatoroperator() {
 
 		if (nbytes == sizeof(Rxmsg)) {
 			printf("Rx ID: 0x%X  Data: 0x%02X\n", Rxmsg.can_id, Rxmsg.data[0]);
+			//add to CAN_messages history
+			string sql = "INSERT INTO CAN_messages (CANID, MessageData) VALUES (?, ?)";
+        	sql::PreparedStatement* pstat = con->prepareStatement(sql);
+			pstat->setInt(1, Rxmsg.can_id);
+        	pstat->setInt(2, Rxmsg.data[0]);
+			pstat->executeUpdate();
 
 			//receive message and add to word
 			if (Rxmsg.can_id == ID_F1_TO_SC) {
@@ -208,18 +215,15 @@ void elevatoroperator() {
 				if (Rxmsg.data[0] == 0x01) word |= 0x01 << 4; // F1
 				else if (Rxmsg.data[0] == 0x02) word |= 0x02 << 4; // F2
 				else if (Rxmsg.data[0] == 0x03) word |= 0x04 << 4; // F3
-				//add to can message history
 			}
 
 			if (Rxmsg.can_id == ID_CC_TO_SC_DOOR) {
 				if (Rxmsg.data[0] == 0x00) word |= 0x01 << 20;//O
 				else if (Rxmsg.data[0] == 0x01) word |= 0x02 << 20;//C
-				//add to can message history
 			}
 
 			if (Rxmsg.can_id == ID_EC_TO_ALL) {
 				word = (word & 0xfffffff0) | Rxmsg.data[0];
-				//add to can message history
 			}
 			
 			//check database for pending elevator commands
