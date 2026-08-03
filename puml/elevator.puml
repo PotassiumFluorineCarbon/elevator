@@ -1,0 +1,15 @@
+@startuml sampleDiagram
+scale 2
+class Node {
+    ~floor:number
+}
+class FloorNode{
+    +elevatorAtFloor: boolen
+}
+class ElevatorCar{
+    +getFloor()
+    +setFloor()
+}
+Node <|-- ElevatorCar
+Node <|-- FloorNode
+@enduml
