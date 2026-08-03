@@ -8,6 +8,14 @@
 #include <signal.h>
 #include <string>
 #include <stdio.h>
+#include <mysql_driver.h>
+#include <mysql_connection.h>
+#include <cppconn/statement.h>
+#include <cppconn/prepared_statement.h>
+#include <cppconn/resultset.h>
+#include <cppconn/exception.h>
+using namespace std;
+using namespace sql;
 
 // Use VLC to play audio files instead of the ALSA-based playAudio implementation
 static void playAudioVLC(const char* filename,int repeat) {
@@ -149,16 +157,15 @@ void elevatoroperator() {
 		printf("Failed to open CAN socket!\n");
 		return;
 	}
+	Driver* driver = get_driver_instance();
+	Connection* con = driver->connect("tcp://127.0.0.1", "elevator_user", "password");
+	con->setSchema("elevator");
 
 	struct can_frame Rxmsg;
 	enum State state = initial;
 	int word = 0;
 	int sabbath_mode = 0; // 0 = normal, 1 = sabbath mode
 	int maintenance_lock_out = 0; // 0 = normal, 1 = maintenance lock-out
-	if (maintenance_lock_out == 1) {
-		printf("The elevator is in maintenance lock-out mode. No operations will be performed.\n");
-		return;
-	}
 	int previousState=0;
 	playAudioVLC("../../../audio/elevator.mp3", 1);
 
@@ -170,6 +177,12 @@ void elevatoroperator() {
 
 		if (nbytes == sizeof(Rxmsg)) {
 			printf("Rx ID: 0x%X  Data: 0x%02X\n", Rxmsg.can_id, Rxmsg.data[0]);
+			//add to CAN_messages history
+			string sql = "INSERT INTO CAN_messages (CANID, MessageData) VALUES (?, ?)";
+        	sql::PreparedStatement* pstat = con->prepareStatement(sql);
+			pstat->setInt(1, Rxmsg.can_id);
+        	pstat->setInt(2, Rxmsg.data[0]);
+			pstat->executeUpdate();
 
 			//receive message and add to word
 			if (Rxmsg.can_id == ID_F1_TO_SC) {
@@ -212,35 +225,38 @@ void elevatoroperator() {
 			if (Rxmsg.can_id == ID_EC_TO_ALL) {
 				word = (word & 0xfffffff0) | Rxmsg.data[0];
 			}
-			/*if (Rxmsg.can_id == ID_MODE) {
-				if (Rxmsg.data[0] == 0x01){
-					sabbath_mode = 1; 
-					maintenance_lock_out = 0;
-				}
-				else if (Rxmsg.data[0] == 0x02){
-					sabbath_mode = 0;
-					maintenance_lock_out = 1;
-					printf("The elevator is in maintenance lock-out mode. No operations will be performed.\n");
-					return;
-				}
-				else if (Rxmsg.data[0] == 0x00) {
-					sabbath_mode = 0;
-					maintenance_lock_out = 0;
-				}
-			}*/
+			
+			//check database for pending elevator commands
+			Statement* stmt = con->createStatement();
+        	ResultSet* res = stmt->executeQuery("SELECT status, requestedFloor FROM elevatorNetwork");
 
+			while (res->next()) {
+            // Access by column name or numeric index (1-based)
+            string status = res->getString("status");
+            int requestedFloor = res->getInt("requestedFloor");
+			//edit word
+			if(status == "pending") {
+				if(requestedFloor == 1) {
+					word |= 0x01 << 4; // F1
+				} else if(requestedFloor == 2) {
+					word |= 0x02 << 4; // F2
+				} else if(requestedFloor == 3) {
+					word |= 0x04 << 4; // F3
+				}
+        	}
+			
 			switch (state) {
 			case initial:
 				printf("Initial\n");//Initialize elevator
 				if ((word & 0x0F) == AT_FLOOR1) state = arrived_at_1_moving_down_door_open;
 				else if ((word & 0x0F) == AT_FLOOR2) state = arrived_at_2_moving_down_door_open;
 				else if ((word & 0x0F) == AT_FLOOR3) state = arrived_at_3_moving_up_door_open;
-
-				//handle disabled mode later
+				else if (maintenance_lock_out == 1) break;
 				break;
 
 			case arrived_at_1_moving_down_door_open:
 				printf("word: %08x state: Arrived at 1, moving down door open\n", (unsigned int)word);
+				if (maintenance_lock_out == 1) break;
 				if (previousState != 10) {
 					playAudioVLC("../../../audio/arrived_at_1.wav", 0);
 					printf("previous state not current state");
@@ -254,6 +270,7 @@ void elevatoroperator() {
 
 			case arrived_at_1_moving_down_door_closed:
 				printf("word: %08x state: Arrived at 1, moving down door closed\n", (unsigned int)word);
+				if (maintenance_lock_out == 1) break;
 				previousState = 11;
 				if (F1U || O) {
 					state = arrived_at_1_moving_down_door_open;
@@ -277,6 +294,7 @@ void elevatoroperator() {
 
 			case arrived_at_2_moving_down_door_open:
 				printf("word: %08x state: Arrived at 2, moving down door open\n", (unsigned int)word);
+				if (maintenance_lock_out == 1) break;
 				if (previousState != 20) {
 					playAudioVLC("../../../audio/arrived_at_2.wav", 0);
 					printf("previous state not current state");
@@ -290,6 +308,7 @@ void elevatoroperator() {
 
 			case arrived_at_2_moving_down_door_closed:
 				printf("word: %08x state: Arrived at 2, moving down door closed\n", (unsigned int)word);
+				if (maintenance_lock_out == 1) break;
 				previousState = 21;
 				if (F2U || F2D || O) {
 					state = arrived_at_2_moving_down_door_open;
@@ -309,6 +328,7 @@ void elevatoroperator() {
 
 			case arrived_at_2_moving_up_door_open:
 				printf("word: %08x state: Arrived at 2, moving up door open\n", (unsigned int)word);
+				if (maintenance_lock_out == 1) break;
 				if (previousState != 30) {
 					playAudioVLC("../../../audio/arrived_at_2.wav", 0);
 					printf("previous state not current state");
@@ -322,6 +342,7 @@ void elevatoroperator() {
 
 			case arrived_at_2_moving_up_door_closed:
 				printf("word: %08x state: Arrived at 2, moving up door closed\n", (unsigned int)word);
+				if (maintenance_lock_out == 1) break;
 				previousState = 31;
 				if (F2U || F2D || O) {
 					state = arrived_at_2_moving_up_door_open;
@@ -341,6 +362,7 @@ void elevatoroperator() {
 
 			case arrived_at_3_moving_up_door_open:
 				printf("word: %08x state: Arrived at 3, moving up door open\n", (unsigned int)word);
+				if (maintenance_lock_out == 1) break;
 				if (previousState != 40) {
 					playAudioVLC("../../../audio/arrived_at_3.wav", 0);
 					printf("previous state not current state");
@@ -354,6 +376,7 @@ void elevatoroperator() {
 
 			case arrived_at_3_moving_up_door_closed:
 				printf("word: %08x state: Arrived at 3, moving up door closed\n", (unsigned int)word);
+				if (maintenance_lock_out == 1) break;
 				previousState = 41;
 				if (F3D || O) {
 					state = arrived_at_3_moving_up_door_open;
