@@ -6,6 +6,7 @@
 #include <stdlib.h>
 #include <unistd.h> 
 #include <iostream>
+#include <system_error>
 
 using namespace std;
 
@@ -25,8 +26,9 @@ int main() {
 	int data; 
 	int numRx;
 	int floorNumber = 1, prev_floorNumber = 1;
-
+	
 	while(1) {
+		try {
 		//system("@cls||clear");
 		choice = menu(); 
 		switch (choice) {
@@ -87,8 +89,12 @@ int main() {
 				break;
 		}
 		sleep(1);					// delay between send/receive
-	}
 	
+	} catch (const std::system_error& e) {
+		printf("CAN error: %s\n", e.what());
+		return 1;
+	}
+}
 	return(0);
 }
 

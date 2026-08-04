@@ -1,0 +1,58 @@
+@startuml
+' --- Classes and Interfaces ---
+
+class ElevatorController {
+    + receiveFloorRequest(floor: int, direction: Direction): void
+    + receiveCarRequest(elevatorId: int, destinationFloor: int): void
+    + dispatchElevator(): void
+    + updateCarPosition(elevatorId: int, floor: int): void
+}
+
+class ElevatorCar {
+    + moveUp(): void
+    + moveDown(): void
+    + stop(): void
+    + openDoors(): void
+    + closeDoors(): void
+    + getCurrentFloor(): int
+}
+
+class FloorNode {
+    + pressUpButton(): void
+    + pressDownButton(): void
+    + clearUpRequest(): void
+    + clearDownRequest(): void
+}
+
+interface Sensor {
+    + getStatus(): boolean
+    + testSensor(): void
+}
+
+class DoorSensor {
+    + isObstructed(): boolean
+}
+
+class WeightSensor {
+    + isOverloaded(): boolean
+    + getCurrentWeight(): float
+}
+
+class ArrivalSensor {
+    + detectFloor(): int
+}
+
+' --- Relationships ---
+
+ElevatorController "1" -- "*" ElevatorCar : manages >
+ElevatorController "1" -- "*" FloorNode : monitors >
+
+ElevatorCar "1" *-- "1" DoorSensor : contains >
+ElevatorCar "1" *-- "1" WeightSensor : contains >
+ElevatorCar "1" *-- "*" ArrivalSensor : contains >
+
+Sensor <|.. DoorSensor : implements
+Sensor <|.. WeightSensor : implements
+Sensor <|.. ArrivalSensor : implements
+
+@enduml

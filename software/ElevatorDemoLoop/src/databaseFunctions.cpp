@@ -20,15 +20,15 @@ int db_getFloorNum() {
 	
 	// Create a connection 
 	driver = get_driver_instance();
-	con = driver->connect("tcp://127.0.0.1:3306", "ese", "ese");	
+	con = driver->connect("tcp://127.0.0.1:3306", "elevator_user", "password");	
 	con->setSchema("elevator");		
 	
 	// Query database
 	// ***************************** 
 	stmt = con->createStatement();
-	res = stmt->executeQuery("SELECT currentFloor FROM elevatorNetwork WHERE nodeID = 1");	// message query
+	res = stmt->executeQuery("SELECT CurrentFloor FROM ElevatorStatus");	// message query
 	while(res->next()){
-		floorNum = res->getInt("currentFloor");
+		floorNum = res->getInt("CurrentFloor");
 	}
 	
 	// Clean up pointers 
@@ -49,20 +49,20 @@ int db_setFloorNum(int floorNum) {
 	
 	// Create a connection 
 	driver = get_driver_instance();
-	con = driver->connect("tcp://127.0.0.1:3306", "ese", "ese");	
+	con = driver->connect("tcp://127.0.0.1:3306", "elevator_user", "password");	
 	con->setSchema("elevator");										
 	
 	// Query database (possibly not necessary)
 	// ***************************** 
 	stmt = con->createStatement();
-	res = stmt->executeQuery("SELECT currentFloor FROM elevatorNetwork WHERE nodeID = 1");	// message query
+	res = stmt->executeQuery("SELECT CurrentFloor FROM ElevatorStatus");	// message query
 	while(res->next()){
-		res->getInt("currentFloor");
+		res->getInt("CurrentFloor");
 	}
 		
 	// Update database
 	// *****************************
-	pstmt = con->prepareStatement("UPDATE elevatorNetwork SET currentFloor = ? WHERE nodeID = 1");
+	pstmt = con->prepareStatement("UPDATE ElevatorStatus SET CurrentFloor = ?");
 	pstmt->setInt(1, floorNum);
 	pstmt->executeUpdate();
 		
@@ -72,4 +72,134 @@ int db_setFloorNum(int floorNum) {
 	delete stmt;
 	delete con;
 } 
+
+bool db_getNextCommand(int &canID, int &data) {
+
+    sql::Driver *driver;
+    sql::Connection *con;
+    sql::PreparedStatement *pstmt;
+    sql::ResultSet *res;
+
+    int commandID = -1;
+
+    // Create connection
+    driver = get_driver_instance();
+    con = driver->connect("tcp://127.0.0.1:3306", "elevator_user", "password");
+    con->setSchema("elevator");
+
+    // ---------------------------------------------------------
+    // First check for highest priority command (CANID=300 Data=2)
+    // ---------------------------------------------------------
+    pstmt = con->prepareStatement(
+        "SELECT CommandID, CANID, Data "
+        "FROM ElevatorCommands "
+        "WHERE Status='pending' AND CANID=300 AND Data=2 "
+        "LIMIT 1"
+    );
+
+    res = pstmt->executeQuery();
+
+    if (!res->next()) {
+
+        delete res;
+        delete pstmt;
+
+        // ---------------------------------------------------------
+        // Otherwise get the oldest pending command
+        // ---------------------------------------------------------
+        pstmt = con->prepareStatement(
+            "SELECT CommandID, CANID, Data "
+            "FROM ElevatorCommands "
+            "WHERE Status='pending' "
+            "ORDER BY Timestamp ASC "
+            "LIMIT 1"
+        );
+
+        res = pstmt->executeQuery();
+
+        if (!res->next()) {
+            delete res;
+            delete pstmt;
+            delete con;
+            return false;
+        }
+    }
+
+    commandID = res->getInt("CommandID");
+    canID     = res->getInt("CANID");
+    data      = res->getInt("Data");
+
+    delete res;
+    delete pstmt;
+
+    // ---------------------------------------------------------
+    // Mark command as complete
+    // ---------------------------------------------------------
+    pstmt = con->prepareStatement(
+        "UPDATE ElevatorCommands "
+        "SET Status='complete' "
+        "WHERE CommandID=?"
+    );
+
+    pstmt->setInt(1, commandID);
+    pstmt->executeUpdate();
+
+    delete pstmt;
+    delete con;
+
+    return true;
+}
+
+int db_addCANMessage(int canID, int data) {
+
+    sql::Driver *driver;
+    sql::Connection *con;
+    sql::PreparedStatement *pstmt;
+
+    driver = get_driver_instance();
+    con = driver->connect("tcp://127.0.0.1:3306", "elevator_user", "password");
+    con->setSchema("elevator");
+
+    pstmt = con->prepareStatement(
+        "INSERT INTO CAN_messages (CANID, MessageData) VALUES (?, ?)"
+    );
+
+    pstmt->setInt(1, canID);
+    pstmt->setInt(2, data);
+
+    pstmt->executeUpdate();
+
+    delete pstmt;
+    delete con;
+
+    return 0;
+}
+
+int db_addDiagnostic(int nodeID, const std::string &message) {
+
+    sql::Driver *driver;
+    sql::Connection *con;
+    sql::PreparedStatement *pstmt;
+
+    // Create connection
+    driver = get_driver_instance();
+    con = driver->connect("tcp://127.0.0.1:3306", "elevator_user", "password");
+    con->setSchema("elevator");
+
+    // Insert diagnostic message
+    pstmt = con->prepareStatement(
+        "INSERT INTO Diagnostics (NodeID, Message) VALUES (?, ?)"
+    );
+
+    pstmt->setInt(1, nodeID);
+    pstmt->setString(2, message);
+
+    pstmt->executeUpdate();
+
+    // Clean up
+    delete pstmt;
+    delete con;
+
+    return 0;
+}
  
