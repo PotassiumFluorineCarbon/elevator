@@ -10,7 +10,7 @@ if(!isset($_SESSION['username'])){
 
 require_once "databaseFunctions.php";
 
-$path="mysql:host=127.0.0.1;dbname=elevator";
+$path="mysql:host=localhost;dbname=elevator";
 $user="elevator_user"; 
 $password="password";
 
