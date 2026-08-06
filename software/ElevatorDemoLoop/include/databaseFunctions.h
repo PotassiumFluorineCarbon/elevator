@@ -1,3 +1,4 @@
+#include <string>
 #ifndef DB_FUNCTIONS
 
 #define DB_FUNCTIONS
