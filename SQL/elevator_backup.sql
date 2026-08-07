@@ -30,7 +30,7 @@ CREATE TABLE `CAN_messages` (
   PRIMARY KEY (`MessageID`),
   KEY `CANID` (`CANID`),
   CONSTRAINT `CAN_messages_ibfk_1` FOREIGN KEY (`CANID`) REFERENCES `CANnodes` (`CANID`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -58,7 +58,7 @@ CREATE TABLE `CANnodes` (
   PRIMARY KEY (`CANID`),
   KEY `fk_node` (`NodeID`),
   CONSTRAINT `fk_node` FOREIGN KEY (`NodeID`) REFERENCES `elevatorNetwork` (`nodeID`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -67,7 +67,7 @@ CREATE TABLE `CANnodes` (
 
 LOCK TABLES `CANnodes` WRITE;
 /*!40000 ALTER TABLE `CANnodes` DISABLE KEYS */;
-INSERT INTO `CANnodes` VALUES (100,1,'SC',0,0),(101,2,'EC',0,0),(200,3,'CC',0,0),(201,4,'F1',0,0),(202,5,'F2',0,0),(203,6,'F3',0,0);
+INSERT INTO `CANnodes` VALUES (0x100,1,'SC',0,0),(0x101,2,'EC',0,0),(0x200,3,'CC',0,0),(0x201,4,'F1',0,0),(0x202,5,'F2',0,0),(0x203,6,'F3',0,0);
 /*!40000 ALTER TABLE `CANnodes` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -86,7 +86,7 @@ CREATE TABLE `Diagnostics` (
   PRIMARY KEY (`DiagnosticID`),
   KEY `NodeID` (`NodeID`),
   CONSTRAINT `Diagnostics_ibfk_1` FOREIGN KEY (`NodeID`) REFERENCES `elevatorNetwork` (`nodeID`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -114,7 +114,7 @@ CREATE TABLE `ElevatorCommands` (
   PRIMARY KEY (`CommandID`),
   UNIQUE KEY `CANID` (`CANID`,`Data`),
   CONSTRAINT `ElevatorCommands_ibfk_1` FOREIGN KEY (`CANID`) REFERENCES `CANnodes` (`CANID`)
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -123,7 +123,7 @@ CREATE TABLE `ElevatorCommands` (
 
 LOCK TABLES `ElevatorCommands` WRITE;
 /*!40000 ALTER TABLE `ElevatorCommands` DISABLE KEYS */;
-INSERT INTO `ElevatorCommands` VALUES (1,100,5,'2026-07-15 15:20:19','complete'),(2,100,6,'2026-07-15 15:20:19','complete'),(3,100,7,'2026-07-15 15:20:19','complete'),(4,200,1,'2026-07-15 15:20:19','complete'),(5,200,2,'2026-07-15 15:20:19','complete'),(6,200,3,'2026-07-15 15:20:19','complete'),(7,201,4,'2026-07-15 15:20:19','complete'),(8,202,2,'2026-07-15 15:20:19','complete'),(9,202,4,'2026-07-15 15:20:19','complete'),(10,203,2,'2026-07-15 15:59:47','pending');
+INSERT INTO `ElevatorCommands` VALUES (1,0x100,5,'2026-07-15 15:20:19','complete'),(2,0x100,6,'2026-07-15 15:20:19','complete'),(3,0x100,7,'2026-07-15 15:20:19','complete'),(4,0x200,1,'2026-07-15 15:20:19','complete'),(5,0x200,2,'2026-07-15 15:20:19','complete'),(6,0x200,3,'2026-07-15 15:20:19','complete'),(7,0x201,4,'2026-07-15 15:20:19','complete'),(8,0x202,2,'2026-07-15 15:20:19','complete'),(9,0x202,4,'2026-07-15 15:20:19','complete'),(10,0x203,2,'2026-07-15 15:59:47','pending');
 /*!40000 ALTER TABLE `ElevatorCommands` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -138,7 +138,7 @@ CREATE TABLE `ElevatorStatus` (
   `CurrentFloor` int NOT NULL,
   `Direction` enum('up','down','idle') NOT NULL,
   `Timestamp` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -164,7 +164,7 @@ CREATE TABLE `Users` (
   `Password` varchar(255) NOT NULL,
   PRIMARY KEY (`UserID`),
   UNIQUE KEY `Username` (`Username`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -192,7 +192,7 @@ CREATE TABLE `elevatorNetwork` (
   PRIMARY KEY (`nodeID`),
   UNIQUE KEY `NodeName` (`NodeName`),
   KEY `idx_networkType` (`NetworkType`)
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=11;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
