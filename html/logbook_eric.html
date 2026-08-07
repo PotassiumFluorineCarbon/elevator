@@ -155,7 +155,7 @@
                 <li>The elevator did not elevate</li>
                 <li>CAN driver got uninstalled</li>
                 <li>No CAN messages were received</li>
-                <li>Did sudo modprobe can_raw and sudo modprobe can_usb</li>
+                <li>Did sudo modprobe can_raw and sudo modprobe peak_usb</li>
                 <li>Found out it was because of an update</li>
                 <li>The PCAN driver did not exist for current drivers and was incompatible with the update</li>
                 <li>Removed the update</li>
@@ -317,6 +317,13 @@
                 <li>Check database for pending elevator commands. Do oldest request first.</li>
                 <li>If there are no requests from gui, check hardware. Else, get can ID and data from database.</li>
                 <li>Update status when pending request is done</li>
+            </ul>
+            <h3>Aug 7</h3>
+            <ul>
+                <li>Made error messages use class</li>
+                <li>Updated database on Rpi using the following code:</li>
+                <li>cat ../../..//SQL/elevator_backup.sql  | sudo mysql elevator</li>
+                <li>Made CANID in database hex</li>
             </ul>
         </section>
 
