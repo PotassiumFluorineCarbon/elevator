@@ -91,7 +91,7 @@ int main() {
 		sleep(1);					// delay between send/receive
 	
 	} catch (const std::system_error& e) {
-		printf("CAN error: %s\n", e.what());
+		printf("error: %s\n", e.what());
 		return 1;
 	}
 }

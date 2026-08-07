@@ -33,6 +33,10 @@ static void playAudioVLC(const char *filename, int repeat)
 	system(cmd);
 }
 
+class MyException : public std::system_error {
+    using std::system_error::system_error; // inherit constructors
+};
+
 static int can_socket = -1;
 int sendMsg(int id, int data, int sock);
 
@@ -46,7 +50,7 @@ static int can_open(void)
 	struct ifreq ifr;
 
 	can_socket = socket(PF_CAN, SOCK_RAW, CAN_RAW);
-	if (can_socket < 0) throw std::system_error(errno, std::generic_category(), "socket CAN");
+	if (can_socket < 0) throw MyException(std::error_code(errno, std::generic_category()),"socket CAN");
 
 	strcpy(ifr.ifr_name, "can0");
 	if (ioctl(can_socket, SIOCGIFINDEX, &ifr) < 0)
@@ -54,7 +58,7 @@ static int can_open(void)
 		int err = errno;
 		close(can_socket);
 		can_socket = -1;
-		throw std::system_error(err, std::generic_category(), "ioctl SIOCGIFINDEX");
+		throw MyException(std::error_code(errno, std::generic_category()),"ioctl SIOCGIFINDEX");
 	}
 
 	addr.can_family = AF_CAN;
@@ -65,7 +69,7 @@ static int can_open(void)
 		int err = errno;
 		close(can_socket);
 		can_socket = -1;
-		throw std::system_error(err, std::generic_category(), "bind CAN");
+		throw MyException(std::error_code(errno, std::generic_category()),"bind CAN");
 	}
 
 	// Non-blocking mode
@@ -94,7 +98,7 @@ int pcanTx(int id, int data)
 	frame.data[0] = (unsigned char)data;
 
 	ssize_t nbytes = write(can_socket, &frame, sizeof(frame));
-	if (nbytes != sizeof(frame)) throw std::system_error(errno, std::generic_category(), "CAN write");
+	if (nbytes != sizeof(frame)) throw MyException(std::error_code(errno, std::generic_category()),"CAN write");
 
 	printf("pcanTx [Tx] ID: 0x%04X  DATA: 0x%02X  --> Sent!\n", id, data);
 	return 0;
@@ -121,7 +125,7 @@ int pcanRx(int num_msgs)
 				usleep(50000);
 				continue;
 			}
-			throw std::system_error(errno, std::generic_category(), "CAN read");
+			throw MyException(std::error_code(errno, std::generic_category()),"CAN read");
 		}
 
 		if (nbytes == sizeof(frame))
@@ -140,7 +144,6 @@ int pcanRx(int num_msgs)
 	}
 	return (int)frame.data[0]; // return last received data byte
 }
-
 // ==================== ELEVATOR STATE MACHINE ====================
 
 enum State
@@ -189,7 +192,7 @@ void elevatoroperator()
 
 		if (!res->next()){//if there are no requests from the gui, then check hardware
 			ssize_t nbytes = read(can_socket, &Rxmsg, sizeof(Rxmsg));
-			if (nbytes < 0 && errno != EAGAIN && errno != EWOULDBLOCK) throw std::system_error(errno, std::generic_category(), "CAN read");
+			if (nbytes < 0 && errno != EAGAIN && errno != EWOULDBLOCK) throw MyException(std::error_code(errno, std::generic_category()),"CAN read");
 			if (nbytes != sizeof(Rxmsg)) continue;//no message
 			printf("Rx ID: 0x%X  Data: 0x%02X\n", Rxmsg.can_id, Rxmsg.data[0]);
 			// add to CAN_messages history
