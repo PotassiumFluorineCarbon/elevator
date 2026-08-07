@@ -1,7 +1,7 @@
 IDIR =../include
 LDIR =-L/usr/lib/arm-linux-gnueabihf
 CC=g++
-CFLAGS=-I$(IDIR)
+CFLAGS=-I$(IDIR) -g -O0
 ODIR=obj
 
 LIBS=-l:libmysqlcppconn.so -lpcan
