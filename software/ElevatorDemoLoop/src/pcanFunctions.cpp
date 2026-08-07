@@ -209,7 +209,7 @@ void elevatoroperator()
 			canID = res->getInt("CANID");
 			candata = res->getInt("Data");
 			// update status to 'processed'
-			string sql = "UPDATE ElevatorCommands SET status = 'processed' WHERE CANID = ? AND Data = ? AND status = 'pending'";
+			string sql = "UPDATE ElevatorCommands SET Status = 'complete' WHERE CANID = ? AND Data = ? AND status = 'pending'";
 			sql::PreparedStatement *pstat = con->prepareStatement(sql);
 			pstat->setInt(1, canID);
 			pstat->setInt(2, candata);
