@@ -33,6 +33,10 @@ static void playAudioVLC(const char *filename, int repeat)
 	system(cmd);
 }
 
+class MyException : public std::system_error {
+    using std::system_error::system_error; // inherit constructors
+};
+
 static int can_socket = -1;
 int sendMsg(int id, int data, int sock);
 
@@ -46,7 +50,7 @@ static int can_open(void)
 	struct ifreq ifr;
 
 	can_socket = socket(PF_CAN, SOCK_RAW, CAN_RAW);
-	if (can_socket < 0) throw std::system_error(errno, std::generic_category(), "socket CAN");
+	if (can_socket < 0) throw MyException(std::error_code(errno, std::generic_category()),"socket CAN");
 
 	strcpy(ifr.ifr_name, "can0");
 	if (ioctl(can_socket, SIOCGIFINDEX, &ifr) < 0)
@@ -54,7 +58,7 @@ static int can_open(void)
 		int err = errno;
 		close(can_socket);
 		can_socket = -1;
-		throw std::system_error(err, std::generic_category(), "ioctl SIOCGIFINDEX");
+		throw MyException(std::error_code(errno, std::generic_category()),"ioctl SIOCGIFINDEX");
 	}
 
 	addr.can_family = AF_CAN;
@@ -65,7 +69,7 @@ static int can_open(void)
 		int err = errno;
 		close(can_socket);
 		can_socket = -1;
-		throw std::system_error(err, std::generic_category(), "bind CAN");
+		throw MyException(std::error_code(errno, std::generic_category()),"bind CAN");
 	}
 
 	// Non-blocking mode
@@ -94,7 +98,7 @@ int pcanTx(int id, int data)
 	frame.data[0] = (unsigned char)data;
 
 	ssize_t nbytes = write(can_socket, &frame, sizeof(frame));
-	if (nbytes != sizeof(frame)) throw std::system_error(errno, std::generic_category(), "CAN write");
+	if (nbytes != sizeof(frame)) throw MyException(std::error_code(errno, std::generic_category()),"CAN write");
 
 	printf("pcanTx [Tx] ID: 0x%04X  DATA: 0x%02X  --> Sent!\n", id, data);
 	return 0;
@@ -121,7 +125,7 @@ int pcanRx(int num_msgs)
 				usleep(50000);
 				continue;
 			}
-			throw std::system_error(errno, std::generic_category(), "CAN read");
+			throw MyException(std::error_code(errno, std::generic_category()),"CAN read");
 		}
 
 		if (nbytes == sizeof(frame))
@@ -140,7 +144,6 @@ int pcanRx(int num_msgs)
 	}
 	return (int)frame.data[0]; // return last received data byte
 }
-
 // ==================== ELEVATOR STATE MACHINE ====================
 
 enum State
@@ -181,29 +184,50 @@ void elevatoroperator()
 
 	while (1)
 	{
-		ssize_t nbytes = read(can_socket, &Rxmsg, sizeof(Rxmsg));
-		if (nbytes < 0 && errno != EAGAIN && errno != EWOULDBLOCK) throw std::system_error(errno, std::generic_category(), "CAN read");
-		if (nbytes != sizeof(Rxmsg)) continue;
-		printf("Rx ID: 0x%X  Data: 0x%02X\n", Rxmsg.can_id, Rxmsg.data[0]);
-		// add to CAN_messages history
-		string sql = "INSERT INTO CAN_messages (CANID, MessageData) VALUES (?, ?)";
-		sql::PreparedStatement *pstat = con->prepareStatement(sql);
-		pstat->setInt(1, Rxmsg.can_id);
-		pstat->setInt(2, Rxmsg.data[0]);
-		pstat->executeUpdate();
+		// check database for pending elevator commands
+		Statement *stmt = con->createStatement();
+		ResultSet *res = stmt->executeQuery("SELECT CANID, Data FROM ElevatorCommands WHERE status = 'pending' ORDER BY timestamp");//find pending commands
+		int canID;
+		int candata;
+
+		if (!res->next()){//if there are no requests from the gui, then check hardware
+			ssize_t nbytes = read(can_socket, &Rxmsg, sizeof(Rxmsg));
+			if (nbytes < 0 && errno != EAGAIN && errno != EWOULDBLOCK) throw MyException(std::error_code(errno, std::generic_category()),"CAN read");
+			if (nbytes != sizeof(Rxmsg)) continue;//no message
+			printf("Rx ID: 0x%X  Data: 0x%02X\n", Rxmsg.can_id, Rxmsg.data[0]);
+			// add to CAN_messages history
+			string sql = "INSERT INTO CAN_messages (CANID, MessageData) VALUES (?, ?)";
+			sql::PreparedStatement *pstat = con->prepareStatement(sql);
+			pstat->setInt(1, Rxmsg.can_id);
+			pstat->setInt(2, Rxmsg.data[0]);
+			pstat->executeUpdate();
+			canID = Rxmsg.can_id;
+			candata = Rxmsg.data[0];
+		}
+		else{
+			//get ID and data from database
+			canID = res->getInt("CANID");
+			candata = res->getInt("Data");
+			// update status to 'complete'
+			string sql = "UPDATE ElevatorCommands SET Status = 'complete' WHERE CANID = ? AND Data = ? AND status = 'pending'";
+			sql::PreparedStatement *pstat = con->prepareStatement(sql);
+			pstat->setInt(1, canID);
+			pstat->setInt(2, candata);
+			pstat->executeUpdate();
+		}
 
 		// receive message and add to word
-		if (Rxmsg.can_id == ID_F1_TO_SC)
+		if (canID == ID_F1_TO_SC)
 		{
-			word |= Rxmsg.data[0] << 16;
+			word |= candata << 16;
 		}
-		if (Rxmsg.can_id == ID_F2_TO_SC)
+		if (canID == ID_F2_TO_SC)
 		{
-			word |= Rxmsg.data[0] << 12;
+			word |= candata << 12;
 		}
-		if (Rxmsg.can_id == ID_F3_TO_SC)
+		if (canID == ID_F3_TO_SC)
 		{
-			word |= Rxmsg.data[0] << 8;
+			word |= candata << 8;
 		}
 #define F1U (word & (UP << 16))
 // #define F1D	(word & (DOWN << 16))
@@ -222,32 +246,28 @@ void elevatoroperator()
 #define O (word & (0x01 << 20))
 #define C (word & (0x02 << 20))
 
-		if (Rxmsg.can_id == ID_CC_TO_SC)
+		if (canID == ID_CC_TO_SC)
 		{
-			if (Rxmsg.data[0] == 0x01)
+			if (candata == 0x01)
 				word |= 0x01 << 4; // F1
-			else if (Rxmsg.data[0] == 0x02)
+			else if (candata == 0x02)
 				word |= 0x02 << 4; // F2
-			else if (Rxmsg.data[0] == 0x03)
+			else if (candata == 0x03)
 				word |= 0x04 << 4; // F3
 		}
 
-		if (Rxmsg.can_id == ID_CC_TO_SC_DOOR)
+		if (canID == ID_CC_TO_SC_DOOR)
 		{
-			if (Rxmsg.data[0] == 0x00)
+			if (candata == 0x00)
 				word |= 0x01 << 20; // O
-			else if (Rxmsg.data[0] == 0x01)
+			else if (candata == 0x01)
 				word |= 0x02 << 20; // C
 		}
 
-		if (Rxmsg.can_id == ID_EC_TO_ALL)
+		if (canID == ID_EC_TO_ALL)
 		{
-			word = (word & 0xfffffff0) | Rxmsg.data[0];
+			word = (word & 0xfffffff0) | candata;
 		}
-
-		// check database for pending elevator commands
-		Statement *stmt = con->createStatement();
-		ResultSet *res = stmt->executeQuery("SELECT status, requestedFloor FROM elevatorNetwork");
 
 		while (res->next())
 		{

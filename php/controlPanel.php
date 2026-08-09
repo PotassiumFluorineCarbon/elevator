@@ -22,17 +22,17 @@ function press($name,$can,$data,$path,$user,$password){
     }
 }
 
-press("doorOpen",10,0,$path,$user,$password);
-press("doorClose",10,1,$path,$user,$password);
-press("car1",200,1,$path,$user,$password);
-press("car2",200,2,$path,$user,$password);
-press("car3",200,3,$path,$user,$password);
-press("f1up",201,4,$path,$user,$password);
-press("f2down",202,2,$path,$user,$password);
-press("f2up",202,4,$path,$user,$password);
-press("f3down",203,2,$path,$user,$password);
-press("sabbathMode",300,1,$path,$user,$password);
-press("maintenanceLockout",300,2,$path,$user,$password);
+press("doorOpen",0x10,0,$path,$user,$password);
+press("doorClose",0x10,1,$path,$user,$password);
+press("car1",0x200,1,$path,$user,$password);
+press("car2",0x200,2,$path,$user,$password);
+press("car3",0x200,3,$path,$user,$password);
+press("f1up",0x201,4,$path,$user,$password);
+press("f2down",0x202,2,$path,$user,$password);
+press("f2up",0x202,4,$path,$user,$password);
+press("f3down",0x203,2,$path,$user,$password);
+press("sabbathMode",0x300,1,$path,$user,$password);
+press("maintenanceLockout",0x300,2,$path,$user,$password);
 clear($path,$user,$password);
 
 function clear($path,$user,$password){

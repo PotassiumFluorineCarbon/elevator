@@ -1,8 +1,8 @@
--- MySQL dump 10.13  Distrib 8.4.9, for Linux (x86_64)
+-- MySQL dump 10.13  Distrib 8.4.10, for Linux (x86_64)
 --
 -- Host: localhost    Database: elevator
 -- ------------------------------------------------------
--- Server version	8.4.9-0ubuntu0.26.04.1
+-- Server version	8.4.10-0ubuntu0.26.04.1
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -25,12 +25,12 @@ DROP TABLE IF EXISTS `CAN_messages`;
 CREATE TABLE `CAN_messages` (
   `MessageID` int NOT NULL AUTO_INCREMENT,
   `CANID` int NOT NULL,
-  `MessageData` text NOT NULL,
+  `MessageData` int NOT NULL,
   `Timestamp` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`MessageID`),
   KEY `CANID` (`CANID`),
   CONSTRAINT `CAN_messages_ibfk_1` FOREIGN KEY (`CANID`) REFERENCES `CANnodes` (`CANID`)
-) ENGINE=InnoDB;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -58,7 +58,7 @@ CREATE TABLE `CANnodes` (
   PRIMARY KEY (`CANID`),
   KEY `fk_node` (`NodeID`),
   CONSTRAINT `fk_node` FOREIGN KEY (`NodeID`) REFERENCES `elevatorNetwork` (`nodeID`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -67,7 +67,7 @@ CREATE TABLE `CANnodes` (
 
 LOCK TABLES `CANnodes` WRITE;
 /*!40000 ALTER TABLE `CANnodes` DISABLE KEYS */;
-INSERT INTO `CANnodes` VALUES (0x100,1,'SC',0,0),(0x101,2,'EC',0,0),(0x200,3,'CC',0,0),(0x201,4,'F1',0,0),(0x202,5,'F2',0,0),(0x203,6,'F3',0,0);
+INSERT INTO `CANnodes` VALUES (100,1,'SC',0,0),(101,2,'EC',0,0),(200,3,'CC',0,0),(201,4,'F1',0,0),(202,5,'F2',0,0),(203,6,'F3',0,0),(300,7,'Website',0,0);
 /*!40000 ALTER TABLE `CANnodes` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -86,7 +86,7 @@ CREATE TABLE `Diagnostics` (
   PRIMARY KEY (`DiagnosticID`),
   KEY `NodeID` (`NodeID`),
   CONSTRAINT `Diagnostics_ibfk_1` FOREIGN KEY (`NodeID`) REFERENCES `elevatorNetwork` (`nodeID`)
-) ENGINE=InnoDB;
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -95,6 +95,7 @@ CREATE TABLE `Diagnostics` (
 
 LOCK TABLES `Diagnostics` WRITE;
 /*!40000 ALTER TABLE `Diagnostics` DISABLE KEYS */;
+INSERT INTO `Diagnostics` VALUES (7,1,'2026-07-20 14:54:45','Emergency stop activated');
 /*!40000 ALTER TABLE `Diagnostics` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -114,7 +115,7 @@ CREATE TABLE `ElevatorCommands` (
   PRIMARY KEY (`CommandID`),
   UNIQUE KEY `CANID` (`CANID`,`Data`),
   CONSTRAINT `ElevatorCommands_ibfk_1` FOREIGN KEY (`CANID`) REFERENCES `CANnodes` (`CANID`)
-) ENGINE=InnoDB;
+) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -123,7 +124,7 @@ CREATE TABLE `ElevatorCommands` (
 
 LOCK TABLES `ElevatorCommands` WRITE;
 /*!40000 ALTER TABLE `ElevatorCommands` DISABLE KEYS */;
-INSERT INTO `ElevatorCommands` VALUES (1,0x100,5,'2026-07-15 15:20:19','complete'),(2,0x100,6,'2026-07-15 15:20:19','complete'),(3,0x100,7,'2026-07-15 15:20:19','complete'),(4,0x200,1,'2026-07-15 15:20:19','complete'),(5,0x200,2,'2026-07-15 15:20:19','complete'),(6,0x200,3,'2026-07-15 15:20:19','complete'),(7,0x201,4,'2026-07-15 15:20:19','complete'),(8,0x202,2,'2026-07-15 15:20:19','complete'),(9,0x202,4,'2026-07-15 15:20:19','complete'),(10,0x203,2,'2026-07-15 15:59:47','pending');
+INSERT INTO `ElevatorCommands` VALUES (1,100,5,'2026-07-15 15:20:19','complete'),(2,100,6,'2026-07-15 15:20:19','complete'),(3,100,7,'2026-07-15 15:20:19','complete'),(4,200,1,'2026-08-04 17:03:49','complete'),(5,200,2,'2026-08-04 17:03:50','complete'),(6,200,3,'2026-08-04 17:03:50','complete'),(7,201,4,'2026-08-04 17:03:51','complete'),(8,202,2,'2026-08-04 17:03:52','complete'),(9,202,4,'2026-08-04 17:03:51','complete'),(10,203,2,'2026-08-04 17:03:52','complete'),(13,300,1,'2026-08-04 17:03:53','complete'),(14,300,2,'2026-08-04 17:03:54','complete');
 /*!40000 ALTER TABLE `ElevatorCommands` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -138,7 +139,7 @@ CREATE TABLE `ElevatorStatus` (
   `CurrentFloor` int NOT NULL,
   `Direction` enum('up','down','idle') NOT NULL,
   `Timestamp` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-) ENGINE=InnoDB;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -147,7 +148,7 @@ CREATE TABLE `ElevatorStatus` (
 
 LOCK TABLES `ElevatorStatus` WRITE;
 /*!40000 ALTER TABLE `ElevatorStatus` DISABLE KEYS */;
-INSERT INTO `ElevatorStatus` VALUES (1,'up','2026-07-15 15:20:50');
+INSERT INTO `ElevatorStatus` VALUES (1,'up','2026-07-24 18:48:19');
 /*!40000 ALTER TABLE `ElevatorStatus` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -164,7 +165,7 @@ CREATE TABLE `Users` (
   `Password` varchar(255) NOT NULL,
   PRIMARY KEY (`UserID`),
   UNIQUE KEY `Username` (`Username`)
-) ENGINE=InnoDB;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -173,6 +174,7 @@ CREATE TABLE `Users` (
 
 LOCK TABLES `Users` WRITE;
 /*!40000 ALTER TABLE `Users` DISABLE KEYS */;
+INSERT INTO `Users` VALUES (1,'IAmAdmin','$2y$12$HQgaTaujASBVkXfPMC701Oh.wfToXBD1aHTIqamGk46omYLCxC/ia');
 /*!40000 ALTER TABLE `Users` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -192,7 +194,7 @@ CREATE TABLE `elevatorNetwork` (
   PRIMARY KEY (`nodeID`),
   UNIQUE KEY `NodeName` (`NodeName`),
   KEY `idx_networkType` (`NetworkType`)
-) ENGINE=InnoDB AUTO_INCREMENT=11;
+) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -201,7 +203,7 @@ CREATE TABLE `elevatorNetwork` (
 
 LOCK TABLES `elevatorNetwork` WRITE;
 /*!40000 ALTER TABLE `elevatorNetwork` DISABLE KEYS */;
-INSERT INTO `elevatorNetwork` VALUES (1,'SC','RPi','CAN/LAN','Online'),(2,'EC','Arduino','CAN','Online'),(3,'CC','STM32','CAN','Online'),(4,'F1','STM32','CAN','Online'),(5,'F2','STM32','CAN','Online'),(6,'F3','STM32','CAN','Online'),(7,'Website','Web Server','LAN','Online');
+INSERT INTO `elevatorNetwork` VALUES (1,'SC','RPi','CAN/LAN','10'),(2,'EC','Arduino','CAN','Online'),(3,'CC','STM32','CAN','10'),(4,'F1','STM32','CAN','Online'),(5,'F2','STM32','CAN','Online'),(6,'F3','STM32','CAN','Online'),(7,'Website','HTML','LAN','Online');
 /*!40000 ALTER TABLE `elevatorNetwork` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -214,4 +216,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2026-07-15 12:20:44
+-- Dump completed on 2026-08-09 13:01:26
