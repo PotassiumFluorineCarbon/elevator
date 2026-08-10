@@ -269,8 +269,8 @@ void elevatoroperator()
 			word = (word & 0xfffffff0) | candata;
 		}
 
-		while (res->next())
-		{
+		//while (res->next())
+		
 			// Access by column name or numeric index (1-based)
 			string status = res->getString("status");
 			int requestedFloor = res->getInt("requestedFloor");
@@ -546,7 +546,7 @@ void elevatoroperator()
 			default:
 				break;
 			}
-		}
+		
 	}
 }
 // Helper used by elevatoroperator (updated for SocketCAN)
