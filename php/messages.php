@@ -85,7 +85,7 @@ $messages = $db->query(
         <?php foreach ($messages as $row) { ?>
             <tr>
                 <td><?= $row["MessageID"] ?></td>
-                <td><?= $row["CANID"] ?></td>
+                <td><?= dechex($row["CANID"]) ?></td>
                 <td><?= htmlspecialchars($row["MessageData"]) ?></td>
                 <td><?= $row["Timestamp"] ?></td>
                 <td>
