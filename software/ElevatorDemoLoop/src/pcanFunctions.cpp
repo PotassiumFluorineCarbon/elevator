@@ -291,6 +291,9 @@ void elevatoroperator()
 				{
 					playAudioVLC("../../../audio/arrived_at_1.wav", 0);
 					printf("previous state not current state");
+					string sql = "UPDATE ElevatorStatus SET CurrentFloor = 1, Direction = 'down', Timestamp=NOW()";
+					sql::PreparedStatement *pstat = con->prepareStatement(sql);
+					pstat->executeUpdate();
 				}
 				previousState = 10;
 				if (C || F2U || F2D || F2 || F3D || F3 || (sabbath_mode == 1))
@@ -336,6 +339,9 @@ void elevatoroperator()
 				{
 					playAudioVLC("../../../audio/arrived_at_2.wav", 0);
 					printf("previous state not current state");
+					string sql = "UPDATE ElevatorStatus SET CurrentFloor = 2, Direction = 'down', Timestamp=NOW()";
+					sql::PreparedStatement *pstat = con->prepareStatement(sql);
+					pstat->executeUpdate();
 				}
 				previousState = 20;
 				if (C || F1U || F1 || F3 || F3D || (sabbath_mode == 1))
@@ -377,6 +383,9 @@ void elevatoroperator()
 				{
 					playAudioVLC("../../../audio/arrived_at_2.wav", 0);
 					printf("previous state not current state");
+					string sql = "UPDATE ElevatorStatus SET CurrentFloor = 2, Direction = 'up', Timestamp=NOW()";
+					sql::PreparedStatement *pstat = con->prepareStatement(sql);
+					pstat->executeUpdate();
 				}
 				previousState = 30;
 				if (C || F1U || F1 || F3 || F3D || (sabbath_mode == 1))
@@ -418,6 +427,9 @@ void elevatoroperator()
 				{
 					playAudioVLC("../../../audio/arrived_at_3.wav", 0);
 					printf("previous state not current state");
+					string sql = "UPDATE ElevatorStatus SET CurrentFloor = 3, Direction = 'up', Timestamp=NOW()";
+					sql::PreparedStatement *pstat = con->prepareStatement(sql);
+					pstat->executeUpdate();
 				}
 				previousState = 40;
 				if (C || F2U || F2D || F2 || F1U || F1 || (sabbath_mode == 1))
