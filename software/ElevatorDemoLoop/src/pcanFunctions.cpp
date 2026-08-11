@@ -290,8 +290,8 @@ void elevatoroperator()
 				if (previousState != 10)
 				{
 					playAudioVLC("../../../audio/arrived_at_1.wav", 0);
-					printf("previous state not current state");
-					string sql = "UPDATE ElevatorStatus SET CurrentFloor = 1, Direction = 'down', Timestamp=NOW()";
+					printf("previous state not current state\n");
+					string sql = "UPDATE ElevatorStatus SET CurrentFloor = 1, Direction = 'down'";//Timestamp is automatically added
 					sql::PreparedStatement *pstat = con->prepareStatement(sql);
 					pstat->executeUpdate();
 				}
@@ -338,8 +338,8 @@ void elevatoroperator()
 				if (previousState != 20)
 				{
 					playAudioVLC("../../../audio/arrived_at_2.wav", 0);
-					printf("previous state not current state");
-					string sql = "UPDATE ElevatorStatus SET CurrentFloor = 2, Direction = 'down', Timestamp=NOW()";
+					printf("previous state not current state\n");
+					string sql = "UPDATE ElevatorStatus SET CurrentFloor = 2, Direction = 'down'";
 					sql::PreparedStatement *pstat = con->prepareStatement(sql);
 					pstat->executeUpdate();
 				}
@@ -382,8 +382,8 @@ void elevatoroperator()
 				if (previousState != 30)
 				{
 					playAudioVLC("../../../audio/arrived_at_2.wav", 0);
-					printf("previous state not current state");
-					string sql = "UPDATE ElevatorStatus SET CurrentFloor = 2, Direction = 'up', Timestamp=NOW()";
+					printf("previous state not current state\n");
+					string sql = "UPDATE ElevatorStatus SET CurrentFloor = 2, Direction = 'up'";
 					sql::PreparedStatement *pstat = con->prepareStatement(sql);
 					pstat->executeUpdate();
 				}
@@ -426,8 +426,8 @@ void elevatoroperator()
 				if (previousState != 40)
 				{
 					playAudioVLC("../../../audio/arrived_at_3.wav", 0);
-					printf("previous state not current state");
-					string sql = "UPDATE ElevatorStatus SET CurrentFloor = 3, Direction = 'up', Timestamp=NOW()";
+					printf("previous state not current state\n");
+					string sql = "UPDATE ElevatorStatus SET CurrentFloor = 3, Direction = 'up'";
 					sql::PreparedStatement *pstat = con->prepareStatement(sql);
 					pstat->executeUpdate();
 				}
