@@ -24,14 +24,6 @@ static void playAudioVLC(const char *filename, int repeat)
 	if (!filename)
 		return;
 	char cmd[1024];
-	
-	// If playing an announcement (repeat=0), kill all other announcements first
-	// But preserve background music (repeat=1) so they play simultaneously
-	if (repeat == 0) {
-		// Kill only non-looping VLC processes (announcements)
-		system("killall -9 vlc 2>/dev/null; sleep 0.1");
-	}
-	
 	// Use dummy interface; disable loop/repeat and exit when finished so the file does not replay
 	// --no-media-library avoids indexing, --quiet reduces output
 	if (repeat == 0)
@@ -209,7 +201,6 @@ void elevatoroperator()
 			pstat->setInt(1, Rxmsg.can_id);
 			pstat->setInt(2, Rxmsg.data[0]);
 			pstat->executeUpdate();
-			delete pstat;
 			canID = Rxmsg.can_id;
 			candata = Rxmsg.data[0];
 		}
@@ -223,7 +214,6 @@ void elevatoroperator()
 			pstat->setInt(1, canID);
 			pstat->setInt(2, candata);
 			pstat->executeUpdate();
-			delete pstat;
 		}
 
 		// receive message and add to word
@@ -562,10 +552,6 @@ void elevatoroperator()
 			default:
 				break;
 			}
-		
-		// Clean up database objects from this loop iteration
-		delete res;
-		delete stmt;
 	}
 }
 // Helper used by elevatoroperator (updated for SocketCAN)
