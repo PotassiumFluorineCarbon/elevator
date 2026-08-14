@@ -191,6 +191,8 @@ void elevatoroperator()
 		int candata;
 
 		if (!res->next()){//if there are no requests from the gui, then check hardware
+			delete res;
+			delete stmt;
 			ssize_t nbytes = read(can_socket, &Rxmsg, sizeof(Rxmsg));
 			if (nbytes < 0 && errno != EAGAIN && errno != EWOULDBLOCK) throw MyException(std::error_code(errno, std::generic_category()),"CAN read");
 			if (nbytes != sizeof(Rxmsg)) continue;//no message
@@ -201,6 +203,7 @@ void elevatoroperator()
 			pstat->setInt(1, Rxmsg.can_id);
 			pstat->setInt(2, Rxmsg.data[0]);
 			pstat->executeUpdate();
+			delete pstat;
 			canID = Rxmsg.can_id;
 			candata = Rxmsg.data[0];
 		}
@@ -214,6 +217,7 @@ void elevatoroperator()
 			pstat->setInt(1, canID);
 			pstat->setInt(2, candata);
 			pstat->executeUpdate();
+			delete pstat;
 		}
 
 		// receive message and add to word
@@ -310,6 +314,7 @@ void elevatoroperator()
 					string sql = "UPDATE ElevatorStatus SET CurrentFloor = 1, Direction = 'down'";//Timestamp is automatically added
 					sql::PreparedStatement *pstat = con->prepareStatement(sql);
 					pstat->executeUpdate();
+					delete pstat;
 				}
 				previousState = 10;
 				if (C || F2U || F2D || F2 || F3D || F3 || (sabbath_mode == 1))
@@ -358,6 +363,7 @@ void elevatoroperator()
 					string sql = "UPDATE ElevatorStatus SET CurrentFloor = 2, Direction = 'down'";
 					sql::PreparedStatement *pstat = con->prepareStatement(sql);
 					pstat->executeUpdate();
+					delete pstat;
 				}
 				previousState = 20;
 				if (C || F1U || F1 || F3 || F3D || (sabbath_mode == 1))
@@ -402,6 +408,7 @@ void elevatoroperator()
 					string sql = "UPDATE ElevatorStatus SET CurrentFloor = 2, Direction = 'up'";
 					sql::PreparedStatement *pstat = con->prepareStatement(sql);
 					pstat->executeUpdate();
+					delete pstat;
 				}
 				previousState = 30;
 				if (C || F1U || F1 || F3 || F3D || (sabbath_mode == 1))
