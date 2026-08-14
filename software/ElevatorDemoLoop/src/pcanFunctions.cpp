@@ -270,13 +270,18 @@ void elevatoroperator()
 		}
 		if (canID == ID_MODE)
 		{
-			if(candata == 0x1)
+			if(candata == 0x1){
 				sabbath_mode = 1;
-			else if(candata == 0x2)
+				printf("sabbath mode enabled\n");
+			}
+			else if(candata == 0x2){
 				maintenance_lock_out = 1;
+				printf("maintenance lock-out enabled\n");
+			}
 			else if(candata == 0x0){
 				sabbath_mode = 0;
 				maintenance_lock_out = 0;
+				printf("sabbath mode and maintenance lock-out disabled\n");
 			}
 		}
 
