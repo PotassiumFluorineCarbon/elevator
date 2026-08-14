@@ -10,7 +10,7 @@ if(!isset($_SESSION['username'])){
 
 require_once "databaseFunctions.php";
 
-$path="mysql:host=localhost;dbname=elevator";
+$path="mysql:host=127.0.0.1;dbname=elevator";
 $user="elevator_user"; 
 $password="password";
 
@@ -22,17 +22,15 @@ function press($name,$can,$data,$path,$user,$password){
     }
 }
 
-press("doorOpen",0x10,0,$path,$user,$password);
-press("doorClose",0x10,1,$path,$user,$password);
-press("car1",0x200,1,$path,$user,$password);
-press("car2",0x200,2,$path,$user,$password);
-press("car3",0x200,3,$path,$user,$password);
-press("f1up",0x201,4,$path,$user,$password);
-press("f2down",0x202,2,$path,$user,$password);
-press("f2up",0x202,4,$path,$user,$password);
-press("f3down",0x203,2,$path,$user,$password);
-press("sabbathMode",0x300,1,$path,$user,$password);
-press("maintenanceLockout",0x300,2,$path,$user,$password);
+press("car1",0x200,0x1,$path,$user,$password);
+press("car2",0x200,0x2,$path,$user,$password);
+press("car3",0x200,0x3,$path,$user,$password);
+press("f1up",0x201,0x4,$path,$user,$password);
+press("f2down",0x202,0x2,$path,$user,$password);
+press("f2up",0x202,0x4,$path,$user,$password);
+press("f3down",0x203,0x2,$path,$user,$password);
+press("sabbathMode",0x300,0x1,$path,$user,$password);
+press("maintenanceLockout",0x300,0x2,$path,$user,$password);
 clear($path,$user,$password);
 
 function clear($path,$user,$password){
@@ -149,7 +147,7 @@ $commands=$db->query("SELECT * FROM ElevatorCommands ORDER BY CommandID ASC");
     <?php foreach($commands as $row){ ?>
         <tr>
         <td><?= $row["CommandID"] ?></td>
-        <td><?= $row["CANID"] ?></td>
+        <td><?= dechex($row["CANID"]) ?></td>
         <td><?= $row["Data"] ?></td>
         <td><?= $row["Timestamp"] ?></td>
         <td><?= $row["Status"] ?></td>

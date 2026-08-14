@@ -13,24 +13,25 @@ try
     die("Database connection failed.");
 }
 
-// latest elevator status
+// 1. Fetch latest elevator status
 $statusQuery = $db->query("SELECT CurrentFloor, Direction, Timestamp FROM ElevatorStatus ORDER BY Timestamp DESC LIMIT 1");
 $currentStatus = $statusQuery->fetch();
 
-// queued requests (pending commands)
+// 2. Fetch queued requests (pending commands)
 $queueQuery = $db->query("SELECT CommandID, CANID, Data, Timestamp FROM ElevatorCommands WHERE Status = 'pending' ORDER BY Timestamp ASC");
 $queuedRequests = $queueQuery->fetchAll();
 $queueCount = count($queuedRequests);
 
-// calculate estimated wait time, placeholder current
-$estimatedWait = "Available Now";
-if ($queueCount > 0) 
-{
-    $seconds = $queueCount * 7; 
-    $estimatedWait = "~" . $seconds . " seconds";
-}
+// 3. Odometer: Count total commands processed today
+$odometerQuery = $db->query("SELECT COUNT(*) as Total FROM ElevatorCommands WHERE DATE(Timestamp) = CURDATE()");
+$odometer = $odometerQuery->fetch();
+$commandsToday = $odometer['Total'];
 
-// in case the database is empty
+// 4. Fetch Network Health
+$healthQuery = $db->query("SELECT NodeName, Status FROM elevatorNetwork");
+$networkNodes = $healthQuery ? $healthQuery->fetchAll() : [];
+
+// Fallbacks in case the database is empty
 $currentFloor = $currentStatus ? htmlspecialchars($currentStatus['CurrentFloor']) : 'Unknown';
 $direction = $currentStatus ? htmlspecialchars($currentStatus['Direction']) : 'Idle';
 ?>
@@ -70,11 +71,11 @@ $direction = $currentStatus ? htmlspecialchars($currentStatus['Direction']) : 'I
             </div>
         </div>
 
-        <!-- wait time -->
+        <!-- odometer -->
         <div class="col-6">
             <div class="card status-card p-3 bg-primary text-white">
-                <div class="card-title text-uppercase mb-1">Wait Time</div>
-                <div class="val-text fs-3 mt-2"><?= $estimatedWait ?></div>
+                <div class="card-title text-uppercase mb-1">Daily Operations</div>
+                <div class="val-text mt-2"><?= $commandsToday ?></div>
             </div>
         </div>
     </div>
@@ -119,11 +120,37 @@ $direction = $currentStatus ? htmlspecialchars($currentStatus['Direction']) : 'I
             <?php endif; ?>
         </ul>
     </div>
-    
-    <!-- refresh -->
-    <div class="d-grid mt-4">
-        <button class="btn btn-outline-dark btn-lg" onclick="location.reload();">Refresh Status</button>
+
+    <!-- System Health Card -->
+    <div class="card shadow-sm border-0 mt-4">
+        <div class="card-header bg-secondary text-white">
+            <h5 class="mb-0">CAN Bus Network Health</h5>
+        </div>
+        <ul class="list-group list-group-flush">
+            <?php if (empty($networkNodes)): ?>
+                <li class="list-group-item text-muted text-center py-3">No network nodes found.</li>
+            <?php else: ?>
+                <?php foreach ($networkNodes as $node): ?>
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <strong><?= htmlspecialchars($node['NodeName']) ?></strong>
+                        <?php if (strtolower($node['Status']) === 'online' || strtolower($node['Status']) === 'active'): ?>
+                            <span class="badge bg-success rounded-pill">ONLINE</span>
+                        <?php else: ?>
+                            <span class="badge bg-danger rounded-pill"><?= htmlspecialchars($node['Status']) ?></span>
+                        <?php endif; ?>
+                    </li>
+                <?php endforeach; ?>
+            <?php endif; ?>
+        </ul>
     </div>
+    
+    <!-- Auto-refresh script -->
+    <script>
+        // Automatically refresh the page every 1.5 seconds (1500 milliseconds)
+        setInterval(function() {
+            window.location.reload();
+        }, 1500);
+    </script>
 
 </div>
 

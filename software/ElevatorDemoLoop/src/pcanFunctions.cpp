@@ -268,28 +268,17 @@ void elevatoroperator()
 		{
 			word = (word & 0xfffffff0) | candata;
 		}
-
-		while (res->next())
+		if (canID == ID_MODE)
 		{
-			// Access by column name or numeric index (1-based)
-			string status = res->getString("status");
-			int requestedFloor = res->getInt("requestedFloor");
-			// edit word
-			if (status == "pending")
-			{
-				if (requestedFloor == 1)
-				{
-					word |= 0x01 << 4; // F1
-				}
-				else if (requestedFloor == 2)
-				{
-					word |= 0x02 << 4; // F2
-				}
-				else if (requestedFloor == 3)
-				{
-					word |= 0x04 << 4; // F3
-				}
+			if(candata == 0x1)
+				sabbath_mode = 1;
+			else if(candata == 0x2)
+				maintenance_lock_out = 1;
+			else if(candata == 0x0){
+				sabbath_mode = 0;
+				maintenance_lock_out = 0;
 			}
+		}
 
 			switch (state)
 			{
@@ -312,7 +301,10 @@ void elevatoroperator()
 				if (previousState != 10)
 				{
 					playAudioVLC("../../../audio/arrived_at_1.wav", 0);
-					printf("previous state not current state");
+					printf("previous state not current state\n");
+					string sql = "UPDATE ElevatorStatus SET CurrentFloor = 1, Direction = 'down'";//Timestamp is automatically added
+					sql::PreparedStatement *pstat = con->prepareStatement(sql);
+					pstat->executeUpdate();
 				}
 				previousState = 10;
 				if (C || F2U || F2D || F2 || F3D || F3 || (sabbath_mode == 1))
@@ -357,7 +349,10 @@ void elevatoroperator()
 				if (previousState != 20)
 				{
 					playAudioVLC("../../../audio/arrived_at_2.wav", 0);
-					printf("previous state not current state");
+					printf("previous state not current state\n");
+					string sql = "UPDATE ElevatorStatus SET CurrentFloor = 2, Direction = 'down'";
+					sql::PreparedStatement *pstat = con->prepareStatement(sql);
+					pstat->executeUpdate();
 				}
 				previousState = 20;
 				if (C || F1U || F1 || F3 || F3D || (sabbath_mode == 1))
@@ -398,7 +393,10 @@ void elevatoroperator()
 				if (previousState != 30)
 				{
 					playAudioVLC("../../../audio/arrived_at_2.wav", 0);
-					printf("previous state not current state");
+					printf("previous state not current state\n");
+					string sql = "UPDATE ElevatorStatus SET CurrentFloor = 2, Direction = 'up'";
+					sql::PreparedStatement *pstat = con->prepareStatement(sql);
+					pstat->executeUpdate();
 				}
 				previousState = 30;
 				if (C || F1U || F1 || F3 || F3D || (sabbath_mode == 1))
@@ -439,7 +437,10 @@ void elevatoroperator()
 				if (previousState != 40)
 				{
 					playAudioVLC("../../../audio/arrived_at_3.wav", 0);
-					printf("previous state not current state");
+					printf("previous state not current state\n");
+					string sql = "UPDATE ElevatorStatus SET CurrentFloor = 3, Direction = 'up'";
+					sql::PreparedStatement *pstat = con->prepareStatement(sql);
+					pstat->executeUpdate();
 				}
 				previousState = 40;
 				if (C || F2U || F2D || F2 || F1U || F1 || (sabbath_mode == 1))
@@ -546,7 +547,6 @@ void elevatoroperator()
 			default:
 				break;
 			}
-		}
 	}
 }
 // Helper used by elevatoroperator (updated for SocketCAN)
