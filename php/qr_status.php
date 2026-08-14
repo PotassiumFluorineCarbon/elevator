@@ -22,10 +22,10 @@ $queueQuery = $db->query("SELECT CommandID, CANID, Data, Timestamp FROM Elevator
 $queuedRequests = $queueQuery->fetchAll();
 $queueCount = count($queuedRequests);
 
-// 3. Odometer: Count total commands processed today
-$odometerQuery = $db->query("SELECT COUNT(*) as Total FROM ElevatorCommands WHERE DATE(Timestamp) = CURDATE()");
+// 3. Odometer: Count total CAN messages processed
+$odometerQuery = $db->query("SELECT COUNT(*) as Total FROM CAN_messages");
 $odometer = $odometerQuery->fetch();
-$commandsToday = $odometer['Total'];
+$totalMessages = $odometer['Total'];
 
 // 4. Fetch Network Health
 $healthQuery = $db->query("SELECT NodeName, Status FROM elevatorNetwork");
@@ -74,8 +74,8 @@ $direction = $currentStatus ? htmlspecialchars($currentStatus['Direction']) : 'I
         <!-- odometer -->
         <div class="col-6">
             <div class="card status-card p-3 bg-primary text-white">
-                <div class="card-title text-uppercase mb-1">Daily Operations</div>
-                <div class="val-text mt-2"><?= $commandsToday ?></div>
+                <div class="card-title text-uppercase mb-1">Total Messages</div>
+                <div class="val-text mt-2"><?= $totalMessages ?></div>
             </div>
         </div>
     </div>
