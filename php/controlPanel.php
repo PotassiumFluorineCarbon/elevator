@@ -131,7 +131,7 @@ $commands=$db->query("SELECT * FROM ElevatorCommands ORDER BY CommandID ASC");
 
 <h4>Special Modes</h4>
 <button name="sabbathMode">Sabbath Mode</button><br>
-<button name="maintenanceLockout">Maintenance Lockout</button>
+<button name="maintenanceLockout">Maintenance Lockout</button><br>
 <button name="clearModes">Normal Mode</button>
 
 <h4>Clear</h4>
