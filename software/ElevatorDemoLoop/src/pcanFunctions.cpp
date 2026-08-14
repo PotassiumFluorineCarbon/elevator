@@ -24,6 +24,13 @@ static void playAudioVLC(const char *filename, int repeat)
 	if (!filename)
 		return;
 	char cmd[1024];
+	
+	// If playing an announcement (repeat=0), kill any previous announcement
+	// But preserve background music (repeat=1) so they play simultaneously
+	if (repeat == 0) {
+		system("pkill -f 'play-and-exit' 2>/dev/null");
+	}
+	
 	// Use dummy interface; disable loop/repeat and exit when finished so the file does not replay
 	// --no-media-library avoids indexing, --quiet reduces output
 	if (repeat == 0)
