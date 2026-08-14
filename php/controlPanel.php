@@ -31,9 +31,11 @@ press("f2up",0x202,0x4,$path,$user,$password);
 press("f3down",0x203,0x2,$path,$user,$password);
 press("sabbathMode",0x300,0x1,$path,$user,$password);
 press("maintenanceLockout",0x300,0x2,$path,$user,$password);
+press("clearModes",0x300,0x0,$path,$user,$password);
+
 clear($path,$user,$password);
 
-function clear($path,$user,$password){
+function clear($path,$user,$password){//mark pending commands as complete
     if(isset($_POST["clearCommands"])){
         clearCommands($path,$user,$password);
         header("Location: controlPanel.php");
@@ -130,6 +132,7 @@ $commands=$db->query("SELECT * FROM ElevatorCommands ORDER BY CommandID ASC");
 <h4>Special Modes</h4>
 <button name="sabbathMode">Sabbath Mode</button><br>
 <button name="maintenanceLockout">Maintenance Lockout</button>
+<button name="clearModes">Normal Mode</button>
 
 <h4>Clear</h4>
 <button name="clearCommands">Clear</button>
