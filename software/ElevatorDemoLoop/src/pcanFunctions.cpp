@@ -268,6 +268,17 @@ void elevatoroperator()
 		{
 			word = (word & 0xfffffff0) | candata;
 		}
+		if (canID == ID_MODE)
+		{
+			if(candata == 0x1)
+				sabbath_mode = 1;
+			else if(candata == 0x2)
+				maintenance_lock_out = 1;
+			else if(candata == 0x0){
+				sabbath_mode = 0;
+				maintenance_lock_out = 0;
+			}
+		}
 
 			switch (state)
 			{
