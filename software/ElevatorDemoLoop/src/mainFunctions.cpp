@@ -22,10 +22,10 @@ int menu(){
 		printf("\nYour choice: ");
 		scanf("%d", &usrchoice);
 
-		if (usrchoice >=1 && usrchoice <= 5) {	
+		if (usrchoice >=1 && usrchoice <= 6) {	
 			return usrchoice;
 		} else {
-			printf("\nPLEASE SELECT FROM CHOICES 1-5 ONLY!\n\n");
+			printf("\nPLEASE SELECT FROM CHOICES 1-6 ONLY!\n\n");
 			sleep(3);
 			//system("@cls||clear");
 		}
